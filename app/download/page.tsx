@@ -17,28 +17,26 @@ function detectOS(): OS {
 
 const COPY = {
   vi: {
-    eyebrow: "Tải về liền",
-    title: "1 file. 1 pet. Vô cày.",
-    sub: "Bản beta. Miễn phí. Khỏi tạo tài khoản gì sất.",
-    macDmg: "macOS · DMG (Apple Silicon + Intel)",
-    macAbout: "cần macOS 12 Monterey trở lên · 28MB · nhẹ tênh",
-    winMsi: "Windows · MSI (x64)",
-    winAbout: "cần Windows 10 build 1809+ · 31MB · nhẹ tênh",
-    linuxNote: "Linux đang nấu trong nồi. Để mail mình ới khi xong →",
-    checksum: "SHA-256 ↗",
+    title: "Một file. Một pet. Bắt đầu.",
+    sub: "Bản beta. Miễn phí. Không cần tạo tài khoản.",
+    macDmg: "macOS, DMG (Apple Silicon + Intel)",
+    macAbout: "Cần macOS 12 trở lên, 28MB",
+    winMsi: "Windows, MSI (x64)",
+    winAbout: "Cần Windows 10 build 1809+, 31MB",
+    linuxNote: "Linux đang nấu. Đăng ký mình ới khi xong.",
     detected: "Máy bạn đang xài",
+    forYou: "Cho máy bạn",
   },
   en: {
-    eyebrow: "Get it",
-    title: "1 file. 1 pet. Go.",
-    sub: "Beta. Free. No sign-up nonsense.",
-    macDmg: "macOS · DMG (Apple Silicon + Intel)",
-    macAbout: "needs macOS 12 Monterey+ · 28MB · feather-light",
-    winMsi: "Windows · MSI (x64)",
-    winAbout: "needs Windows 10 build 1809+ · 31MB · feather-light",
-    linuxNote: "Linux is in the oven. Drop your email and I'll ping you →",
-    checksum: "SHA-256 ↗",
-    detected: "Detected your machine",
+    title: "One file. One pet. Go.",
+    sub: "Beta. Free. No sign-up.",
+    macDmg: "macOS, DMG (Apple Silicon + Intel)",
+    macAbout: "Requires macOS 12+, 28MB",
+    winMsi: "Windows, MSI (x64)",
+    winAbout: "Requires Windows 10 build 1809+, 31MB",
+    linuxNote: "Linux is in the oven. Drop your email and I'll ping you.",
+    detected: "Detected system",
+    forYou: "For your Mac",
   },
 };
 
@@ -53,30 +51,34 @@ export default function DownloadPage() {
         return (
           <section className="relative px-6 py-20 md:py-28">
             <div className="mx-auto max-w-[1000px]">
-              <div className="font-pixel text-[11px] uppercase tracking-[0.3em] text-[var(--color-pop)]">
-                ▸ {t.eyebrow}
-              </div>
-              <h1 className="mt-3 font-display text-[48px] leading-[0.95] tracking-[-0.02em] md:text-[88px]">
+              <h1 className="font-display text-[48px] leading-[1.02] tracking-tight md:text-[80px]">
                 {t.title}
               </h1>
-              <p className="mt-5 max-w-[600px] text-[17px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[19px]">
+              <p className="mt-5 max-w-[560px] text-[17px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[19px]">
                 {t.sub}
               </p>
 
-              <div className="mt-4 font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink)]/55">
+              <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                 {t.detected}:{" "}
-                <span className="text-[var(--color-pop)]">
-                  {os === "mac" ? "macOS" : os === "windows" ? "Windows" : os === "linux" ? "Linux" : "—"}
+                <span className="text-[var(--color-accent-deep)]">
+                  {os === "mac"
+                    ? "macOS"
+                    : os === "windows"
+                      ? "Windows"
+                      : os === "linux"
+                        ? "Linux"
+                        : "-"}
                 </span>
               </div>
 
-              <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
                 <DownloadCard
                   primary={os === "mac"}
                   label={t.macDmg}
                   about={t.macAbout}
                   sha="a1f3...c9b2"
                   href="#"
+                  forYouLabel={t.forYou}
                 />
                 <DownloadCard
                   primary={os === "windows"}
@@ -84,10 +86,11 @@ export default function DownloadPage() {
                   about={t.winAbout}
                   sha="71ad...c5ee"
                   href="#"
+                  forYouLabel={t.forYou}
                 />
               </div>
 
-              <div className="mt-10 rounded-2xl border-[2px] border-dashed border-[var(--color-ink)]/40 p-5 font-mono text-[13px] text-[var(--color-ink)]/65">
+              <div className="mt-10 rounded-2xl border border-dashed border-[var(--color-hairline-strong)] bg-[var(--color-tint)] p-6 text-[14px] text-[var(--color-ink-soft)]">
                 {t.linuxNote}
               </div>
             </div>
@@ -104,40 +107,45 @@ function DownloadCard({
   about,
   sha,
   href,
+  forYouLabel,
 }: {
   primary: boolean;
   label: string;
   about: string;
   sha: string;
   href: string;
+  forYouLabel: string;
 }) {
   return (
     <motion.a
       href={href}
-      whileHover={{ y: -3 }}
-      className={`group relative block rounded-3xl border-[2px] border-[var(--color-ink)] p-6 transition-shadow ${
+      whileHover={{ y: -2 }}
+      transition={{ type: "spring", stiffness: 200, damping: 18 }}
+      className={`group relative block rounded-2xl border p-6 transition-shadow ${
         primary
-          ? "bg-[var(--color-ink)] text-[var(--color-cream)] shadow-[6px_6px_0_var(--color-pop)] hover:shadow-[8px_8px_0_var(--color-pop)]"
-          : "bg-[var(--color-cream)] shadow-[5px_5px_0_var(--color-ink)] hover:shadow-[7px_7px_0_var(--color-ink)]"
+          ? "border-[var(--color-ink)] bg-[var(--color-surface)] lift-md"
+          : "border-[var(--color-hairline-strong)] bg-[var(--color-surface)] lift hover:lift-md"
       }`}
     >
       {primary && (
-        <span className="absolute -top-3 left-6 rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-lcd)] px-3 py-1 font-pixel text-[10px] uppercase tracking-widest text-[var(--color-ink)]">
-          Hợp máy bạn nè
+        <span className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
+          {forYouLabel}
         </span>
       )}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="font-display text-[22px] italic leading-tight">{label}</div>
-          <div className={`mt-2 font-mono text-[12px] uppercase tracking-wider ${primary ? "text-[var(--color-cream)]/70" : "text-[var(--color-ink)]/55"}`}>
+          <div className="font-display text-[20px] leading-tight tracking-tight">
+            {label}
+          </div>
+          <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-soft)]">
             {about}
           </div>
         </div>
-        <span className="grid h-12 w-12 place-items-center rounded-full border-[2px] border-current font-pixel text-lg transition-transform group-hover:translate-y-1">
-          ▼
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[var(--color-hairline-strong)] text-[16px] text-[var(--color-ink)] transition-transform group-hover:translate-y-0.5">
+          ↓
         </span>
       </div>
-      <div className={`mt-6 flex items-center justify-between border-t-[1.5px] border-dashed pt-4 font-mono text-[11px] ${primary ? "border-[var(--color-cream)]/30 text-[var(--color-cream)]/60" : "border-[var(--color-ink)]/30 text-[var(--color-ink)]/60"}`}>
+      <div className="mt-6 flex items-center justify-between border-t border-[var(--color-hairline)] pt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
         <span>SHA-256</span>
         <span>{sha}</span>
       </div>

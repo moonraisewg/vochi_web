@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Nav, type Lang } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
+import { Method } from "@/components/Method";
 import { Manifesto } from "@/components/Manifesto";
 import { PricingTeaser } from "@/components/PricingTeaser";
 import { FAQ } from "@/components/FAQ";
@@ -17,6 +18,7 @@ export default function Home() {
       <Nav lang={lang} onLangChange={setLang} />
       <Hero lang={lang} />
       <Features lang={lang} />
+      <Method lang={lang} />
       <Manifesto lang={lang} />
       <PricingTeaser lang={lang} />
       <FAQ lang={lang} />

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type Lang = "vi" | "en";
 
@@ -11,14 +11,14 @@ const COPY = {
     pricing: "Giá nhiêu",
     docs: "Cẩm nang",
     changelog: "Có gì mới",
-    download: "Tải liền",
+    download: "Tải free",
   },
   en: {
     features: "How it works",
     pricing: "Pricing",
     docs: "Handbook",
-    changelog: "What's new",
-    download: "Get it",
+    changelog: "Updates",
+    download: "Download free",
   },
 };
 
@@ -30,25 +30,41 @@ export function Nav({
   onLangChange: (l: Lang) => void;
 }) {
   const t = COPY[lang];
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const sentinel = document.createElement("div");
+    sentinel.style.cssText = "position:absolute;top:0;left:0;height:1px;width:1px;pointer-events:none;";
+    document.body.prepend(sentinel);
+    const io = new IntersectionObserver(
+      ([entry]) => setScrolled(!entry.isIntersecting),
+      { threshold: 0, rootMargin: "0px" },
+    );
+    io.observe(sentinel);
+    return () => {
+      io.disconnect();
+      sentinel.remove();
+    };
+  }, []);
+
   return (
-    <header className="relative z-30">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 pt-6 md:pt-8">
-        <Link href="/" className="group flex items-center gap-3">
-          <div className="relative h-10 w-10 rounded-xl border-[2px] border-[var(--color-ink)] bg-[var(--color-lcd)] shadow-[3px_3px_0_var(--color-ink)] transition-transform group-hover:rotate-[-6deg]">
-            <div className="absolute inset-1 rounded-md bg-[#cfe0a4] lcd-scanlines">
-              <span className="absolute inset-0 grid place-items-center font-pixel text-[10px] text-[var(--color-lcd-shadow)]">
-                V
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-[20px] italic">Vocabagotchi</span>
-            <span className="font-pixel text-[9px] uppercase tracking-[0.25em] text-[var(--color-ink)]/60">
-              vocab · pet · srs
-            </span>
-          </div>
+    <header
+      className={`sticky top-0 z-40 transition-colors duration-300 ${
+        scrolled
+          ? "border-b border-[var(--color-hairline)] bg-[var(--color-bg)]/85 backdrop-blur-md"
+          : "bg-transparent"
+      }`}
+      style={{ height: 72 }}
+    >
+      <div className="mx-auto flex h-full max-w-[1280px] items-center justify-between px-6">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <span className="relative grid h-7 w-7 place-items-center rounded-md bg-[var(--color-accent)] text-[var(--color-surface)]">
+            <span className="font-display text-[14px] font-semibold leading-none">V</span>
+          </span>
+          <span className="font-display text-[18px] font-medium tracking-tight">
+            Vô chi
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -62,29 +78,33 @@ export function Nav({
           <LangSwitch lang={lang} onChange={onLangChange} />
           <Link
             href="/download"
-            className="hidden rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-ink)] px-5 py-2 font-pixel text-[11px] uppercase tracking-widest text-[var(--color-cream)] shadow-[3px_3px_0_var(--color-pop)] transition-transform hover:-translate-y-[2px] hover:shadow-[5px_5px_0_var(--color-pop)] md:inline-block"
+            className="hidden rounded-full bg-[var(--color-ink)] px-4 py-2 text-[13px] font-medium text-[var(--color-surface)] transition-all hover:bg-[var(--color-accent-deep)] md:inline-block"
           >
-            ▼ {t.download}
+            {t.download}
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="md:hidden h-10 w-10 rounded-lg border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] shadow-[3px_3px_0_var(--color-ink)]"
+            className="grid h-9 w-9 place-items-center rounded-md border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] md:hidden"
           >
-            <span className="block text-lg">≡</span>
+            <span className="block text-base">≡</span>
           </button>
         </div>
       </div>
 
       {open && (
-        <div className="mx-6 mt-3 rounded-2xl border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] p-4 shadow-[4px_4px_0_var(--color-ink)] md:hidden">
-          <nav className="flex flex-col gap-3 font-body text-[15px]">
+        <div className="mx-6 mt-2 rounded-xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-4 lift md:hidden">
+          <nav className="flex flex-col gap-3 text-[14px]">
             <a href="#features" onClick={() => setOpen(false)}>{t.features}</a>
             <Link href="/pricing" onClick={() => setOpen(false)}>{t.pricing}</Link>
             <Link href="/docs" onClick={() => setOpen(false)}>{t.docs}</Link>
             <Link href="/changelog" onClick={() => setOpen(false)}>{t.changelog}</Link>
-            <Link href="/download" onClick={() => setOpen(false)} className="font-pixel text-[11px] uppercase tracking-widest">
-              ▼ {t.download}
+            <Link
+              href="/download"
+              onClick={() => setOpen(false)}
+              className="mt-1 rounded-full bg-[var(--color-ink)] px-4 py-2 text-center text-[13px] font-medium text-[var(--color-surface)]"
+            >
+              {t.download}
             </Link>
           </nav>
         </div>
@@ -94,20 +114,13 @@ export function Nav({
         .navlink {
           position: relative;
           font-family: var(--font-body);
-          font-size: 15px;
-          font-weight: 500;
-          color: var(--color-ink);
+          font-size: 14px;
+          font-weight: 450;
+          color: var(--color-ink-soft);
           padding: 4px 0;
+          transition: color 200ms;
         }
-        .navlink::after {
-          content: "";
-          position: absolute;
-          left: 0; bottom: -2px;
-          width: 0; height: 2px;
-          background: var(--color-pop);
-          transition: width 220ms ease;
-        }
-        .navlink:hover::after { width: 100%; }
+        .navlink:hover { color: var(--color-ink); }
       `}</style>
     </header>
   );
@@ -115,26 +128,26 @@ export function Nav({
 
 function LangSwitch({ lang, onChange }: { lang: Lang; onChange: (l: Lang) => void }) {
   return (
-    <div className="relative flex h-10 items-center rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] p-1 font-pixel text-[10px] uppercase tracking-widest shadow-[3px_3px_0_var(--color-ink)]">
+    <div className="relative flex h-9 items-center rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-0.5 text-[11px] font-medium uppercase tracking-wider">
       <button
         onClick={() => onChange("vi")}
-        className={`relative z-10 px-3 py-1 transition-colors ${
-          lang === "vi" ? "text-[var(--color-cream)]" : "text-[var(--color-ink)]"
+        className={`relative z-10 px-3 py-1.5 transition-colors ${
+          lang === "vi" ? "text-[var(--color-surface)]" : "text-[var(--color-ink-soft)]"
         }`}
       >
-        VN
+        VI
       </button>
       <button
         onClick={() => onChange("en")}
-        className={`relative z-10 px-3 py-1 transition-colors ${
-          lang === "en" ? "text-[var(--color-cream)]" : "text-[var(--color-ink)]"
+        className={`relative z-10 px-3 py-1.5 transition-colors ${
+          lang === "en" ? "text-[var(--color-surface)]" : "text-[var(--color-ink-soft)]"
         }`}
       >
         EN
       </button>
       <div
-        className="absolute top-1 bottom-1 w-[42px] rounded-full bg-[var(--color-ink)] transition-[left] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
-        style={{ left: lang === "vi" ? 4 : 50 }}
+        className="absolute top-0.5 bottom-0.5 w-[38px] rounded-full bg-[var(--color-ink)] transition-[left] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{ left: lang === "vi" ? 2 : 42 }}
       />
     </div>
   );

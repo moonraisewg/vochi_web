@@ -35,7 +35,6 @@ export function PetDevice({ className = "" }: { className?: string }) {
   const [revealed, setRevealed] = useState(false);
   const word = WORDS[wordIdx % WORDS.length];
 
-  // Load Lottie JSON
   useEffect(() => {
     let alive = true;
     fetch(SRC[current])
@@ -47,23 +46,20 @@ export function PetDevice({ className = "" }: { className?: string }) {
     };
   }, [current]);
 
-  // Hunger decay loop — drains slowly, restores on "feed"
   useAnimationFrame((_, dt) => {
-    setHunger((h) => Math.max(0, h - dt * 0.0008));
+    setHunger((h) => Math.max(0, h - dt * 0.0006));
   });
 
-  // Word cycle
   useEffect(() => {
     const id = setInterval(() => {
       setRevealed(false);
       setWordIdx((i) => i + 1);
-      setTimeout(() => setRevealed(true), 1200);
-    }, 4200);
+      setTimeout(() => setRevealed(true), 1100);
+    }, 4600);
     setRevealed(true);
     return () => clearInterval(id);
   }, []);
 
-  // Trigger animation based on hunger
   useEffect(() => {
     if (hunger < 22) setCurrent("sleeping");
     else if (hunger > 88) setCurrent("happy");
@@ -77,160 +73,116 @@ export function PetDevice({ className = "" }: { className?: string }) {
   };
 
   const hungerColor = useMemo(() => {
-    if (hunger < 25) return "#FF3D7F";
-    if (hunger < 55) return "#E2A100";
-    return "#9DC209";
+    if (hunger < 25) return "var(--color-accent-deep)";
+    return "var(--color-accent)";
   }, [hunger]);
 
   return (
     <div className={`relative ${className}`}>
-      {/* Tamagotchi device shell */}
       <motion.div
-        initial={{ rotate: -3, scale: 0.95, opacity: 0 }}
-        animate={{ rotate: -2, scale: 1, opacity: 1 }}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative mx-auto w-[340px] md:w-[400px]"
+        className="relative mx-auto w-[320px] md:w-[360px]"
       >
-        {/* shadow */}
-        <div className="absolute -inset-4 -z-10 translate-x-3 translate-y-4 rounded-[48%] bg-[var(--color-ink)] opacity-90 blur-[1px]" />
-
-        {/* body */}
-        <div
-          className="relative rounded-[46%] border-[3px] border-[var(--color-ink)] p-7 md:p-9"
-          style={{
-            background:
-              "radial-gradient(circle at 30% 25%, #ffe9f1 0%, #ff8fb4 35%, #d8336a 78%, #8d1a44 100%)",
-          }}
-        >
-          {/* highlight */}
-          <div className="absolute left-10 top-6 h-10 w-16 rounded-full bg-white/60 blur-md" />
-
-          {/* small lights row */}
-          <div className="absolute right-8 top-8 flex gap-2">
-            <span className="h-2 w-2 rounded-full bg-[var(--color-lcd)] shadow-[0_0_8px_#9DC209] blink" />
-            <span className="h-2 w-2 rounded-full bg-[var(--color-ink)]/80" />
-            <span className="h-2 w-2 rounded-full bg-[var(--color-ink)]/80" />
+        {/* device chassis */}
+        <div className="relative rounded-[28px] border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-5 lift-md">
+          {/* status row */}
+          <div className="flex items-center justify-between pb-4">
+            <div className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
+                Live
+              </span>
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
+              Lvl 04
+            </span>
           </div>
 
           {/* screen */}
-          <div className="relative mx-auto mt-2 aspect-square w-full overflow-hidden rounded-[28px] border-[3px] border-[var(--color-ink)] bg-[#cfe0a4] shadow-[inset_0_4px_0_rgba(0,0,0,0.18),inset_0_-3px_0_rgba(255,255,255,0.35)]">
-            <div className="absolute inset-0 lcd-scanlines pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#dfeebd] via-[#c7d99a] to-[#a8be79]" />
-
-            {/* HUD bar */}
-            <div className="absolute left-2 right-2 top-2 z-10 flex items-center justify-between font-pixel text-[9px] uppercase tracking-wider text-[var(--color-lcd-shadow)]">
-              <span>LVL 04</span>
-              <span className="flex items-center gap-1">
-                <span className="inline-block h-2 w-12 border border-[var(--color-lcd-shadow)] bg-[var(--color-lcd-shadow)]/15">
-                  <span
-                    className="block h-full transition-[width] duration-300"
-                    style={{
-                      width: `${hunger}%`,
-                      background: hungerColor,
-                    }}
-                  />
-                </span>
-                <span>{Math.round(hunger)}%</span>
-              </span>
-              <span className="font-mono">12:48</span>
-            </div>
-
-            {/* pet wander layer */}
+          <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-[var(--color-tint)]">
             <PetWanderer animationData={animationData} hunger={hunger} />
+          </div>
 
-            {/* word card */}
-            <motion.div
-              key={wordIdx}
-              initial={{ y: 8, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-              className="absolute bottom-3 left-3 right-3 z-10 rounded-md border-[2px] border-[var(--color-lcd-shadow)] bg-[#eaf2cc] px-2 py-1.5 text-[var(--color-lcd-shadow)]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display text-[18px] italic leading-none">
-                  {word.en}
+          {/* hunger meter */}
+          <div className="mt-5 flex items-center gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
+              Hunger
+            </span>
+            <div className="h-1 flex-1 overflow-hidden rounded-full bg-[var(--color-hairline)]">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: hungerColor }}
+                animate={{ width: `${hunger}%` }}
+                transition={{ type: "spring", stiffness: 60, damping: 18 }}
+              />
+            </div>
+            <span className="font-mono text-[11px] tabular-nums text-[var(--color-ink)]">
+              {Math.round(hunger)}
+            </span>
+          </div>
+
+          {/* word card */}
+          <motion.div
+            key={wordIdx}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="mt-4 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-bg)] px-4 py-3"
+          >
+            <div className="flex items-baseline justify-between">
+              <span className="font-display text-[20px] tracking-tight">{word.en}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
+                Due
+              </span>
+            </div>
+            <div className="mt-1 flex items-center justify-between gap-2">
+              <span className="font-mono text-[11px] text-[var(--color-ink-soft)]">
+                {word.phon}
+              </span>
+              {revealed ? (
+                <span className="text-[13px] text-[var(--color-ink)]">{word.vi}</span>
+              ) : (
+                <span className="font-mono text-[12px] text-[var(--color-ink-muted)]">
+                  · · · · ·
                 </span>
-                <span className="font-pixel text-[8px] tracking-widest">DUE</span>
-              </div>
-              <div className="mt-0.5 flex items-center justify-between gap-2 font-mono text-[10px]">
-                <span>{word.phon}</span>
-                {revealed ? (
-                  <span className="font-body text-[11px] font-medium">{word.vi}</span>
-                ) : (
-                  <span className="font-pixel text-[9px]">??????</span>
-                )}
-              </div>
-            </motion.div>
-          </div>
+              )}
+            </div>
+          </motion.div>
 
-          {/* buttons */}
-          <div className="mt-6 flex items-center justify-between px-2">
-            <DeviceButton color="bg-[var(--color-cream)]" onClick={() => setWordIdx((i) => i + 1)} label="A" />
-            <DeviceButton color="bg-[var(--color-lcd)]" onClick={feed} label="B" />
-            <DeviceButton color="bg-[var(--color-cream)]" onClick={() => setRevealed((r) => !r)} label="C" />
-          </div>
-
-          {/* brand chip */}
-          <div className="mt-5 flex items-center justify-center gap-2">
-            <span className="font-pixel text-[10px] tracking-widest text-white/90">
-              VOCABAGOTCHI
-            </span>
-            <span className="font-pixel text-[10px] tracking-widest text-[var(--color-ink)]/70">
-              ・v0.1
-            </span>
+          {/* controls */}
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            <ControlButton onClick={() => setWordIdx((i) => i + 1)} label="Skip" />
+            <ControlButton onClick={feed} label="Feed" primary />
+            <ControlButton onClick={() => setRevealed((r) => !r)} label="Reveal" />
           </div>
         </div>
-
-        {/* lanyard */}
-        <div className="absolute -top-7 left-1/2 h-7 w-3 -translate-x-1/2 rounded-t-md border-x-[2px] border-t-[2px] border-[var(--color-ink)] bg-[#b2244c]" />
-
-        {/* sticker callout */}
-        <motion.div
-          initial={{ rotate: 18, scale: 0 }}
-          animate={{ rotate: 12, scale: 1 }}
-          transition={{ delay: 0.6, duration: 0.5, type: "spring", bounce: 0.5 }}
-          className="absolute -right-6 top-10 hidden rotate-12 md:block"
-        >
-          <div className="sticker-pop bg-[var(--color-lcd)] px-3 py-2 text-center">
-            <div className="font-pixel text-[9px] uppercase tracking-widest">PET</div>
-            <div className="font-display text-[14px] italic leading-none">v0.1 ♡</div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ rotate: -22, scale: 0 }}
-          animate={{ rotate: -14, scale: 1 }}
-          transition={{ delay: 0.9, duration: 0.5, type: "spring", bounce: 0.5 }}
-          className="absolute -left-8 bottom-16 hidden md:block"
-        >
-          <div className="sticker bg-[var(--color-stamp)] px-3 py-2 text-[var(--color-cream)]">
-            <div className="font-pixel text-[9px] uppercase tracking-widest">Made in</div>
-            <div className="font-display text-[14px] italic leading-none">Vietnam ★</div>
-          </div>
-        </motion.div>
       </motion.div>
     </div>
   );
 }
 
-function DeviceButton({
-  color,
+function ControlButton({
   onClick,
   label,
+  primary = false,
 }: {
-  color: string;
   onClick: () => void;
   label: string;
+  primary?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`group relative h-10 w-10 rounded-full border-[2px] border-[var(--color-ink)] ${color} shadow-[0_3px_0_var(--color-ink)] transition-transform active:translate-y-[2px] active:shadow-[0_1px_0_var(--color-ink)]`}
+      className={`rounded-full px-3 py-2 text-[12px] font-medium transition-all active:scale-[0.97] ${
+        primary
+          ? "bg-[var(--color-accent)] text-[var(--color-surface)] hover:bg-[var(--color-accent-deep)]"
+          : "border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-tint)]"
+      }`}
     >
-      <span className="absolute inset-0 flex items-center justify-center font-pixel text-[10px] text-[var(--color-ink)]/80">
-        {label}
-      </span>
+      {label}
     </button>
   );
 }
@@ -243,20 +195,20 @@ function PetWanderer({
   hunger: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const target = useRef({ x: 0.5, y: 0.6 });
-  const pos = useRef({ x: 0.5, y: 0.6 });
+  const target = useRef({ x: 0.5, y: 0.55 });
+  const pos = useRef({ x: 0.5, y: 0.55 });
   const last = useRef(0);
 
   useAnimationFrame((t) => {
-    if (t - last.current > 2600) {
+    if (t - last.current > 3000) {
       target.current = {
-        x: 0.15 + Math.random() * 0.7,
-        y: 0.4 + Math.random() * 0.4,
+        x: 0.2 + Math.random() * 0.6,
+        y: 0.4 + Math.random() * 0.35,
       };
       last.current = t;
     }
-    pos.current.x += (target.current.x - pos.current.x) * 0.015;
-    pos.current.y += (target.current.y - pos.current.y) * 0.015;
+    pos.current.x += (target.current.x - pos.current.x) * 0.012;
+    pos.current.y += (target.current.y - pos.current.y) * 0.012;
     const el = ref.current;
     if (el) {
       const facing = target.current.x < pos.current.x ? -1 : 1;
@@ -269,8 +221,8 @@ function PetWanderer({
   return (
     <div
       ref={ref}
-      className="absolute z-[5] h-[58%] w-[58%]"
-      style={{ left: "50%", top: "60%", transform: "translate(-50%, -50%)" }}
+      className="absolute z-[5] h-[62%] w-[62%]"
+      style={{ left: "50%", top: "55%", transform: "translate(-50%, -50%)" }}
     >
       {animationData ? (
         <Lottie
@@ -278,7 +230,7 @@ function PetWanderer({
           loop
           autoplay
           rendererSettings={{ preserveAspectRatio: "xMidYMid meet" }}
-          style={{ width: "100%", height: "100%", opacity: hunger < 15 ? 0.6 : 1 }}
+          style={{ width: "100%", height: "100%", opacity: hunger < 15 ? 0.7 : 1 }}
         />
       ) : (
         <div className="h-full w-full" />

@@ -6,183 +6,198 @@ import type { Lang } from "./Nav";
 
 const COPY = {
   vi: {
-    eyebrow: "Giá nhiêu · không cắt cổ",
-    title: "Trả 1 phát. Cày tới già.",
-    sub: "Khum có subscription nhảm. Quét VietQR qua Sepay, 30 giây xong, license bay vô mail. Bạn ngồi cười.",
+    eyebrow: "Giá · nhẹ ví",
+    title: "Trả một lần. Học vô tư.",
+    sub: "Khỏi sub mệt mỏi. Quét VietQR qua Sepay, 30 giây sau license bay vô mail. Xong, đi nuôi thú nhỏ.",
     plans: [
       {
         name: "Free",
         price: "0đ",
-        priceNote: "free mãi mãi · ko đùa",
+        priceNote: "miễn phí mãi mãi, hong đùa",
         cta: "Lụm free",
         href: "/download",
-        accent: "var(--color-rice)",
-        features: ["1 con pet · 100 từ sẵn", "Mode 1 (pet đi lông bông)", "1 thiết bị", "Vô Discord chém gió"],
-        badge: null,
+        features: [
+          "1 thú nhỏ, 100 từ có sẵn",
+          "Mode 1 (thú đi tự do)",
+          "1 thiết bị",
+          "Vô Discord chém gió",
+        ],
+        featured: false,
       },
       {
-        name: "Pro · 1 năm",
+        name: "Pro",
         price: "990.000đ",
-        priceNote: "~$39 · 12 tháng quẩy",
+        priceNote: "12 tháng quẩy",
         cta: "Lên Pro nào trùm",
         href: "/checkout?plan=pro_annual",
-        accent: "var(--color-lcd)",
-        features: ["Có hết của Free", "Mode 2: pet ngủ có giờ giấc", "CSV không giới hạn", "3 thiết bị cùng lúc", "Mở khoá full skin pet", "Lịch streak xịn xò"],
-        badge: "AI CŨNG CHỌN",
+        features: [
+          "Có hết của Free",
+          "Mode 2 (thú nhỏ ngủ có lịch)",
+          "Không giới hạn từ",
+          "3 thiết bị",
+          "Mở khoá skin thú nhỏ",
+          "Lịch streak xinh xinh",
+        ],
+        featured: true,
       },
       {
         name: "Lifetime",
         price: "1.990.000đ",
-        priceNote: "~$79 · trả 1 lần · giữ trọn đời",
+        priceNote: "trả 1 phát, giữ trọn đời",
         cta: "Chốt deal lifetime",
         href: "/checkout?plan=lifetime",
-        accent: "var(--color-pop)",
-        features: ["Có hết của Pro", "Mãi mãi · không bao giờ hết hạn", "Pet skin tương lai free", "Vô beta sớm flex bạn bè", "DM admin trực tiếp"],
-        badge: "500 SLOT · HẾT LÀ HẾT",
+        features: [
+          "Có hết của Pro",
+          "Mãi mãi, không hết hạn",
+          "Thú mới tương lai free",
+          "Vô beta sớm",
+          "DM admin trực tiếp",
+        ],
+        featured: false,
       },
     ],
-    student: "Sinh viên? 490.000đ/năm với mail .edu.vn — rẻ hơn 1 ly Phúc Long mỗi tháng →",
+    student: "Sinh viên? 490.000đ/năm với mail .edu.vn, rẻ hơn ly trà sữa mỗi tháng.",
   },
   en: {
-    eyebrow: "Pricing (wallet-friendly)",
-    title: "Pay once. Grind forever.",
-    sub: "No subscription nonsense. Scan a VietQR via Sepay, 30 seconds, license drops in your inbox.",
+    eyebrow: "Pricing · easy",
+    title: "Pay once. Learn chill.",
+    sub: "No subscription. Scan VietQR via Sepay, license drops into your inbox in 30 seconds. Then go adopt a creature.",
     plans: [
       {
         name: "Free",
         price: "0đ",
-        priceNote: "free, like, forever",
-        cta: "Try it",
+        priceNote: "free forever",
+        cta: "Download free",
         href: "/download",
-        accent: "var(--color-rice)",
-        features: ["1 pet, 100 seed words", "Mode 1 (free-roam pet)", "1 device", "Hang out on Discord"],
-        badge: null,
+        features: [
+          "1 creature, 100 seed words",
+          "Mode 1 (free-roam creature)",
+          "1 device",
+          "Community Discord",
+        ],
+        featured: false,
       },
       {
-        name: "Pro · Annual",
+        name: "Pro",
         price: "990.000đ",
-        priceNote: "~$39 · 12 months",
+        priceNote: "12 months",
         cta: "Go Pro",
         href: "/checkout?plan=pro_annual",
-        accent: "var(--color-lcd)",
-        features: ["Everything in Free", "Mode 2: spaced ambush", "Unlimited CSV imports", "3 devices", "Unlock pet skins", "Streak calendar"],
-        badge: "MOST PICKED",
+        features: [
+          "Everything in Free",
+          "Mode 2 (scheduled wake-up)",
+          "Unlimited words",
+          "3 devices",
+          "Unlock creature skins",
+          "Streak calendar",
+        ],
+        featured: true,
       },
       {
         name: "Lifetime",
         price: "1.990.000đ",
-        priceNote: "~$79 · pay once, keep forever",
-        cta: "Lock it in",
+        priceNote: "pay once, keep forever",
+        cta: "Get lifetime",
         href: "/checkout?plan=lifetime",
-        accent: "var(--color-pop)",
-        features: ["Everything in Pro", "Never expires, like ever", "Future pet skins free", "Early beta access", "DM the maker directly"],
-        badge: "500 SEATS ONLY",
+        features: [
+          "Everything in Pro",
+          "Never expires",
+          "All future creature skins free",
+          "Early beta access",
+          "DM the maker directly",
+        ],
+        featured: false,
       },
     ],
-    student: "Student with a .edu.vn email? 490.000đ/yr — cheaper than monthly bubble tea →",
+    student: "Student with .edu.vn email? 490.000đ a year.",
   },
 };
 
 export function PricingTeaser({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
-    <section id="pricing" className="relative px-6 py-24 md:py-36">
-      {/* big background type */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-10 select-none text-center font-display text-[28vw] italic leading-none tracking-[-0.04em] text-[var(--color-ink)]/[0.045] md:top-0"
-      >
-        pricing
-      </div>
-
-      <div className="relative mx-auto max-w-[1400px]">
-        <div className="mb-14 flex flex-col items-start gap-4">
-          <div className="font-pixel text-[11px] uppercase tracking-[0.3em] text-[var(--color-pop)]">
-            ▸ {t.eyebrow}
+    <section id="pricing" className="relative px-6 py-28 md:py-40">
+      <div className="mx-auto max-w-[1280px]">
+        <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-12">
+          <div className="md:col-span-7">
+            <div className="micro mb-4">{t.eyebrow}</div>
+            <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
+              {t.title}
+            </h2>
           </div>
-          <h2 className="font-display text-[44px] leading-[0.95] tracking-[-0.02em] md:text-[72px]">
-            <span className="italic">{t.title.split(".")[0]}.</span>{" "}
-            {t.title.split(".").slice(1).join(".").trim()}
-          </h2>
-          <p className="max-w-[540px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[18px]">
-            {t.sub}
-          </p>
+          <div className="md:col-span-5 md:pt-6">
+            <p className="max-w-[420px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[17px]">
+              {t.sub}
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {t.plans.map((plan, idx) => (
             <motion.div
               key={plan.name}
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="relative"
+              transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              className={`relative flex flex-col rounded-2xl border p-7 transition-shadow ${
+                plan.featured
+                  ? "border-[var(--color-ink)] bg-[var(--color-surface)] lift-md"
+                  : "border-[var(--color-hairline-strong)] bg-[var(--color-surface)] lift"
+              }`}
             >
-              {plan.badge && (
-                <div
-                  className="absolute -top-3 left-6 z-10 rounded-full border-[2px] border-[var(--color-ink)] px-3 py-1 font-pixel text-[10px] uppercase tracking-widest text-[var(--color-ink)]"
-                  style={{ background: plan.accent }}
-                >
-                  {plan.badge}
+              {plan.featured && (
+                <div className="absolute -top-3 left-7 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
+                  Ai cũng chọn
                 </div>
               )}
-              <div
-                className={`relative h-full rounded-3xl border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] p-7 transition-transform hover:-translate-y-1 ${
-                  idx === 1
-                    ? "shadow-[8px_8px_0_var(--color-lcd)]"
-                    : "shadow-[5px_5px_0_var(--color-ink)]"
-                }`}
-              >
-                <div className="flex items-baseline justify-between">
-                  <h3 className="font-display text-[26px] tracking-[-0.01em]">
-                    {plan.name}
-                  </h3>
-                  <span
-                    className="h-3 w-3 rounded-full border border-[var(--color-ink)]"
-                    style={{ background: plan.accent }}
-                  />
-                </div>
 
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="font-display text-[42px] leading-none tracking-[-0.02em]">
-                    {plan.price}
-                  </span>
+              <div className="flex items-baseline justify-between">
+                <h3 className="font-display text-[22px] tracking-tight">{plan.name}</h3>
+              </div>
+
+              <div className="mt-6">
+                <div className="font-display text-[36px] leading-none tracking-tight">
+                  {plan.price}
                 </div>
-                <div className="mt-1 font-mono text-[12px] uppercase tracking-wider text-[var(--color-ink)]/55">
+                <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                   {plan.priceNote}
                 </div>
-
-                <ul className="mt-7 space-y-3 border-t-[1.5px] border-dashed border-[var(--color-ink)]/30 pt-6 text-[14.5px] leading-[1.4]">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 inline-block h-2 w-2 rounded-sm bg-[var(--color-ink)]" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link
-                  href={plan.href}
-                  className={`mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full border-[2px] border-[var(--color-ink)] px-5 py-3 font-pixel text-[11px] uppercase tracking-widest transition-transform hover:-translate-y-[2px] ${
-                    idx === 1
-                      ? "bg-[var(--color-ink)] text-[var(--color-cream)] shadow-[3px_3px_0_var(--color-lcd)] hover:shadow-[5px_5px_0_var(--color-lcd)]"
-                      : "bg-[var(--color-cream)] shadow-[3px_3px_0_var(--color-ink)] hover:shadow-[5px_5px_0_var(--color-ink)]"
-                  }`}
-                >
-                  {plan.cta} →
-                </Link>
               </div>
+
+              <ul className="mt-7 flex-1 space-y-2.5 border-t border-[var(--color-hairline)] pt-6 text-[14px] leading-[1.45] text-[var(--color-ink-soft)]">
+                {plan.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5">
+                    <span className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href={plan.href}
+                className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-medium transition-colors ${
+                  plan.featured
+                    ? "bg-[var(--color-ink)] text-[var(--color-surface)] hover:bg-[var(--color-accent-deep)]"
+                    : "border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-tint)]"
+                }`}
+              >
+                {plan.cta}
+                <span aria-hidden>→</span>
+              </Link>
             </motion.div>
           ))}
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t-[1.5px] border-dashed border-[var(--color-ink)]/30 pt-6">
-          <Link href="/pricing" className="font-display text-[18px] italic underline decoration-[var(--color-pop)] decoration-[3px] underline-offset-4">
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--color-hairline)] pt-6">
+          <Link
+            href="/pricing"
+            className="text-[14px] text-[var(--color-ink-soft)] underline decoration-[var(--color-hairline-strong)] decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)]"
+          >
             {t.student}
           </Link>
-          <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink)]/55">
-            <span>VietQR</span>·<span>Vietcombank</span>·<span>Techcombank</span>·<span>MB</span>·<span>ACB</span>
+          <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+            VietQR · Vietcombank · Techcombank · MB · ACB
           </div>
         </div>
       </div>

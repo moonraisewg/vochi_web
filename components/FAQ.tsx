@@ -6,74 +6,70 @@ import type { Lang } from "./Nav";
 
 const COPY = {
   vi: {
-    eyebrow: "Hỏi gì cũng được · ko ngại",
-    title: "Bạn hỏi. Mình đáp tuốt.",
+    title: "Hỏi gì cũng được.",
+    contact: "Không thấy câu của bạn? Mail mình nha.",
     items: [
       {
-        q: "Có chạy trên Windows không hay chỉ Mac?",
-        a: "Cả hai luôn. macOS 12+ và Windows 10+ chiến tốt. Linux đang trong nồi — build chạy được mà overlay chưa mượt, đợi xíu nha.",
+        q: "Có chạy trên Windows không?",
+        a: "Có. macOS 12 trở lên và Windows 10 trở lên đều chạy mượt. Linux đang trong nồi, build chạy được nhưng overlay chưa hoàn thiện.",
       },
       {
-        q: "Sepay là gì? An toàn không vậy?",
-        a: "Sepay là cổng VietQR. Bạn mở app ngân hàng, quét cái mã, chuyển khoản như bình thường — không có vụ nhập số thẻ đâu. Ngân hàng confirm (~30s–2 phút) là license bay thẳng vô mail.",
+        q: "Sepay là gì, có an toàn không?",
+        a: "Sepay là cổng VietQR. Bạn mở app ngân hàng, quét mã, chuyển khoản như bình thường. Không nhập số thẻ ở đâu cả. Sau khi ngân hàng xác nhận (khoảng 30 giây đến 2 phút), license sẽ gửi vào email.",
       },
       {
-        q: "Pet có lên được fullscreen Chrome không?",
-        a: "Có chứ. Bạn mở Chrome fullscreen, xem Netflix toàn màn hình, hay Zoom họp full — pet vẫn nhảy đùng đùng trên đó. Tụi mình tốn khá nhiều đêm để xử vụ này, nên giờ pet siêu lì.",
+        q: "Thú nhỏ có thật sự đè được fullscreen Chrome?",
+        a: "Có. Mở Chrome fullscreen, xem Netflix toàn màn hình, Zoom họp full, thú nhỏ vẫn vô tư đi loanh quanh trên đó. Tụi mình tốn khá nhiều đêm để xử vụ này.",
       },
       {
-        q: "Dữ liệu của em có bị upload đi đâu không?",
-        a: "Không hề. Từ vựng với tiến độ học nằm im trên máy bạn. Chỉ có 1 lần gọi server lúc verify license thôi. Không telemetry, không train AI, không scrape gì hết. Đảm bảo bằng danh dự pet.",
+        q: "Dữ liệu của tôi có bị upload?",
+        a: "Không. Từ vựng và tiến độ học nằm im trên máy. Chỉ có 1 lần gọi server lúc verify license thôi. Không telemetry, không train AI, không scrape.",
       },
       {
-        q: "Lỡ không thích, hoàn tiền được không?",
-        a: "Được mà. Pro: 14 ngày. Lifetime: 30 ngày. Email cho mình trong thời hạn → hoàn 100%, mình không hỏi lý do (nhưng mình sẽ buồn xíu).",
+        q: "Hoàn tiền?",
+        a: "Pro 14 ngày. Lifetime 30 ngày. Email mình trong thời hạn, hoàn 100%, không hỏi lý do.",
       },
       {
-        q: "Có open source không?",
-        a: "Phần lõi sẽ mở mã nguồn khi lên v1.0 cho ai muốn mò code. App đóng gói (pet, skin, license) thì giữ closed, để còn có cái nuôi pet thật của mình.",
+        q: "Có buff IELTS hay TOEIC không?",
+        a: "Có. Bạn đẩy file danh sách từ IELTS hoặc TOEIC vào, thú nhỏ sẽ ưu tiên ôn cho bạn. Vài bạn beta nhâm nhi được 600 từ trong 3 tháng, không stress.",
       },
       {
-        q: "Lỡ pet chết thì sao? Có ám ảnh không?",
-        a: "Pet khum chết được đâu, yên tâm. Hunger xuống 0 thì pet ngủ thôi, chờ bạn quay lại. Không có drama, không guilt-trip kiểu Tamagotchi cũ — mình hong nỡ.",
-      },
-      {
-        q: "Có buff IELTS / TOEIC được không trùm?",
-        a: "Được mà. Bạn đẩy file danh sách từ IELTS / TOEIC vô, pet ưu tiên ôn cho bạn. Một số bạn beta cày được 600 từ trong 3 tháng — không claim suông, log review thật.",
+        q: "Lỡ thú nhỏ chết thì sao?",
+        a: "Thú nhỏ khum chết được đâu. Hunger xuống 0 thì nó ngủ thôi, chờ bạn quay lại. Không drama, không guilt-trip kiểu Tamagotchi cũ. Vô tư là vô tư.",
       },
     ],
   },
   en: {
-    eyebrow: "Ask away",
-    title: "Stuff you'll wonder.",
+    title: "Questions, maybe.",
+    contact: "Question not here?",
     items: [
       {
-        q: "Mac only or Windows too?",
-        a: "Both, friend. macOS 12+ and Windows 10+. Linux is in the oven — the build runs but the overlay's still rough.",
+        q: "Does it run on Windows?",
+        a: "Yes. macOS 12+ and Windows 10+ run smoothly. Linux is in the oven, the build runs but the overlay isn't polished.",
       },
       {
-        q: "What's Sepay? Is it safe?",
-        a: "Sepay is a VietQR gateway. Open your banking app, scan the code, transfer normally — no card details typed anywhere. Bank confirms (~30s–2min), license drops into your inbox.",
+        q: "What is Sepay, and is it safe?",
+        a: "Sepay is a VietQR gateway. Open your banking app, scan the code, transfer normally. No card details entered anywhere. After the bank confirms (30 seconds to 2 minutes), the license lands in your inbox.",
       },
       {
-        q: "Does it really hover over fullscreen Chrome?",
-        a: "Yep. Chrome fullscreen, Netflix, Zoom presenting — pet hops on top of all of them. Took a lot of late nights to get this right, so the pet is now stubbornly visible.",
+        q: "Does the creature really sit over fullscreen Chrome?",
+        a: "Yes. Chrome fullscreen, Netflix, Zoom presenting, the creature carefree wanders over all of them. Took a lot of late nights to get this right.",
       },
       {
-        q: "Is my data uploaded somewhere?",
-        a: "Nope. Words + reviews live on your disk. One network call: license verify on launch. No telemetry, no AI training, no scraping. Pet's honor.",
+        q: "Is my data uploaded?",
+        a: "No. Words and review history sit on your machine. One network call: license verify on launch. No telemetry, no AI training, no scraping.",
       },
       {
-        q: "Refunds if I bail?",
-        a: "Sure. Pro: 14 days. Lifetime: 30 days. Email within the window — full refund, no questions (but I'll be a little sad).",
+        q: "Refunds?",
+        a: "Pro: 14 days. Lifetime: 30 days. Email within the window for a full refund, no questions asked.",
       },
       {
-        q: "Open source?",
-        a: "The engine core goes open at v1.0 for tinkerers. The packaged app (pet, skins, license layer) stays closed — gotta feed my own pet too.",
+        q: "Can I drill IELTS or TOEIC vocab?",
+        a: "Yes. Drop a list of IELTS or TOEIC words and the creature prioritizes them. A handful of beta users nibbled through 600 words in 3 months, no stress.",
       },
       {
-        q: "What if my pet dies? Do I cry?",
-        a: "It can't die. Hunger hits 0 → pet just sleeps and waits for you. Zero drama, zero guilt-trip.",
+        q: "What happens if my creature dies?",
+        a: "It can't. Hunger hits 0 and the creature just sleeps waiting for you. Zero drama, zero guilt-trip. Carefree means carefree.",
       },
     ],
   },
@@ -84,44 +80,42 @@ export function FAQ({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="relative px-6 py-24 md:py-36">
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-12 md:grid-cols-12">
+    <section className="relative px-6 py-28 md:py-40">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
-          <div className="font-pixel text-[11px] uppercase tracking-[0.3em] text-[var(--color-pop)]">
-            ▸ {t.eyebrow}
-          </div>
-          <h2 className="mt-3 font-display text-[44px] italic leading-[0.95] tracking-[-0.02em] md:text-[72px]">
+          <h2 className="font-display text-[40px] italic leading-[1.02] tracking-tight md:text-[56px]">
             {t.title}
           </h2>
-          <div className="mt-8 hidden font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink)]/50 md:block">
-            ↘ {lang === "vi" ? "không thấy câu của bạn? gửi mail nha" : "not here? shoot an email"}<br />
-            <a href="mailto:hi@vocabagotchi.app" className="underline decoration-[var(--color-pop)] decoration-[3px] underline-offset-4">
-              hi@vocabagotchi.app
+          <div className="mt-8 text-[14px] text-[var(--color-ink-soft)]">
+            {t.contact}
+            <br />
+            <a
+              href="mailto:hi@vochi.app"
+              className="mt-2 inline-block text-[var(--color-ink)] underline decoration-[var(--color-hairline-strong)] decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)]"
+            >
+              hi@vochi.app
             </a>
           </div>
         </div>
 
         <div className="md:col-span-8">
-          <div className="divide-y-[1.5px] divide-[var(--color-ink)] border-y-[1.5px] border-[var(--color-ink)]">
+          <div className="border-t border-[var(--color-hairline)]">
             {t.items.map((item, idx) => {
               const isOpen = open === idx;
               return (
-                <div key={idx}>
+                <div key={idx} className="border-b border-[var(--color-hairline)]">
                   <button
                     onClick={() => setOpen(isOpen ? null : idx)}
-                    className="flex w-full items-center justify-between gap-6 py-6 text-left transition-colors hover:bg-[var(--color-paper-dark)]/40"
+                    className="flex w-full items-baseline justify-between gap-6 py-6 text-left transition-colors hover:text-[var(--color-accent-deep)]"
                   >
-                    <div className="flex items-baseline gap-5">
-                      <span className="font-mono text-[12px] tabular-nums text-[var(--color-ink)]/45">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span className="font-display text-[20px] leading-tight tracking-[-0.01em] md:text-[24px]">
-                        {item.q}
-                      </span>
-                    </div>
+                    <span className="font-display text-[19px] leading-[1.25] tracking-tight md:text-[22px]">
+                      {item.q}
+                    </span>
                     <span
-                      className={`grid h-9 w-9 shrink-0 place-items-center rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] font-pixel text-[14px] transition-transform ${
-                        isOpen ? "rotate-45 bg-[var(--color-pop)] text-[var(--color-cream)]" : ""
+                      className={`grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[var(--color-hairline-strong)] text-[14px] transition-all ${
+                        isOpen
+                          ? "rotate-45 border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-surface)]"
+                          : "text-[var(--color-ink-soft)]"
                       }`}
                     >
                       +
@@ -136,7 +130,7 @@ export function FAQ({ lang }: { lang: Lang }) {
                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                         className="overflow-hidden"
                       >
-                        <p className="pb-6 pl-12 pr-12 text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
+                        <p className="pb-6 pr-12 text-[15px] leading-[1.6] text-[var(--color-ink-soft)]">
                           {item.a}
                         </p>
                       </motion.div>

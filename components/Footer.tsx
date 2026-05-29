@@ -5,34 +5,44 @@ import type { Lang } from "./Nav";
 
 const COPY = {
   vi: {
-    cta: "Cứu pet. Cày từ vựng.",
-    sub: "macOS · Windows · Beta · 28MB · chill nhẹ · free luôn",
+    cta: "Nuôi một thú nhỏ vô tư.",
+    sub: "macOS, Windows. 28MB. Khỏi cần thẻ.",
     download: "Tải free",
     pricing: "Coi giá",
-    legal: "Pháp lý xíu",
-    privacy: "Riêng tư",
+    product: "Sản phẩm",
+    legal: "Pháp lý",
+    company: "Công ty",
+    privacy: "Quyền riêng tư",
     terms: "Điều khoản",
     contact: "Liên hệ",
-    address: "Hà Nội · Việt Nam · ☕",
-    rights: "Vocabagotchi · 2026 · Pet team status: vẫn còn nguyên đội hình",
-    newsletter: "Newsletter",
-    newsletterSub: "1 mail / tháng. Có pet mới thì kêu. Không spam, hứa.",
-    newsletterCta: "Đăng ký",
+    docs: "Cẩm nang",
+    changelog: "Cập nhật",
+    address: "Hà Nội, Việt Nam",
+    rights: "Vô chi, 2026.",
+    newsletterTitle: "Thư hàng tháng",
+    newsletterSub: "Một email mỗi tháng khi có pet mới. Không spam.",
+    tagline:
+      "Thú nhỏ ăn từ vựng. Bạn học mà cứ tưởng đang chill cùng nó. Đẻ ra ở một căn gác Hà Nội, nuôi bằng trà sữa.",
   },
   en: {
-    cta: "Adopt a pet. Grind words.",
-    sub: "macOS · Windows · Beta · 28MB · chill",
+    cta: "Adopt a carefree creature.",
+    sub: "macOS, Windows. 28MB. No card needed.",
     download: "Download free",
     pricing: "Pricing",
-    legal: "Legal stuff",
+    product: "Product",
+    legal: "Legal",
+    company: "Company",
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact",
-    address: "Hanoi · Vietnam · ☕",
-    rights: "Vocabagotchi · 2026 · No pets harmed",
-    newsletter: "Newsletter",
-    newsletterSub: "One email a month. When a new pet ships. Zero spam, promise.",
-    newsletterCta: "Subscribe",
+    docs: "Handbook",
+    changelog: "Updates",
+    address: "Hanoi, Vietnam",
+    rights: "Vô chi, 2026.",
+    newsletterTitle: "Monthly note",
+    newsletterSub: "One email a month when a new pet ships. No spam.",
+    tagline:
+      "A creature that eats vocab. You learn while you chill next to it. Built in a Hanoi attic, fueled by milk tea.",
   },
 };
 
@@ -40,105 +50,106 @@ export function Footer({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
     <footer className="relative">
-      {/* big CTA */}
-      <div className="relative overflow-hidden border-t-[2px] border-[var(--color-ink)] bg-[var(--color-pop)] px-6 py-24 text-[var(--color-cream)] md:py-32">
-        <div className="grain absolute inset-0 opacity-50" />
-        <div className="relative mx-auto flex max-w-[1400px] flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-display text-[44px] leading-[0.95] tracking-[-0.02em] md:text-[88px]">
-              <span className="italic">{t.cta.split(".")[0]}.</span>
+      <section className="border-t border-[var(--color-hairline)] bg-[var(--color-surface)] px-6 py-24 md:py-32">
+        <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-10 md:flex-row md:items-end">
+          <div className="max-w-[640px]">
+            <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
+              {t.cta}
             </h2>
-            <p className="mt-4 font-mono text-[12px] uppercase tracking-widest text-[var(--color-cream)]/80">
+            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
               {t.sub}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/download"
-              className="inline-flex items-center gap-3 rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-ink)] px-6 py-3.5 font-pixel text-[11px] uppercase tracking-widest text-[var(--color-cream)] shadow-[5px_5px_0_var(--color-cream)] transition-transform hover:-translate-y-[2px] hover:shadow-[7px_7px_0_var(--color-cream)]"
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-ink)] px-6 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
             >
-              ▼ {t.download}
+              {t.download}
+              <span aria-hidden>↓</span>
             </Link>
             <Link
               href="/pricing"
-              className="inline-flex items-center gap-2 rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] px-5 py-3.5 font-pixel text-[11px] uppercase tracking-widest text-[var(--color-ink)] shadow-[3px_3px_0_var(--color-ink)] transition-transform hover:-translate-y-[2px]"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] px-5 py-3 text-[14px] font-medium text-[var(--color-ink)] transition-colors hover:bg-[var(--color-tint)]"
             >
-              {t.pricing} →
+              {t.pricing}
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* main footer */}
-      <div className="border-t-[2px] border-[var(--color-ink)] bg-[var(--color-paper-dark)] px-6 py-14">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-10 md:grid-cols-5">
+      <section className="border-t border-[var(--color-hairline)] bg-[var(--color-bg)] px-6 py-16">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl border-[2px] border-[var(--color-ink)] bg-[var(--color-lcd)] shadow-[3px_3px_0_var(--color-ink)]">
-                <div className="m-1 grid place-items-center rounded-md bg-[#cfe0a4] lcd-scanlines font-pixel text-[10px] text-[var(--color-lcd-shadow)] aspect-square">
-                  V
-                </div>
-              </div>
-              <span className="font-display text-[22px] italic">Vocabagotchi</span>
-            </div>
-            <p className="mt-4 max-w-[300px] text-[14px] leading-[1.55] text-[var(--color-ink-soft)]">
-              {lang === "vi"
-                ? "Pet ăn từ vựng. Bạn học mà tưởng đang chill. Đẻ ra trong một căn gác Hà Nội, nuôi bằng trà sữa, làm bằng tình yêu."
-                : "A pet that eats vocab. Learn English without realizing. Built in a Hanoi attic, fueled by milk tea and love."}
+            <Link href="/" className="flex items-center gap-2.5">
+              <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-accent)] text-[var(--color-surface)]">
+                <span className="font-display text-[14px] font-semibold leading-none">V</span>
+              </span>
+              <span className="font-display text-[18px] font-medium tracking-tight">
+                Vô chi
+              </span>
+            </Link>
+            <p className="mt-5 max-w-[300px] text-[14px] leading-[1.55] text-[var(--color-ink-soft)]">
+              {t.tagline}
             </p>
-            <p className="mt-6 font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink)]/55">
+            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
               {t.address}
             </p>
           </div>
 
           <div>
-            <div className="font-pixel text-[10px] uppercase tracking-widest text-[var(--color-ink)]/60">
-              {lang === "vi" ? "Sản phẩm" : "Product"}
-            </div>
-            <ul className="mt-4 space-y-2 text-[14px]">
-              <li><Link href="/download" className="hover:underline">{t.download}</Link></li>
-              <li><Link href="/pricing" className="hover:underline">{t.pricing}</Link></li>
-              <li><Link href="/changelog" className="hover:underline">{lang === "vi" ? "Cập nhật" : "Changelog"}</Link></li>
-              <li><Link href="/docs" className="hover:underline">{lang === "vi" ? "Hướng dẫn" : "Docs"}</Link></li>
+            <div className="micro mb-4">{t.product}</div>
+            <ul className="space-y-2.5 text-[14px] text-[var(--color-ink-soft)]">
+              <li><Link href="/download" className="hover:text-[var(--color-ink)]">{t.download}</Link></li>
+              <li><Link href="/pricing" className="hover:text-[var(--color-ink)]">{t.pricing}</Link></li>
+              <li><Link href="/changelog" className="hover:text-[var(--color-ink)]">{t.changelog}</Link></li>
+              <li><Link href="/docs" className="hover:text-[var(--color-ink)]">{t.docs}</Link></li>
             </ul>
           </div>
 
           <div>
-            <div className="font-pixel text-[10px] uppercase tracking-widest text-[var(--color-ink)]/60">{t.legal}</div>
-            <ul className="mt-4 space-y-2 text-[14px]">
-              <li><Link href="/privacy" className="hover:underline">{t.privacy}</Link></li>
-              <li><Link href="/terms" className="hover:underline">{t.terms}</Link></li>
-              <li><a href="mailto:hi@vocabagotchi.app" className="hover:underline">hi@vocabagotchi.app</a></li>
+            <div className="micro mb-4">{t.company}</div>
+            <ul className="space-y-2.5 text-[14px] text-[var(--color-ink-soft)]">
+              <li><Link href="/privacy" className="hover:text-[var(--color-ink)]">{t.privacy}</Link></li>
+              <li><Link href="/terms" className="hover:text-[var(--color-ink)]">{t.terms}</Link></li>
+              <li>
+                <a href="mailto:hi@vochi.app" className="hover:text-[var(--color-ink)]">
+                  {t.contact}
+                </a>
+              </li>
             </ul>
           </div>
 
           <div>
-            <div className="font-pixel text-[10px] uppercase tracking-widest text-[var(--color-ink)]/60">{t.newsletter}</div>
-            <p className="mt-4 text-[13px] leading-[1.5] text-[var(--color-ink-soft)]">{t.newsletterSub}</p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="mt-4 flex gap-2"
-            >
+            <div className="micro mb-4">{t.newsletterTitle}</div>
+            <p className="text-[13px] leading-[1.5] text-[var(--color-ink-soft)]">
+              {t.newsletterSub}
+            </p>
+            <form onSubmit={(e) => e.preventDefault()} className="mt-4 flex gap-2">
               <input
                 type="email"
                 placeholder="email@..."
-                className="w-full rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-cream)] px-3 py-2 font-mono text-[12px] outline-none focus:shadow-[3px_3px_0_var(--color-pop)]"
+                className="w-full rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] px-3 py-2 text-[13px] outline-none placeholder:text-[var(--color-ink-muted)] focus:border-[var(--color-accent)]"
               />
-              <button className="rounded-full border-[2px] border-[var(--color-ink)] bg-[var(--color-ink)] px-3 py-2 font-pixel text-[10px] uppercase tracking-widest text-[var(--color-cream)] shadow-[3px_3px_0_var(--color-pop)]">
+              <button
+                type="submit"
+                aria-label="Subscribe"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--color-ink)] text-[14px] text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
+              >
                 →
               </button>
             </form>
           </div>
         </div>
 
-        <div className="mx-auto mt-14 flex max-w-[1400px] flex-wrap items-center justify-between gap-4 border-t-[1.5px] border-dashed border-[var(--color-ink)]/30 pt-6 font-mono text-[11px] uppercase tracking-widest text-[var(--color-ink)]/55">
+        <div className="mx-auto mt-14 flex max-w-[1280px] flex-wrap items-center justify-between gap-4 border-t border-[var(--color-hairline)] pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
           <span>© {t.rights}</span>
           <span className="flex items-center gap-2">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-lcd)] blink" />
-            {lang === "vi" ? "Pet đang xem bạn scroll · vẫn còn sống nhé" : "Pet is watching you scroll · still alive"}
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+            {lang === "vi" ? "Thú nhỏ vẫn vô tư" : "Creatures still carefree"}
           </span>
         </div>
-      </div>
+      </section>
     </footer>
   );
 }
