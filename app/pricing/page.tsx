@@ -8,32 +8,34 @@ import { motion } from "motion/react";
 const COMPARE = {
   vi: {
     title: "Bạn hợp gói nào?",
-    headers: ["Tính năng", "Free", "Pro", "Lifetime"],
+    headers: ["Tính năng", "Free", "3 tháng", "6 tháng", "Lifetime"],
     rows: [
-      ["Pet, Mode 1 (đi tự do)", "✓", "✓", "✓"],
-      ["Mode 2 (pet ngủ có lịch)", "-", "✓", "✓"],
-      ["Số từ tối đa", "100 (sẵn)", "Không giới hạn", "Không giới hạn"],
-      ["Đẩy CSV của bạn", "-", "✓", "✓"],
-      ["Pet skin", "1 (mặc định)", "Tất cả hiện có", "Tất cả, cả tương lai"],
-      ["Thiết bị", "1", "3", "5"],
-      ["Streak calendar và stats", "-", "✓", "✓"],
-      ["Hỗ trợ", "Discord", "Email dưới 48h", "Nhắn admin trực tiếp"],
-      ["Cập nhật", "Năm hiện tại", "12 tháng", "Trọn đời"],
+      ["Giá", "0đ", "129.000đ", "239.000đ", "599.000đ"],
+      ["Thú nhỏ, Mode 1 (đi tự do)", "✓", "✓", "✓", "✓"],
+      ["Mode 2 (thú ngủ có lịch)", "-", "✓", "✓", "✓"],
+      ["Số từ tối đa", "100", "Không giới hạn", "Không giới hạn", "Không giới hạn"],
+      ["Đẩy file của bạn", "-", "✓", "✓", "✓"],
+      ["Skin thú nhỏ", "1", "Mặc định", "Tất cả hiện có", "Tất cả, cả tương lai"],
+      ["Thiết bị", "1", "2", "3", "5"],
+      ["Lịch streak và stats", "-", "✓", "✓", "✓"],
+      ["Hỗ trợ", "Discord", "Email", "Email dưới 48h", "DM admin"],
+      ["Thời hạn", "Mãi mãi", "3 tháng", "6 tháng", "Trọn đời"],
     ],
   },
   en: {
     title: "Which plan fits?",
-    headers: ["Feature", "Free", "Pro", "Lifetime"],
+    headers: ["Feature", "Free", "3 months", "6 months", "Lifetime"],
     rows: [
-      ["Pet, Mode 1 (free-roam)", "✓", "✓", "✓"],
-      ["Mode 2 (scheduled wake-up)", "-", "✓", "✓"],
-      ["Word cap", "100 (seed)", "Unlimited", "Unlimited"],
-      ["Bring your own CSV", "-", "✓", "✓"],
-      ["Pet skins", "1 (default)", "All current", "All, future too"],
-      ["Devices", "1", "3", "5"],
-      ["Streak calendar and stats", "-", "✓", "✓"],
-      ["Support", "Discord", "Email under 48h", "DM the maker"],
-      ["Updates", "Current year", "12 months", "Lifetime"],
+      ["Price", "0đ", "129.000đ", "239.000đ", "599.000đ"],
+      ["Creature, Mode 1 (free-roam)", "✓", "✓", "✓", "✓"],
+      ["Mode 2 (scheduled wake-up)", "-", "✓", "✓", "✓"],
+      ["Word cap", "100", "Unlimited", "Unlimited", "Unlimited"],
+      ["Bring your own file", "-", "✓", "✓", "✓"],
+      ["Creature skins", "1", "Default only", "All current", "All, future too"],
+      ["Devices", "1", "2", "3", "5"],
+      ["Streak calendar and stats", "-", "✓", "✓", "✓"],
+      ["Support", "Discord", "Email", "Email under 48h", "DM the maker"],
+      ["Duration", "Forever", "3 months", "6 months", "Lifetime"],
     ],
   },
 };
@@ -58,8 +60,8 @@ export default function PricingPage() {
                       {COMPARE[lang].headers.map((h, i) => (
                         <th
                           key={h}
-                          className={`px-5 py-4 text-left font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)] ${
-                            i === 2 ? "bg-[var(--color-tint)] text-[var(--color-ink)]" : ""
+                          className={`px-4 py-4 text-left font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)] ${
+                            i === 3 ? "bg-[var(--color-tint)] text-[var(--color-ink)]" : ""
                           }`}
                         >
                           {h}
@@ -80,11 +82,11 @@ export default function PricingPage() {
                         {row.map((cell, ci) => (
                           <td
                             key={ci}
-                            className={`px-5 py-4 text-[14px] ${
+                            className={`px-4 py-4 text-[14px] ${
                               ci === 0
                                 ? "font-display text-[15px] text-[var(--color-ink)]"
                                 : "text-[var(--color-ink-soft)]"
-                            } ${ci === 2 ? "bg-[var(--color-tint)]" : ""}`}
+                            } ${ci === 3 ? "bg-[var(--color-tint)]" : ""}`}
                           >
                             {cell}
                           </td>

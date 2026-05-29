@@ -6,9 +6,9 @@ import { PageShell } from "@/components/PageShell";
 import { motion } from "motion/react";
 
 const PLANS = {
-  pro_annual: { name: "Pro, 12 tháng", amount: 990_000 },
-  lifetime: { name: "Lifetime", amount: 1_990_000 },
-  student: { name: "Student", amount: 490_000 },
+  "3_months": { name: "3 tháng", amount: 129_000 },
+  "6_months": { name: "6 tháng", amount: 239_000 },
+  lifetime: { name: "Lifetime", amount: 599_000 },
 };
 
 function genMemo() {
@@ -17,8 +17,8 @@ function genMemo() {
 
 function CheckoutInner() {
   const params = useSearchParams();
-  const plan = (params.get("plan") ?? "pro_annual") as keyof typeof PLANS;
-  const planInfo = PLANS[plan] ?? PLANS.pro_annual;
+  const plan = (params.get("plan") ?? "6_months") as keyof typeof PLANS;
+  const planInfo = PLANS[plan] ?? PLANS["6_months"];
 
   const [memo] = useState(genMemo);
   const [secondsLeft, setSecondsLeft] = useState(900);
