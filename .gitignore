@@ -1,6 +1,10 @@
 node_modules
 .next
 out
+# secrets — never commit real env files
+.env
+.env.*
+!.env.example
 .env*.local
 .DS_Store
 *.tsbuildinfo
