@@ -1,180 +1,159 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
-import { motion } from "motion/react";
 
 const PLANS = {
-  pro_annual: { name: "Pro, 12 tháng", amount: 990_000 },
-  lifetime: { name: "Lifetime", amount: 1_990_000 },
-  student: { name: "Student", amount: 490_000 },
-};
+  pro_annual: { name: "Pro, 12 tháng", amount: "990.000đ", note: "3 thiết bị, 12 tháng" },
+  lifetime: { name: "Lifetime", amount: "1.990.000đ", note: "5 thiết bị, trọn đời" },
+  student: { name: "Student", amount: "490.000đ", note: "Yêu cầu email .edu.vn" },
+} as const;
 
-function genMemo() {
-  return `VOCHI${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
-}
+type PlanId = keyof typeof PLANS;
+type CheckoutResponse = {
+  invoiceNumber: string;
+  checkoutUrl: string;
+  fields: Record<string, string | number>;
+};
 
 function CheckoutInner() {
   const params = useSearchParams();
-  const plan = (params.get("plan") ?? "pro_annual") as keyof typeof PLANS;
-  const planInfo = PLANS[plan] ?? PLANS.pro_annual;
-
-  const [memo] = useState(genMemo);
-  const [secondsLeft, setSecondsLeft] = useState(900);
-  const [status, setStatus] = useState<"pending" | "confirming" | "paid">("pending");
+  const initialPlan = (params.get("plan") ?? "pro_annual") as PlanId;
+  const [plan, setPlan] = useState<PlanId>(initialPlan in PLANS ? initialPlan : "pro_annual");
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [checkout, setCheckout] = useState<CheckoutResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    const t = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
-    return () => clearInterval(t);
-  }, []);
+    if (checkout) formRef.current?.submit();
+  }, [checkout]);
 
-  const mins = Math.floor(secondsLeft / 60);
-  const secs = secondsLeft % 60;
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const response = await fetch("/api/checkout/create", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan, email }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error?.message ?? "Không tạo được đơn hàng");
+      setCheckout(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Không tạo được đơn hàng");
+      setLoading(false);
+    }
+  }
 
-  const qrSrc = useMemo(
-    () =>
-      `https://img.vietqr.io/image/MB-9999999-compact2.png?amount=${planInfo.amount}&addInfo=${memo}&accountName=VOCHI`,
-    [memo, planInfo.amount],
-  );
+  const selected = PLANS[plan];
 
   return (
     <section className="relative px-6 py-16 md:py-24">
       <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-12 md:grid-cols-12">
-        {/* left: steps */}
         <div className="md:col-span-7">
-          <div className="micro mb-4">Thanh toán, Sepay VietQR</div>
+          <div className="micro mb-4">Thanh toán qua SePay</div>
           <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">
-            Quét QR. <span className="italic text-[var(--color-ink-soft)]">Pet no liền.</span>
+            Tạo đơn an toàn. <span className="italic text-[var(--color-ink-soft)]">SePay xác nhận.</span>
           </h1>
+          <p className="mt-5 max-w-[560px] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
+            Điền email nhận license, chọn gói, rồi qua cổng SePay. License chỉ được gửi sau khi
+            SePay báo thanh toán thành công về server.
+          </p>
 
           <ol className="mt-12 space-y-7">
             {[
-              {
-                n: "01",
-                t: "Mở app ngân hàng",
-                d: "Vietcombank, Techcombank, MB, ACB, VPB, BIDV, TPBank, app nào cũng quét được.",
-              },
-              {
-                n: "02",
-                t: "Quét QR bên cạnh",
-                d: "Số tiền và nội dung tự nhảy vào. Khỏi gõ tay.",
-              },
-              {
-                n: "03",
-                t: "Bấm chuyển khoản",
-                d: "Sepay nhận thông báo từ ngân hàng trong khoảng 30 giây tới 2 phút.",
-              },
-              {
-                n: "04",
-                t: "Mở mail, license tới rồi",
-                d: "Dán vào app Vô chi, mở khoá ngay.",
-              },
-            ].map((step) => (
-              <li key={step.n} className="flex items-start gap-5">
-                <span className="font-mono text-[12px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)] pt-1">
-                  {step.n}
+              ["01", "Tạo đơn hàng", "Server tạo invoice riêng và ký payload thanh toán."],
+              ["02", "Thanh toán trên SePay", "Bạn quét/chuyển khoản trong cổng thanh toán của SePay."],
+              ["03", "SePay gửi IPN", "Server xác nhận IPN hợp lệ rồi mới phát hành license."],
+              ["04", "Mở mail", "License key được gửi tới email bạn nhập ở đây."],
+            ].map(([n, title, desc]) => (
+              <li key={n} className="flex items-start gap-5">
+                <span className="pt-1 font-mono text-[12px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
+                  {n}
                 </span>
                 <div>
-                  <div className="font-display text-[20px] leading-tight tracking-tight">
-                    {step.t}
-                  </div>
+                  <div className="font-display text-[20px] leading-tight tracking-tight">{title}</div>
                   <div className="mt-1.5 text-[14.5px] leading-[1.55] text-[var(--color-ink-soft)]">
-                    {step.d}
+                    {desc}
                   </div>
                 </div>
               </li>
             ))}
           </ol>
-
-          <div className="mt-12 rounded-2xl border border-[var(--color-hairline-strong)] bg-[var(--color-tint)] p-5">
-            <div className="micro" style={{ color: "var(--color-accent-deep)" }}>
-              Lưu ý
-            </div>
-            <div className="mt-2 text-[14px] leading-[1.55] text-[var(--color-ink-soft)]">
-              Nội dung chuyển khoản phải khớp y chang với{" "}
-              <code className="rounded bg-[var(--color-surface)] px-1.5 py-0.5 font-mono text-[var(--color-ink)]">
-                {memo}
-              </code>
-              . Sai 1 chữ phải đối soát thủ công, mất công. Mail{" "}
-              <a className="underline decoration-[var(--color-hairline-strong)] decoration-[1.5px] underline-offset-[4px]" href="mailto:hi@vochi.app">
-                hi@vochi.app
-              </a>{" "}
-              mình xử nhanh.
-            </div>
-          </div>
         </div>
 
-        {/* right: QR card */}
         <div className="md:col-span-5">
-          <motion.div
-            initial={{ y: 12, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="sticky top-24 rounded-2xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-6 lift-md"
-          >
-            <div className="flex items-baseline justify-between">
-              <h2 className="font-display text-[20px] tracking-tight">{planInfo.name}</h2>
-              <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                {status === "pending"
-                  ? "Đang đợi"
-                  : status === "confirming"
-                    ? "Đang xác nhận"
-                    : "Đã thanh toán"}
-              </span>
-            </div>
-            <div className="mt-3 font-display text-[36px] leading-none tracking-tight">
-              {planInfo.amount.toLocaleString("vi-VN")}đ
-            </div>
+          <div className="sticky top-24 rounded-2xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-6 lift-md">
+            <form onSubmit={submit}>
+              <label className="block">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
+                  Gói
+                </span>
+                <select
+                  value={plan}
+                  onChange={(e) => setPlan(e.target.value as PlanId)}
+                  className="mt-2 w-full rounded-xl border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-[14px] outline-none focus:border-[var(--color-accent)]"
+                >
+                  {Object.entries(PLANS).map(([id, p]) => (
+                    <option key={id} value={id}>
+                      {p.name} - {p.amount}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-            <div className="mt-6 overflow-hidden rounded-xl border border-[var(--color-hairline)] bg-white p-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={qrSrc}
-                alt="VietQR"
-                className="aspect-square w-full object-contain"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.opacity = "0";
-                }}
-              />
-            </div>
-
-            <dl className="mt-5 space-y-2 text-[12px]">
-              <div className="rounded-lg border border-[var(--color-hairline)] px-3 py-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                  Ngân hàng
-                </dt>
-                <dd className="font-mono text-[13px] text-[var(--color-ink)]">
-                  MB Bank, 9999 9999 9999
-                </dd>
+              <div className="mt-6 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-tint)] p-4">
+                <div className="font-display text-[22px] tracking-tight">{selected.name}</div>
+                <div className="mt-2 font-display text-[36px] leading-none tracking-tight">
+                  {selected.amount}
+                </div>
+                <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+                  {selected.note}
+                </div>
               </div>
-              <div className="rounded-lg border border-[var(--color-hairline)] px-3 py-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                  Nội dung
-                </dt>
-                <dd className="font-mono text-[14px] text-[var(--color-accent-deep)]">
-                  {memo}
-                </dd>
-              </div>
-            </dl>
 
-            <div className="mt-5 flex items-center justify-between rounded-lg bg-[var(--color-ink)] px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--color-surface)]">
-              <span>QR còn dùng được</span>
-              <span className="text-[14px] tabular-nums">
-                {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
-              </span>
-            </div>
+              <label className="mt-6 block">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
+                  Email nhận license
+                </span>
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  className="mt-2 w-full rounded-xl border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-[14px] outline-none focus:border-[var(--color-accent)]"
+                />
+              </label>
 
-            <button
-              onClick={() => {
-                setStatus("confirming");
-                setTimeout(() => setStatus("paid"), 1800);
-              }}
-              className="mt-4 w-full rounded-full bg-[var(--color-accent)] px-5 py-3 text-[13px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
-            >
-              Tôi chuyển khoản rồi
-            </button>
-          </motion.div>
+              {error && (
+                <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="mt-6 w-full rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)] disabled:cursor-wait disabled:opacity-70"
+              >
+                {loading ? "Đang tạo đơn..." : "Qua SePay thanh toán"}
+              </button>
+            </form>
+
+            {checkout && (
+              <form ref={formRef} method="POST" action={checkout.checkoutUrl} className="hidden">
+                {Object.entries(checkout.fields).map(([key, value]) => (
+                  <input key={key} type="hidden" name={key} value={String(value)} />
+                ))}
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>

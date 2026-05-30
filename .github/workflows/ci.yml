@@ -1,0 +1,38 @@
+name: Web CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+          SEPAY_ENV: sandbox
+          SEPAY_MERCHANT_ID: ci_merchant
+          SEPAY_SECRET_KEY: ci_secret
+          SEPAY_IPN_SECRET_KEY: ci_ipn_secret
+          APP_BASE_URL: https://example.com
+          LICENSE_SIGNING_PRIVATE_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          LICENSE_PUBLIC_KEY: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+          LICENSE_KEY_ENCRYPTION_SECRET: ci-encryption-secret-at-least-32-characters

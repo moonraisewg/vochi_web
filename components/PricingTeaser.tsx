@@ -18,7 +18,7 @@ const COPY = {
         href: "/download",
         features: [
           "1 thú nhỏ, 100 từ có sẵn",
-          "Mode 1 (thú đi tự do)",
+          "Mode 1 + Mode 2 (ngủ có lịch)",
           "1 thiết bị",
           "Vô Discord chém gió",
         ],
@@ -32,8 +32,8 @@ const COPY = {
         href: "/checkout?plan=pro_annual",
         features: [
           "Có hết của Free",
-          "Mode 2 (thú nhỏ ngủ có lịch)",
           "Không giới hạn từ",
+          "Đẩy CSV của bạn",
           "3 thiết bị",
           "Mở khoá skin thú nhỏ",
           "Lịch streak xinh xinh",
@@ -71,7 +71,7 @@ const COPY = {
         href: "/download",
         features: [
           "1 creature, 100 seed words",
-          "Mode 1 (free-roam creature)",
+          "Mode 1 + Mode 2 (scheduled wake-up)",
           "1 device",
           "Community Discord",
         ],
@@ -85,8 +85,8 @@ const COPY = {
         href: "/checkout?plan=pro_annual",
         features: [
           "Everything in Free",
-          "Mode 2 (scheduled wake-up)",
           "Unlimited words",
+          "Bring your own CSV",
           "3 devices",
           "Unlock creature skins",
           "Streak calendar",

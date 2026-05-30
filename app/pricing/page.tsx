@@ -11,7 +11,7 @@ const COMPARE = {
     headers: ["Tính năng", "Free", "Pro", "Lifetime"],
     rows: [
       ["Pet, Mode 1 (đi tự do)", "✓", "✓", "✓"],
-      ["Mode 2 (pet ngủ có lịch)", "-", "✓", "✓"],
+      ["Mode 2 (pet ngủ có lịch)", "✓", "✓", "✓"],
       ["Số từ tối đa", "100 (sẵn)", "Không giới hạn", "Không giới hạn"],
       ["Đẩy CSV của bạn", "-", "✓", "✓"],
       ["Pet skin", "1 (mặc định)", "Tất cả hiện có", "Tất cả, cả tương lai"],
@@ -26,7 +26,7 @@ const COMPARE = {
     headers: ["Feature", "Free", "Pro", "Lifetime"],
     rows: [
       ["Pet, Mode 1 (free-roam)", "✓", "✓", "✓"],
-      ["Mode 2 (scheduled wake-up)", "-", "✓", "✓"],
+      ["Mode 2 (scheduled wake-up)", "✓", "✓", "✓"],
       ["Word cap", "100 (seed)", "Unlimited", "Unlimited"],
       ["Bring your own CSV", "-", "✓", "✓"],
       ["Pet skins", "1 (default)", "All current", "All, future too"],

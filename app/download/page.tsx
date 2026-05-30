@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PageShell } from "@/components/PageShell";
 import { motion } from "motion/react";
 
@@ -41,8 +41,7 @@ const COPY = {
 };
 
 export default function DownloadPage() {
-  const [os, setOs] = useState<OS>("unknown");
-  useEffect(() => setOs(detectOS()), []);
+  const [os] = useState<OS>(() => detectOS());
 
   return (
     <PageShell>

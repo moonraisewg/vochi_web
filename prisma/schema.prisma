@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  pro_annual
+  lifetime
+  student
+}
+
+enum OrderStatus {
+  created
+  pending
+  paid
+  failed
+  cancelled
+  expired
+}
+
+enum LicenseStatus {
+  active
+  revoked
+}
+
+enum EmailStatus {
+  pending
+  sending
+  sent
+  failed
+}
+
+model Order {
+  id                 String         @id @default(cuid())
+  invoiceNumber      String         @unique
+  plan               Plan
+  amountVnd          Int
+  currency           String         @default("VND")
+  email              String
+  status             OrderStatus    @default(created)
+  sepayOrderId        String?
+  sepayTransactionId String?
+  rawIpnJson         Json?
+  expiresAt          DateTime
+  paidAt             DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  license            License?
+  paymentEvents      PaymentEvent[]
+  emailOutbox        EmailOutbox[]
+  audits             AuditLog[]
+
+  @@index([email])
+  @@index([status, expiresAt])
+}
+
+model PaymentEvent {
+  id                 String   @id @default(cuid())
+  orderId            String?
+  sepayTransactionId String   @unique
+  eventType          String
+  status             String
+  rawJson            Json
+  receivedAt         DateTime @default(now())
+  order              Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+}
+
+model License {
+  id               String        @id @default(cuid())
+  licenseKeyHash   String        @unique
+  licenseKeyPrefix String
+  orderId          String        @unique
+  email            String
+  plan             Plan
+  status           LicenseStatus @default(active)
+  deviceLimit      Int
+  expiresAt        DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  order            Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  activations      Activation[]
+  emailOutbox      EmailOutbox[]
+  audits           AuditLog[]
+
+  @@index([email])
+  @@index([status])
+}
+
+model Activation {
+  id               String   @id @default(cuid())
+  licenseId        String
+  deviceIdHash     String
+  deviceLabel      String?
+  createdAt        DateTime @default(now())
+  lastSeenAt       DateTime @default(now())
+  license          License  @relation(fields: [licenseId], references: [id], onDelete: Cascade)
+
+  @@unique([licenseId, deviceIdHash])
+  @@index([deviceIdHash])
+}
+
+model EmailOutbox {
+  id          String      @id @default(cuid())
+  dedupeKey   String      @unique
+  type        String
+  recipient   String
+  orderId     String?
+  licenseId   String?
+  payload     Json
+  status      EmailStatus @default(pending)
+  attempts    Int         @default(0)
+  lastError   String?
+  sentAt      DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  order       Order?      @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  license     License?    @relation(fields: [licenseId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  orderId   String?
+  licenseId String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  license   License? @relation(fields: [licenseId], references: [id], onDelete: SetNull)
+
+  @@index([action, createdAt])
+}
