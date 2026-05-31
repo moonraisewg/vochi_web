@@ -8,7 +8,8 @@ datasource db {
 }
 
 enum Plan {
-  pro_annual
+  three_months
+  six_months
   lifetime
   student
 }

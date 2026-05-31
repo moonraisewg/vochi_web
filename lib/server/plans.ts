@@ -1,4 +1,6 @@
-export const PLAN_IDS = ["pro_annual", "lifetime", "student"] as const;
+// `student` is kept in the backend (planned: .edu.vn verification) but is
+// intentionally NOT surfaced on the pricing/teaser UI — see WEB_MERGE_PLAN.md.
+export const PLAN_IDS = ["three_months", "six_months", "lifetime", "student"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
 export type PlanDefinition = {
@@ -11,18 +13,26 @@ export type PlanDefinition = {
 };
 
 export const PLANS: Record<PlanId, PlanDefinition> = {
-  pro_annual: {
-    id: "pro_annual",
-    name: "Pro, 12 months",
-    amountVnd: 990_000,
+  three_months: {
+    id: "three_months",
+    name: "3 months",
+    amountVnd: 129_000,
+    deviceLimit: 2,
+    durationDays: 90,
+    features: ["mode2", "unlimited_vocab", "skins", "stats"],
+  },
+  six_months: {
+    id: "six_months",
+    name: "6 months",
+    amountVnd: 239_000,
     deviceLimit: 3,
-    durationDays: 365,
+    durationDays: 180,
     features: ["mode2", "unlimited_vocab", "skins", "stats"],
   },
   lifetime: {
     id: "lifetime",
     name: "Lifetime",
-    amountVnd: 1_990_000,
+    amountVnd: 599_000,
     deviceLimit: 5,
     durationDays: null,
     features: ["mode2", "unlimited_vocab", "skins", "stats", "future_skins"],

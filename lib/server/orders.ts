@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { prisma } from "./prisma";
 import { generateInvoiceNumber } from "./crypto";
-import { getPlan } from "./plans";
+import { getPlan, PLAN_IDS } from "./plans";
 
 export const createCheckoutSchema = z.object({
-  plan: z.enum(["pro_annual", "lifetime", "student"]),
+  // Derive from PLAN_IDS so the schema never drifts from the plan catalog.
+  plan: z.enum(PLAN_IDS),
   email: z.string().trim().toLowerCase().email(),
 });
 
