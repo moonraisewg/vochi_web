@@ -32,21 +32,19 @@ export function PetDevice({ className = "" }: { className?: string }) {
   const [current, setCurrent] = useState<Animation>("carry");
   const [hunger, setHunger] = useState(72);
   const [wordIdx, setWordIdx] = useState(0);
-  const [revealed, setRevealed] = useState(true);
+  const [revealed, setRevealed] = useState(false);
   const word = WORDS[wordIdx % WORDS.length];
-  const effectiveAnimation: Animation =
-    current === "eating" ? current : hunger < 22 ? "sleeping" : hunger > 88 ? "happy" : "carry";
 
   useEffect(() => {
     let alive = true;
-    fetch(SRC[effectiveAnimation])
+    fetch(SRC[current])
       .then((r) => r.json())
       .then((d) => alive && setAnimationData(d))
       .catch(() => {});
     return () => {
       alive = false;
     };
-  }, [effectiveAnimation]);
+  }, [current]);
 
   useAnimationFrame((_, dt) => {
     setHunger((h) => Math.max(0, h - dt * 0.0006));
@@ -58,13 +56,20 @@ export function PetDevice({ className = "" }: { className?: string }) {
       setWordIdx((i) => i + 1);
       setTimeout(() => setRevealed(true), 1100);
     }, 4600);
+    setRevealed(true);
     return () => clearInterval(id);
   }, []);
+
+  useEffect(() => {
+    if (hunger < 22) setCurrent("sleeping");
+    else if (hunger > 88) setCurrent("happy");
+    else setCurrent("carry");
+  }, [hunger]);
 
   const feed = () => {
     setCurrent("eating");
     setHunger((h) => Math.min(100, h + 18));
-    setTimeout(() => setCurrent("carry"), 1400);
+    setTimeout(() => setCurrent("happy"), 1400);
   };
 
   const hungerColor = useMemo(() => {

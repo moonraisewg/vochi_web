@@ -21,25 +21,78 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const SITE_URL = "https://vochi.app";
+
 export const metadata: Metadata = {
-  title: "Vô chi. Học từ vựng. Đừng để pet đói khóc.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Vô chi · Học từ vựng tiếng Anh cùng thú nhỏ vô tư",
+    template: "%s · Vô chi",
+  },
   description:
-    "Pet ảo sống trên màn hình macOS và Windows. Đói thì gọi bạn học từ. Học tiếng Anh dưới lớp vỏ Tamagotchi.",
+    "Pet ảo sống trên màn hình bạn, vừa làm việc vừa nhâm nhi từ vựng tiếng Anh. Không streak, không stress. Phương pháp Vô chi cho macOS và Windows. Tải miễn phí.",
+  applicationName: "Vô chi",
+  authors: [{ name: "himitsuko" }],
+  creator: "himitsuko",
+  publisher: "Vô chi",
   keywords: [
+    "vô chi",
+    "vochi",
     "học từ vựng",
     "học tiếng anh",
-    "tamagotchi",
-    "pet ảo",
-    "ứng dụng học từ vựng",
+    "app học từ vựng",
+    "học IELTS",
+    "học TOEIC",
+    "ôn từ vựng",
+    "pet ảo desktop",
+    "tamagotchi học tiếng anh",
     "desktop pet",
+    "vocabulary app",
+    "spaced repetition",
     "macOS app",
     "Windows app",
+    "tiếng anh chill",
+    "học tiếng anh không stress",
   ],
+  category: "education",
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "vi-VN": SITE_URL,
+      "en-US": `${SITE_URL}?lang=en`,
+    },
+  },
   openGraph: {
-    title: "Vô chi. Pet ăn từ vựng.",
-    description: "Tamagotchi cho người học tiếng Anh. macOS và Windows.",
     type: "website",
+    url: SITE_URL,
+    siteName: "Vô chi",
+    title: "Vô chi · Học từ vựng cùng thú nhỏ vô tư",
+    description:
+      "Pet ảo sống trên màn hình macOS và Windows. Nhâm nhi từ vựng tiếng Anh trong kẽ rảnh, không streak, không stress.",
     locale: "vi_VN",
+    alternateLocale: ["en_US"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vô chi · Học từ vựng cùng thú nhỏ vô tư",
+    description:
+      "Pet ảo sống trên màn hình. Không streak, không stress. Tải miễn phí cho macOS và Windows.",
+    creator: "@himitsuko",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: {
+    email: false,
+    telephone: false,
   },
 };
 
