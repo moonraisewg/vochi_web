@@ -36,8 +36,13 @@ describe("payment helpers", () => {
   });
 
   it("defines production paid plans", () => {
-    expect(getPlan("pro_annual")?.amountVnd).toBe(990000);
+    expect(getPlan("three_months")?.amountVnd).toBe(129000);
+    expect(getPlan("six_months")?.amountVnd).toBe(239000);
+    expect(getPlan("lifetime")?.amountVnd).toBe(599000);
     expect(getPlan("lifetime")?.deviceLimit).toBe(5);
+    // student stays in the backend (hidden from UI) for the planned .edu.vn flow
     expect(getPlan("student")?.amountVnd).toBe(490000);
+    // the retired plan must no longer resolve
+    expect(getPlan("pro_annual")).toBeNull();
   });
 });

@@ -29,11 +29,16 @@ const WORDS = [
 
 export function PetDevice({ className = "" }: { className?: string }) {
   const [animationData, setAnimationData] = useState<Record<string, unknown> | null>(null);
-  const [current, setCurrent] = useState<Animation>("carry");
+  // A short-lived override (eating/happy) set by feed(); when null, the displayed
+  // animation is derived from hunger so we never setState in an effect.
+  const [override, setOverride] = useState<Animation | null>(null);
   const [hunger, setHunger] = useState(72);
   const [wordIdx, setWordIdx] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const word = WORDS[wordIdx % WORDS.length];
+
+  const current: Animation =
+    override ?? (hunger < 22 ? "sleeping" : hunger > 88 ? "happy" : "carry");
 
   useEffect(() => {
     let alive = true;
@@ -51,25 +56,23 @@ export function PetDevice({ className = "" }: { className?: string }) {
   });
 
   useEffect(() => {
+    const reveal = setTimeout(() => setRevealed(true), 0);
     const id = setInterval(() => {
       setRevealed(false);
       setWordIdx((i) => i + 1);
       setTimeout(() => setRevealed(true), 1100);
     }, 4600);
-    setRevealed(true);
-    return () => clearInterval(id);
+    return () => {
+      clearTimeout(reveal);
+      clearInterval(id);
+    };
   }, []);
 
-  useEffect(() => {
-    if (hunger < 22) setCurrent("sleeping");
-    else if (hunger > 88) setCurrent("happy");
-    else setCurrent("carry");
-  }, [hunger]);
-
   const feed = () => {
-    setCurrent("eating");
+    setOverride("eating");
     setHunger((h) => Math.min(100, h + 18));
-    setTimeout(() => setCurrent("happy"), 1400);
+    setTimeout(() => setOverride("happy"), 1400);
+    setTimeout(() => setOverride(null), 2800);
   };
 
   const hungerColor = useMemo(() => {

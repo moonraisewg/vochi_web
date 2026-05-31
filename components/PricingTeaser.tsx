@@ -13,50 +13,59 @@ const COPY = {
       {
         name: "Free",
         price: "0đ",
-        priceNote: "miễn phí mãi mãi, hong đùa",
+        priceNote: "miễn phí, hong đùa",
         cta: "Lụm free",
         href: "/download",
         features: [
-          "1 thú nhỏ, 100 từ có sẵn",
-          "Mode 1 + Mode 2 (ngủ có lịch)",
-          "1 thiết bị",
+          "1 thú nhỏ, 100 từ sẵn",
+          "Mode 1, 1 thiết bị",
           "Vô Discord chém gió",
         ],
         featured: false,
       },
       {
-        name: "Pro",
-        price: "990.000đ",
-        priceNote: "12 tháng quẩy",
-        cta: "Lên Pro nào trùm",
-        href: "/checkout?plan=pro_annual",
+        name: "3 tháng",
+        price: "129.000đ",
+        priceNote: "khoảng 43k mỗi tháng",
+        cta: "Thử 3 tháng",
+        href: "/checkout?plan=three_months",
         features: [
           "Có hết của Free",
-          "Không giới hạn từ",
-          "Đẩy CSV của bạn",
+          "Mode 2, không giới hạn từ",
+          "2 thiết bị",
+        ],
+        featured: false,
+      },
+      {
+        name: "6 tháng",
+        price: "239.000đ",
+        priceNote: "40k mỗi tháng, đỡ 19k",
+        cta: "Chốt 6 tháng",
+        href: "/checkout?plan=six_months",
+        features: [
+          "Có hết của 3 tháng",
           "3 thiết bị",
           "Mở khoá skin thú nhỏ",
-          "Lịch streak xinh xinh",
+          "Lịch streak xinh",
         ],
         featured: true,
       },
       {
         name: "Lifetime",
-        price: "1.990.000đ",
+        price: "599.000đ",
         priceNote: "trả 1 phát, giữ trọn đời",
-        cta: "Chốt deal lifetime",
+        cta: "Chốt deal",
         href: "/checkout?plan=lifetime",
         features: [
-          "Có hết của Pro",
+          "Có hết của 6 tháng",
           "Mãi mãi, không hết hạn",
           "Thú mới tương lai free",
-          "Vô beta sớm",
           "DM admin trực tiếp",
         ],
         featured: false,
       },
     ],
-    student: "Sinh viên? 490.000đ/năm với mail .edu.vn, rẻ hơn ly trà sữa mỗi tháng.",
+    student: "Sinh viên có mail .edu.vn? DM mình giảm thêm 50%.",
   },
   en: {
     eyebrow: "Pricing · easy",
@@ -66,27 +75,37 @@ const COPY = {
       {
         name: "Free",
         price: "0đ",
-        priceNote: "free forever",
-        cta: "Download free",
+        priceNote: "free, like, forever",
+        cta: "Try it",
         href: "/download",
         features: [
           "1 creature, 100 seed words",
-          "Mode 1 + Mode 2 (scheduled wake-up)",
-          "1 device",
-          "Community Discord",
+          "Mode 1, 1 device",
+          "Hang out on Discord",
         ],
         featured: false,
       },
       {
-        name: "Pro",
-        price: "990.000đ",
-        priceNote: "12 months",
-        cta: "Go Pro",
-        href: "/checkout?plan=pro_annual",
+        name: "3 months",
+        price: "129.000đ",
+        priceNote: "about 43k a month",
+        cta: "Try 3 months",
+        href: "/checkout?plan=three_months",
         features: [
           "Everything in Free",
-          "Unlimited words",
-          "Bring your own CSV",
+          "Mode 2, unlimited words",
+          "2 devices",
+        ],
+        featured: false,
+      },
+      {
+        name: "6 months",
+        price: "239.000đ",
+        priceNote: "40k a month, save 19k",
+        cta: "Get 6 months",
+        href: "/checkout?plan=six_months",
+        features: [
+          "Everything in 3 months",
           "3 devices",
           "Unlock creature skins",
           "Streak calendar",
@@ -95,21 +114,20 @@ const COPY = {
       },
       {
         name: "Lifetime",
-        price: "1.990.000đ",
+        price: "599.000đ",
         priceNote: "pay once, keep forever",
-        cta: "Get lifetime",
+        cta: "Lock it in",
         href: "/checkout?plan=lifetime",
         features: [
-          "Everything in Pro",
+          "Everything in 6 months",
           "Never expires",
-          "All future creature skins free",
-          "Early beta access",
+          "Future creature skins free",
           "DM the maker directly",
         ],
         featured: false,
       },
     ],
-    student: "Student with .edu.vn email? 490.000đ a year.",
+    student: "Student with .edu.vn email? DM me for 50% off.",
   },
 };
 
@@ -132,32 +150,32 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {t.plans.map((plan, idx) => (
             <motion.div
               key={plan.name}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative flex flex-col rounded-2xl border p-7 transition-shadow ${
+              transition={{ duration: 0.5, delay: idx * 0.05, ease: [0.16, 1, 0.3, 1] }}
+              className={`relative flex flex-col rounded-2xl border p-6 transition-shadow ${
                 plan.featured
                   ? "border-[var(--color-ink)] bg-[var(--color-surface)] lift-md"
                   : "border-[var(--color-hairline-strong)] bg-[var(--color-surface)] lift"
               }`}
             >
               {plan.featured && (
-                <div className="absolute -top-3 left-7 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
+                <div className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
                   Ai cũng chọn
                 </div>
               )}
 
               <div className="flex items-baseline justify-between">
-                <h3 className="font-display text-[22px] tracking-tight">{plan.name}</h3>
+                <h3 className="font-display text-[20px] tracking-tight">{plan.name}</h3>
               </div>
 
-              <div className="mt-6">
-                <div className="font-display text-[36px] leading-none tracking-tight">
+              <div className="mt-5">
+                <div className="font-display text-[30px] leading-none tracking-tight">
                   {plan.price}
                 </div>
                 <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
@@ -165,7 +183,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
                 </div>
               </div>
 
-              <ul className="mt-7 flex-1 space-y-2.5 border-t border-[var(--color-hairline)] pt-6 text-[14px] leading-[1.45] text-[var(--color-ink-soft)]">
+              <ul className="mt-6 flex-1 space-y-2.5 border-t border-[var(--color-hairline)] pt-5 text-[13.5px] leading-[1.45] text-[var(--color-ink-soft)]">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5">
                     <span className="mt-2 inline-block h-1 w-1 shrink-0 rounded-full bg-[var(--color-accent)]" />
@@ -176,7 +194,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
 
               <Link
                 href={plan.href}
-                className={`mt-7 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-[13px] font-medium transition-colors ${
+                className={`mt-6 inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-[13px] font-medium transition-colors ${
                   plan.featured
                     ? "bg-[var(--color-ink)] text-[var(--color-surface)] hover:bg-[var(--color-accent-deep)]"
                     : "border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] text-[var(--color-ink)] hover:bg-[var(--color-tint)]"
