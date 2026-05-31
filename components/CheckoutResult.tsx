@@ -12,6 +12,12 @@ type OrderStatus = {
   licenseIssued: boolean;
 };
 
+const TERMINAL_STATUSES = new Set(["paid", "expired", "failed", "cancelled"]);
+
+function isTerminalOrder(order: OrderStatus): boolean {
+  return order.licenseIssued || TERMINAL_STATUSES.has(order.status);
+}
+
 export function CheckoutResult({
   invoice,
   tone,
@@ -25,21 +31,32 @@ export function CheckoutResult({
   useEffect(() => {
     if (!invoice) return;
     let cancelled = false;
+    let id: number | undefined;
+    const stop = () => {
+      if (id !== undefined) {
+        window.clearInterval(id);
+        id = undefined;
+      }
+    };
     async function load() {
       try {
         const res = await fetch(`/api/orders/${encodeURIComponent(invoice!)}`);
-        const data = await res.json();
+        const data = (await res.json()) as OrderStatus & { error?: { message?: string } };
         if (!res.ok) throw new Error(data?.error?.message ?? "Order not found");
-        if (!cancelled) setOrder(data);
+        if (cancelled) return;
+        setOrder(data);
+        // Stop polling once the order reaches a terminal state — no point hitting
+        // the API every 5s forever after the license is issued or the order died.
+        if (isTerminalOrder(data)) stop();
       } catch (err) {
         if (!cancelled) setError(err instanceof Error ? err.message : "Order not found");
       }
     }
     void load();
-    const id = window.setInterval(load, 5000);
+    id = window.setInterval(load, 5000);
     return () => {
       cancelled = true;
-      window.clearInterval(id);
+      stop();
     };
   }, [invoice]);
 

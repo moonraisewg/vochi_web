@@ -17,6 +17,16 @@ type CheckoutResponse = {
   fields: Record<string, string | number>;
 };
 
+function isValidHttpUrl(value: unknown): value is string {
+  if (typeof value !== "string" || value.length === 0) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function CheckoutInner() {
   const params = useSearchParams();
   const initialPlan = (params.get("plan") ?? "pro_annual") as PlanId;
@@ -27,6 +37,8 @@ function CheckoutInner() {
   const [loading, setLoading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
+  // `checkout` is only ever set with a validated absolute URL (see submit()),
+  // so the effect can safely auto-submit the hidden form to SePay.
   useEffect(() => {
     if (checkout) formRef.current?.submit();
   }, [checkout]);
@@ -43,6 +55,11 @@ function CheckoutInner() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data?.error?.message ?? "Không tạo được đơn hàng");
+      // Guard the SePay redirect URL before committing — otherwise the button
+      // would stay disabled forever with no feedback if the gateway returns junk.
+      if (!isValidHttpUrl(data?.checkoutUrl)) {
+        throw new Error("Cổng thanh toán trả về địa chỉ không hợp lệ. Vui lòng thử lại.");
+      }
       setCheckout(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Không tạo được đơn hàng");
