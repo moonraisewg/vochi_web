@@ -39,5 +39,8 @@ export function buildCheckout(order: {
 }
 
 export async function retrieveSepayOrder(invoiceNumber: string) {
-  return sepayClient().order.retrieve(invoiceNumber);
+  // SDK returns a full AxiosResponse (which has circular req/res refs). Return
+  // only the JSON body so callers can safely parse/stringify it.
+  const response = await sepayClient().order.retrieve(invoiceNumber);
+  return response.data;
 }
