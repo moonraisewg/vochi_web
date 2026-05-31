@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import { PageShell } from "@/components/PageShell";
+import { RELEASES } from "@/lib/releases";
 import { motion } from "motion/react";
 
 type OS = "mac" | "windows" | "linux" | "unknown";
@@ -15,6 +16,19 @@ function detectOS(): OS {
   return "unknown";
 }
 
+// Detect OS via useSyncExternalStore so the server snapshot is always "unknown"
+// (matching the first client render → no hydration mismatch / card flip) while
+// the client snapshot reflects the real navigator. No subscription is needed —
+// the OS never changes after mount.
+const noopSubscribe = () => () => {};
+function useDetectedOS(): OS {
+  return useSyncExternalStore<OS>(
+    noopSubscribe,
+    () => detectOS(),
+    () => "unknown",
+  );
+}
+
 const COPY = {
   vi: {
     title: "Một file. Một pet. Bắt đầu.",
@@ -25,7 +39,10 @@ const COPY = {
     winAbout: "Cần Windows 10 build 1809+, 31MB",
     linuxNote: "Linux đang nấu. Đăng ký mình ới khi xong.",
     detected: "Máy bạn đang xài",
+    forYouMac: "Cho máy Mac của bạn",
+    forYouWin: "Cho máy Windows của bạn",
     forYou: "Cho máy bạn",
+    comingSoon: "Sắp ra mắt",
   },
   en: {
     title: "One file. One pet. Go.",
@@ -36,12 +53,15 @@ const COPY = {
     winAbout: "Requires Windows 10 build 1809+, 31MB",
     linuxNote: "Linux is in the oven. Drop your email and I'll ping you.",
     detected: "Detected system",
-    forYou: "For your Mac",
+    forYouMac: "For your Mac",
+    forYouWin: "For your Windows",
+    forYou: "For you",
+    comingSoon: "Coming soon",
   },
 };
 
 export default function DownloadPage() {
-  const [os] = useState<OS>(() => detectOS());
+  const os = useDetectedOS();
 
   return (
     <PageShell>
@@ -75,17 +95,19 @@ export default function DownloadPage() {
                   primary={os === "mac"}
                   label={t.macDmg}
                   about={t.macAbout}
-                  sha="a1f3...c9b2"
-                  href="#"
-                  forYouLabel={t.forYou}
+                  sha={RELEASES.mac.sha256}
+                  href={RELEASES.mac.url}
+                  forYouLabel={t.forYouMac}
+                  comingSoonLabel={t.comingSoon}
                 />
                 <DownloadCard
                   primary={os === "windows"}
                   label={t.winMsi}
                   about={t.winAbout}
-                  sha="71ad...c5ee"
-                  href="#"
-                  forYouLabel={t.forYou}
+                  sha={RELEASES.windows.sha256}
+                  href={RELEASES.windows.url}
+                  forYouLabel={t.forYouWin}
+                  comingSoonLabel={t.comingSoon}
                 />
               </div>
 
@@ -107,30 +129,32 @@ function DownloadCard({
   sha,
   href,
   forYouLabel,
+  comingSoonLabel,
 }: {
   primary: boolean;
   label: string;
   about: string;
-  sha: string;
-  href: string;
+  sha: string | null;
+  href: string | null;
   forYouLabel: string;
+  comingSoonLabel: string;
 }) {
-  return (
-    <motion.a
-      href={href}
-      whileHover={{ y: -2 }}
-      transition={{ type: "spring", stiffness: 200, damping: 18 }}
-      className={`group relative block rounded-2xl border p-6 transition-shadow ${
-        primary
-          ? "border-[var(--color-ink)] bg-[var(--color-surface)] lift-md"
-          : "border-[var(--color-hairline-strong)] bg-[var(--color-surface)] lift hover:lift-md"
-      }`}
-    >
-      {primary && (
-        <span className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
-          {forYouLabel}
-        </span>
-      )}
+  const available = href != null;
+
+  const badge =
+    available && primary ? (
+      <span className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
+        {forYouLabel}
+      </span>
+    ) : !available ? (
+      <span className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink-muted)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
+        {comingSoonLabel}
+      </span>
+    ) : null;
+
+  const inner = (
+    <>
+      {badge}
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="font-display text-[20px] leading-tight tracking-tight">
@@ -146,8 +170,35 @@ function DownloadCard({
       </div>
       <div className="mt-6 flex items-center justify-between border-t border-[var(--color-hairline)] pt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
         <span>SHA-256</span>
-        <span>{sha}</span>
+        <span>{sha ?? "—"}</span>
       </div>
+    </>
+  );
+
+  if (!available) {
+    // No artifact yet — render an inert card so the CTA never lies.
+    return (
+      <div
+        aria-disabled="true"
+        className="group relative block cursor-not-allowed rounded-2xl border border-dashed border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-6 opacity-60"
+      >
+        {inner}
+      </div>
+    );
+  }
+
+  return (
+    <motion.a
+      href={href}
+      whileHover={{ y: -2 }}
+      transition={{ type: "spring", stiffness: 200, damping: 18 }}
+      className={`group relative block rounded-2xl border p-6 transition-shadow ${
+        primary
+          ? "border-[var(--color-ink)] bg-[var(--color-surface)] lift-md"
+          : "border-[var(--color-hairline-strong)] bg-[var(--color-surface)] lift hover:lift-md"
+      }`}
+    >
+      {inner}
     </motion.a>
   );
 }
