@@ -18,13 +18,13 @@ export default function TermsPage() {
               </p>
               <p>
                 Pro được hoàn tiền trong 14 ngày, Lifetime trong 30 ngày. Hoàn tiền được xử lý thủ
-                công qua email hi@vochi.app và license liên quan có thể bị thu hồi.
+                công qua email hi@vochi.xyz và license liên quan có thể bị thu hồi.
               </p>
               <p>
                 App đang trong giai đoạn beta. Vô chi sẽ ưu tiên sửa lỗi ảnh hưởng đến dữ liệu học
                 và quyền truy cập trả phí.
               </p>
-              <p>Liên hệ: hi@vochi.app.</p>
+              <p>Liên hệ: hi@vochi.xyz.</p>
             </div>
           </div>
         </section>

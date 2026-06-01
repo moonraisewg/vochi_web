@@ -489,7 +489,7 @@ export default async function OG() {
               Học từ vựng với thú nhỏ · Không streak · Không stress
             </div>
             <div style={{ display: "flex", color: "#0f1311", fontWeight: 700 }}>
-              vochi.app
+              vochi.xyz
             </div>
           </div>
         </div>

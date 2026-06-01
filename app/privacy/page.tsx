@@ -23,7 +23,7 @@ export default function PrivacyPage() {
               <p>
                 Dữ liệu thanh toán được xử lý qua SePay. Vô chi không lưu thông tin thẻ ngân hàng.
               </p>
-              <p>Liên hệ: hi@vochi.app.</p>
+              <p>Liên hệ: hi@vochi.xyz.</p>
             </div>
           </div>
         </section>
