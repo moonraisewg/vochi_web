@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import type { Lang } from "./Nav";
 
@@ -82,9 +83,13 @@ export function Footer({ lang }: { lang: Lang }) {
         <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-10 md:grid-cols-5">
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2.5">
-              <span className="grid h-7 w-7 place-items-center rounded-md bg-[var(--color-accent)] text-[var(--color-surface)]">
-                <span className="font-display text-[14px] font-semibold leading-none">V</span>
-              </span>
+              <Image
+                src="/logo-bird.png"
+                alt="Vô chi"
+                width={28}
+                height={28}
+                className="h-7 w-7 rounded-md object-cover"
+              />
               <span className="font-display text-[18px] font-medium tracking-tight">
                 Vô chi
               </span>
