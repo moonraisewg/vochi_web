@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const SITE_URL = "https://vochi.app";
+const SITE_URL = "https://vochi.xyz";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -71,6 +71,14 @@ export const metadata: Metadata = {
       "Pet ảo sống trên màn hình macOS và Windows. Nhâm nhi từ vựng tiếng Anh trong kẽ rảnh, không streak, không stress.",
     locale: "vi_VN",
     alternateLocale: ["en_US"],
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Vô chi · pet ảo học từ vựng tiếng Anh",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -78,6 +86,7 @@ export const metadata: Metadata = {
     description:
       "Pet ảo sống trên màn hình. Không streak, không stress. Tải miễn phí cho macOS và Windows.",
     creator: "@himitsuko",
+    images: ["/og.png"],
   },
   robots: {
     index: true,
