@@ -85,7 +85,8 @@ export function Features({ lang }: { lang: Lang }) {
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-16 max-w-[760px]">
           <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
-            {t.title}{" "}
+            {t.title}
+            <br />
             <span className="italic text-[var(--color-ink-soft)]">{t.titleItalic}</span>
           </h2>
         </div>
