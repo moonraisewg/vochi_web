@@ -15,7 +15,9 @@
     "db:migrate": "prisma migrate deploy",
     "email:outbox": "tsx scripts/process-email-outbox.ts",
     "admin:license": "tsx scripts/admin-license.ts",
-    "admin:reconcile": "tsx scripts/reconcile-sepay-order.ts"
+    "admin:reconcile": "tsx scripts/reconcile-sepay-order.ts",
+    "og:gen": "tsx scripts/gen-og.tsx",
+    "prebuild": "tsx scripts/gen-og.tsx"
   },
   "dependencies": {
     "@noble/ed25519": "^3.1.0",
@@ -33,6 +35,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.7",
@@ -41,6 +44,7 @@
     "eslint-config-next": "16.2.6",
     "postcss": "^8.5.1",
     "prisma": "^6.19.3",
+    "satori": "^0.26.0",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.22.3",
     "typescript": "^5.7.3",

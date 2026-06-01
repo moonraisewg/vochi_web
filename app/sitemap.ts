@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://vochi.app";
+const SITE_URL = "https://vochiapp.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
