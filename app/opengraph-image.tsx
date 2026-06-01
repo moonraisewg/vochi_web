@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BIRD_OG } from "./_bird-data";
 
 export const runtime = "edge";
 export const alt = "Vô chi · Học từ vựng cùng thú nhỏ vô tư";
@@ -228,159 +229,15 @@ export default async function OG() {
                   overflow: "hidden",
                 }}
               >
-                {/* creature: rounded blob body */}
-                <div
-                  style={{
-                    position: "relative",
-                    width: 150,
-                    height: 130,
-                    display: "flex",
-                  }}
-                >
-                  {/* shadow */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: -8,
-                      left: 20,
-                      width: 110,
-                      height: 14,
-                      borderRadius: 999,
-                      background: "rgba(15,19,17,0.18)",
-                      display: "flex",
-                      filter: "blur(2px)",
-                    }}
-                  />
-                  {/* body */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 8,
-                      left: 0,
-                      width: 150,
-                      height: 122,
-                      background: "#3d9b62",
-                      borderRadius: 999,
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 14,
-                      boxShadow:
-                        "inset 0 -8px 16px rgba(0,0,0,0.18), inset 0 6px 0 rgba(255,255,255,0.18)",
-                    }}
-                  >
-                    {/* eyes row */}
-                    <div style={{ display: "flex", gap: 22, marginTop: 6 }}>
-                      <div
-                        style={{
-                          width: 14,
-                          height: 18,
-                          background: "#0f1311",
-                          borderRadius: 999,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: 5,
-                            height: 5,
-                            background: "#fafaf7",
-                            borderRadius: 999,
-                            marginTop: -6,
-                            display: "flex",
-                          }}
-                        />
-                      </div>
-                      <div
-                        style={{
-                          width: 14,
-                          height: 18,
-                          background: "#0f1311",
-                          borderRadius: 999,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: 5,
-                            height: 5,
-                            background: "#fafaf7",
-                            borderRadius: 999,
-                            marginTop: -6,
-                            display: "flex",
-                          }}
-                        />
-                      </div>
-                    </div>
-                    {/* cheeks */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 48,
-                        left: 18,
-                        width: 18,
-                        height: 10,
-                        background: "rgba(255,180,140,0.55)",
-                        borderRadius: 999,
-                        display: "flex",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 48,
-                        right: 18,
-                        width: 18,
-                        height: 10,
-                        background: "rgba(255,180,140,0.55)",
-                        borderRadius: 999,
-                        display: "flex",
-                      }}
-                    />
-                    {/* mouth */}
-                    <div
-                      style={{
-                        width: 24,
-                        height: 12,
-                        borderBottomLeftRadius: 24,
-                        borderBottomRightRadius: 24,
-                        background: "#0f1311",
-                        display: "flex",
-                        marginTop: -4,
-                      }}
-                    />
-                  </div>
-                  {/* tiny feet */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: -2,
-                      left: 38,
-                      width: 26,
-                      height: 12,
-                      background: "#2c7548",
-                      borderRadius: 999,
-                      display: "flex",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: -2,
-                      right: 38,
-                      width: 26,
-                      height: 12,
-                      background: "#2c7548",
-                      borderRadius: 999,
-                      display: "flex",
-                    }}
-                  />
-                </div>
+                {/* creature: bird mascot — fills the screen, rounded to blend the
+                    cream backdrop into the device screen's warm gradient */}
+                <img
+                  src={BIRD_OG}
+                  width={236}
+                  height={236}
+                  alt="Vô chi"
+                  style={{ objectFit: "cover", borderRadius: 12 }}
+                />
               </div>
 
               {/* hunger bar */}

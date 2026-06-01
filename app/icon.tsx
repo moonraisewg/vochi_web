@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { BIRD_FAVICON } from "./_bird-data";
 
 export const runtime = "edge";
 export const size = { width: 32, height: 32 };
@@ -11,17 +12,20 @@ export default function Icon() {
         style={{
           width: "100%",
           height: "100%",
-          background: "#3d9b62",
-          color: "#ffffff",
-          fontSize: 22,
-          fontWeight: 700,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 7,
+          overflow: "hidden",
         }}
       >
-        V
+        <img
+          src={BIRD_FAVICON}
+          width={32}
+          height={32}
+          alt="Vô chi"
+          style={{ objectFit: "cover" }}
+        />
       </div>
     ),
     { ...size },
