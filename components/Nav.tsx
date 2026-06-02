@@ -73,7 +73,7 @@ export function Nav({
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          <a href="#features" className="navlink">{t.features}</a>
+          <a href="/#features" className="navlink">{t.features}</a>
           <Link href="/pricing" className="navlink">{t.pricing}</Link>
           <Link href="/docs" className="navlink">{t.docs}</Link>
           <Link href="/changelog" className="navlink">{t.changelog}</Link>
@@ -100,7 +100,7 @@ export function Nav({
       {open && (
         <div className="mx-6 mt-2 rounded-xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-4 lift md:hidden">
           <nav className="flex flex-col gap-3 text-[14px]">
-            <a href="#features" onClick={() => setOpen(false)}>{t.features}</a>
+            <a href="/#features" onClick={() => setOpen(false)}>{t.features}</a>
             <Link href="/pricing" onClick={() => setOpen(false)}>{t.pricing}</Link>
             <Link href="/docs" onClick={() => setOpen(false)}>{t.docs}</Link>
             <Link href="/changelog" onClick={() => setOpen(false)}>{t.changelog}</Link>
