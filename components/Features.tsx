@@ -25,13 +25,13 @@ const COPY = {
       },
       {
         no: "04",
-        name: "100 từ free, bộ riêng của bạn",
-        desc: "Mở app là có 100 từ chơi liền. Muốn ôn IELTS, lyric BTS, từ ngành dev, hay từ rảnh trên Twitter? Đẩy file của bạn vô, thú nhỏ học cùng.",
+        name: "5.300 từ sẵn, thêm từ của riêng bạn",
+        desc: "Mở app là có ngay kho ~5.300 từ chia theo cấp độ. Muốn ôn IELTS, lyric BTS, hay từ gì bạn tự nhặt được? Thêm vô, thú nhỏ học cùng.",
       },
       {
         no: "05",
         name: "Streak, level, exp, hết stress",
-        desc: "Trả lời đúng, thú nhỏ vui, bạn lên cấp, mở thú mới. Không có vụ pet chết hay streak gãy ám ảnh. Hôm nay rảnh thì học, không rảnh thì thôi.",
+        desc: "Trả lời đúng, thú nhỏ vui, bạn lên cấp, mở thú mới. Không có vụ pet chết hay streak gãy ám ảnh. Hôm nay bận thì nghỉ, mai gặp lại. Thú nhỏ không giận.",
       },
       {
         no: "06",
@@ -61,13 +61,13 @@ const COPY = {
       },
       {
         no: "04",
-        name: "100 free words, plus your own",
-        desc: "Boot it up, 100 English words ready. Want IELTS, K-pop lyrics, dev jargon, random Twitter words? Drop your file, the creature joins in.",
+        name: "5,300 words built-in, add your own",
+        desc: "Open the app and ~5,300 words sorted by level are ready. Want IELTS, K-pop lyrics, or whatever you picked up today? Add them in, the creature learns with you.",
       },
       {
         no: "05",
         name: "Streak, level, XP, zero stress",
-        desc: "Right answer, creature smiles, you level up, unlock new creatures. No pet-death drama, no broken-streak guilt. Today's busy? Skip it. No one's mad.",
+        desc: "Right answer, creature smiles, you level up, unlock new creatures. No pet-death drama, no broken-streak guilt. Busy today? Take a break, come back tomorrow. The creature doesn't hold grudges.",
       },
       {
         no: "06",

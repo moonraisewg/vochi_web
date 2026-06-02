@@ -37,7 +37,7 @@ const COPY = {
     macAbout: "Cần macOS 12 trở lên, 28MB",
     winMsi: "Windows, MSI (x64)",
     winAbout: "Cần Windows 10 build 1809+, 31MB",
-    linuxNote: "Linux đang nấu. Đăng ký mình ới khi xong.",
+    linuxNote: "Linux đang nấu. Đăng ký đê, mình sẽ ới khi xong.",
     detected: "Máy bạn đang xài",
     forYouMac: "Cho máy Mac của bạn",
     forYouWin: "Cho máy Windows của bạn",

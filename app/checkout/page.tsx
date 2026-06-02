@@ -7,13 +7,13 @@ import { PageShell } from "@/components/PageShell";
 // Plans shown in the checkout selector. `student` is intentionally omitted from
 // the UI (backend still accepts it for the planned .edu.vn flow).
 const PLANS = {
+  one_month: { name: "1 tháng", amount: "59.000đ", note: "2 thiết bị, 1 tháng" },
   three_months: { name: "3 tháng", amount: "129.000đ", note: "2 thiết bị, 3 tháng" },
-  six_months: { name: "6 tháng", amount: "239.000đ", note: "3 thiết bị, 6 tháng" },
   lifetime: { name: "Lifetime", amount: "599.000đ", note: "5 thiết bị, trọn đời" },
 } as const;
 
 type PlanId = keyof typeof PLANS;
-const DEFAULT_PLAN: PlanId = "six_months";
+const DEFAULT_PLAN: PlanId = "three_months";
 type CheckoutResponse = {
   invoiceNumber: string;
   checkoutUrl: string;
@@ -78,7 +78,7 @@ function CheckoutInner() {
         <div className="md:col-span-7">
           <div className="micro mb-4">Thanh toán qua SePay</div>
           <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">
-            Tạo đơn an toàn. <span className="italic text-[var(--color-ink-soft)]">SePay xác nhận.</span>
+            Đặt hàng. <span className="italic text-[var(--color-ink-soft)]">SePay lo thanh toán.</span>
           </h1>
           <p className="mt-5 max-w-[560px] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
             Điền email nhận license, chọn gói, rồi qua cổng SePay. License chỉ được gửi sau khi

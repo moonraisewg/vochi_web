@@ -16,16 +16,11 @@ const COPY = {
       },
       {
         no: "02",
-        name: "Không streak. Không stress.",
-        desc: "Quên hôm nay? Mai gặp lại. Thú nhỏ khum chết, streak khum gãy. Áp lực rời đi, não mở ra, từ vào nhẹ tênh.",
-      },
-      {
-        no: "03",
         name: "Học trong kẽ rảnh.",
         desc: "Thú nhỏ sống trên màn hình mọi lúc. 30 giây giữa hai task, nó ghé chào, bạn nhâm nhi một từ, đi tiếp. 5 phút mỗi ngày, không cảm giác như đã học.",
       },
       {
-        no: "04",
+        no: "03",
         name: "Nhớ qua thương.",
         desc: "Bạn còn nhớ con Tamagotchi hồi tiểu học vì bạn thương nó. Bạn sẽ nhớ ephemeral cũng vì lý do đó. Cảm xúc gắn từ, từ ở lại lâu.",
       },
@@ -43,16 +38,11 @@ const COPY = {
       },
       {
         no: "02",
-        name: "No streak. No stress.",
-        desc: "Forgot today? It comes back tomorrow. The creature doesn't die, the streak doesn't snap. Pressure off, brain open, words land soft.",
-      },
-      {
-        no: "03",
         name: "Learn in the gaps.",
         desc: "The creature lives on your screen all the time. Thirty seconds between tasks, it says hi, you nibble one word, you move on. Five minutes a day, never feels like study.",
       },
       {
-        no: "04",
+        no: "03",
         name: "Remember through love.",
         desc: "You still remember your childhood Tamagotchi because you loved it. You'll remember ephemeral the same way. Emotion glues the word in.",
       },

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { PageShell } from "@/components/PageShell";
 
 const COPY = {
@@ -17,15 +16,15 @@ const COPY = {
       },
       {
         name: "Từ vựng",
-        topics: ["100 từ có sẵn", "Đẩy CSV của bạn", "Sửa và xoá"],
+        topics: ["~5.300 từ theo cấp độ", "Tự thêm từ của bạn", "Sửa và xoá"],
       },
       {
-        name: "Cách ôn",
-        topics: ["Vì sao app biết bạn sắp quên", "Again / Hard / Good / Easy", "Streak và lapses"],
+        name: "Cách nhớ",
+        topics: ["Thuật toán FSRS — học ít, nhớ dai", "Quên rồi? Pet biết, và sẽ nhắc lại đúng lúc", "Streak và lapses"],
       },
       {
         name: "License",
-        topics: ["Mua qua VietQR", "Kích hoạt", "Chuyển sang máy khác"],
+        topics: ["Mua xong, key bay vô mail", "Vào app nhập key, kích hoạt", "Dùng ngon luôn"],
       },
       {
         name: "Lỡ bug",
@@ -46,15 +45,15 @@ const COPY = {
       },
       {
         name: "Vocab",
-        topics: ["100 starter words", "Bring your own CSV", "Edit and delete"],
+        topics: ["~5,300 words by level", "Add your own words", "Edit and delete"],
       },
       {
-        name: "How reviews work",
-        topics: ["Why the app knows you're forgetting", "Again / Hard / Good / Easy", "Streaks and lapses"],
+        name: "How it sticks",
+        topics: ["FSRS algorithm — less study, longer memory", "Forgot? The creature knows — and brings it back at the right time", "Streaks and lapses"],
       },
       {
         name: "License",
-        topics: ["Buy via VietQR", "Activate", "Move to another device"],
+        topics: ["Buy — key lands in your inbox", "Enter key in the app, activate", "Ready to go"],
       },
       {
         name: "Bug? Here.",
@@ -93,13 +92,8 @@ export default function DocsPage() {
                     <div className="mt-5 font-display text-[22px] tracking-tight">{s.name}</div>
                     <ul className="mt-3 space-y-1.5">
                       {s.topics.map((topic) => (
-                        <li key={topic}>
-                          <Link
-                            href="#"
-                            className="text-[14px] text-[var(--color-ink-soft)] transition-colors hover:text-[var(--color-accent-deep)]"
-                          >
-                            {topic}
-                          </Link>
+                        <li key={topic} className="text-[14px] text-[var(--color-ink-soft)]">
+                          {topic}
                         </li>
                       ))}
                     </ul>

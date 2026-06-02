@@ -31,7 +31,7 @@ const COPY = {
       },
       {
         q: "Có buff IELTS hay TOEIC không?",
-        a: "Có. Bạn đẩy file danh sách từ IELTS hoặc TOEIC vào, thú nhỏ sẽ ưu tiên ôn cho bạn. Vài bạn beta nhâm nhi được 600 từ trong 3 tháng, không stress.",
+        a: "Có. App có sẵn gần 5.300 từ chia theo cấp độ, trong đó phủ hầu hết từ thi IELTS và TOEIC. Bạn cũng có thể đẩy thêm file của riêng mình vào.",
       },
       {
         q: "Lỡ thú nhỏ chết thì sao?",
@@ -65,7 +65,7 @@ const COPY = {
       },
       {
         q: "Can I drill IELTS or TOEIC vocab?",
-        a: "Yes. Drop a list of IELTS or TOEIC words and the creature prioritizes them. A handful of beta users nibbled through 600 words in 3 months, no stress.",
+        a: "Yes. The app comes with nearly 5,300 words sorted by level, covering most IELTS and TOEIC vocab. You can also drop in your own list.",
       },
       {
         q: "What happens if my creature dies?",

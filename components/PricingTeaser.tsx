@@ -8,7 +8,7 @@ const COPY = {
   vi: {
     eyebrow: "Giá · nhẹ ví",
     title: "Trả một lần. Học vô tư.",
-    sub: "Khỏi sub mệt mỏi. Quét VietQR qua Sepay, 30 giây sau license bay vô mail. Xong, đi nuôi thú nhỏ.",
+    sub: "Mua một lần. Chuyển khoản xong, key vô mail trong 30 giây. Đi nuôi thú thôi.",
     plans: [
       {
         name: "Free",
@@ -24,11 +24,11 @@ const COPY = {
         featured: false,
       },
       {
-        name: "3 tháng",
-        price: "129.000đ",
-        priceNote: "khoảng 43k mỗi tháng",
-        cta: "Thử 3 tháng",
-        href: "/checkout?plan=three_months",
+        name: "1 tháng",
+        price: "59.000đ",
+        priceNote: "thử trước khi chốt lâu dài",
+        cta: "Thử 1 tháng",
+        href: "/checkout?plan=one_month",
         features: [
           "Có hết của Free",
           "Mode 2, không giới hạn từ",
@@ -37,16 +37,15 @@ const COPY = {
         featured: false,
       },
       {
-        name: "6 tháng",
-        price: "239.000đ",
-        priceNote: "40k mỗi tháng, đỡ 19k",
-        cta: "Chốt 6 tháng",
-        href: "/checkout?plan=six_months",
+        name: "3 tháng",
+        price: "129.000đ",
+        priceNote: "khoảng 43k mỗi tháng",
+        cta: "Thử 3 tháng",
+        href: "/checkout?plan=three_months",
         features: [
-          "Có hết của 3 tháng",
-          "3 thiết bị",
-          "Mở khoá skin thú nhỏ",
-          "Lịch streak xinh",
+          "Có hết của 1 tháng",
+          "Tiết kiệm 48k so với mua lẻ từng tháng",
+          "2 thiết bị",
         ],
         featured: true,
       },
@@ -57,7 +56,7 @@ const COPY = {
         cta: "Chốt deal",
         href: "/checkout?plan=lifetime",
         features: [
-          "Có hết của 6 tháng",
+          "Có hết của 3 tháng",
           "Mãi mãi, không hết hạn",
           "Thú mới tương lai free",
           "DM admin trực tiếp",
@@ -65,12 +64,13 @@ const COPY = {
         featured: false,
       },
     ],
-    student: "Sinh viên có mail .edu.vn? DM mình giảm thêm 50%.",
+    badge: "Ai cũng chọn",
+    student: "Nếu là sinh viên, điền mail .edu.vn lúc mua, giảm 50% đấy.",
   },
   en: {
     eyebrow: "Pricing · easy",
     title: "Pay once. Learn chill.",
-    sub: "No subscription. Scan VietQR via Sepay, license drops into your inbox in 30 seconds. Then go adopt a creature.",
+    sub: "Buy once. Transfer done, key hits your inbox in 30 seconds. Go adopt.",
     plans: [
       {
         name: "Free",
@@ -86,11 +86,11 @@ const COPY = {
         featured: false,
       },
       {
-        name: "3 months",
-        price: "129.000đ",
-        priceNote: "about 43k a month",
-        cta: "Try 3 months",
-        href: "/checkout?plan=three_months",
+        name: "1 month",
+        price: "59.000đ",
+        priceNote: "try before you commit",
+        cta: "Try 1 month",
+        href: "/checkout?plan=one_month",
         features: [
           "Everything in Free",
           "Mode 2, unlimited words",
@@ -99,16 +99,15 @@ const COPY = {
         featured: false,
       },
       {
-        name: "6 months",
-        price: "239.000đ",
-        priceNote: "40k a month, save 19k",
-        cta: "Get 6 months",
-        href: "/checkout?plan=six_months",
+        name: "3 months",
+        price: "129.000đ",
+        priceNote: "about 43k a month",
+        cta: "Try 3 months",
+        href: "/checkout?plan=three_months",
         features: [
-          "Everything in 3 months",
-          "3 devices",
-          "Unlock creature skins",
-          "Streak calendar",
+          "Everything in 1 month",
+          "Save 48k vs monthly",
+          "2 devices",
         ],
         featured: true,
       },
@@ -119,7 +118,7 @@ const COPY = {
         cta: "Lock it in",
         href: "/checkout?plan=lifetime",
         features: [
-          "Everything in 6 months",
+          "Everything in 3 months",
           "Never expires",
           "Future creature skins free",
           "DM the maker directly",
@@ -127,7 +126,8 @@ const COPY = {
         featured: false,
       },
     ],
-    student: "Student with .edu.vn email? DM me for 50% off.",
+    badge: "Most popular",
+    student: "Use your student email (.edu.vn) at checkout — 50% off.",
   },
 };
 
@@ -166,7 +166,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
             >
               {plan.featured && (
                 <div className="absolute -top-3 left-6 rounded-full bg-[var(--color-ink)] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--color-surface)]">
-                  Ai cũng chọn
+                  {t.badge}
                 </div>
               )}
 

@@ -20,8 +20,6 @@ const COPY = {
     changelog: "Cập nhật",
     address: "Hà Nội, Việt Nam",
     rights: "Vô chi, 2026.",
-    newsletterTitle: "Thư hàng tháng",
-    newsletterSub: "Một email mỗi tháng khi có pet mới. Không spam.",
     tagline:
       "Thú nhỏ ăn từ vựng. Bạn học mà cứ tưởng đang chill cùng nó. Đẻ ra ở một căn gác Hà Nội, nuôi bằng trà sữa.",
   },
@@ -40,8 +38,6 @@ const COPY = {
     changelog: "Updates",
     address: "Hanoi, Vietnam",
     rights: "Vô chi, 2026.",
-    newsletterTitle: "Monthly note",
-    newsletterSub: "One email a month when a new pet ships. No spam.",
     tagline:
       "A creature that eats vocab. You learn while you chill next to it. Built in a Hanoi attic, fueled by milk tea.",
   },
@@ -119,31 +115,21 @@ export function Footer({ lang }: { lang: Lang }) {
               <li><Link href="/terms" className="hover:text-[var(--color-ink)]">{t.terms}</Link></li>
               <li>
                 <a href="mailto:hi@vochi.app" className="hover:text-[var(--color-ink)]">
-                  {t.contact}
+                  hi@vochi.app
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <div className="micro mb-4">{t.newsletterTitle}</div>
-            <p className="text-[13px] leading-[1.5] text-[var(--color-ink-soft)]">
-              {t.newsletterSub}
-            </p>
-            <form onSubmit={(e) => e.preventDefault()} className="mt-4 flex gap-2">
-              <input
-                type="email"
-                placeholder="email@..."
-                className="w-full rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] px-3 py-2 text-[13px] outline-none placeholder:text-[var(--color-ink-muted)] focus:border-[var(--color-accent)]"
-              />
-              <button
-                type="submit"
-                aria-label="Subscribe"
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--color-ink)] text-[14px] text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
-              >
-                →
-              </button>
-            </form>
+            <div className="micro mb-4">{t.contact}</div>
+            <ul className="space-y-2.5 text-[14px] text-[var(--color-ink-soft)]">
+              <li>
+                <a href="mailto:hi@vochi.app" className="hover:text-[var(--color-ink)]">
+                  hi@vochi.app
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
