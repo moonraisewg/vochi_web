@@ -17,6 +17,7 @@
     "admin:license": "tsx scripts/admin-license.ts",
     "admin:reconcile": "tsx scripts/reconcile-sepay-order.ts",
     "og:gen": "tsx scripts/gen-og.tsx",
+    "release": "bash scripts/publish-release.sh",
     "prebuild": "tsx scripts/gen-og.tsx"
   },
   "dependencies": {
