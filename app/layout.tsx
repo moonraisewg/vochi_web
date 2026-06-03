@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { PostHogProvider } from "@/components/PostHogProvider";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -111,7 +112,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="vi"
       className={`${bricolage.variable} ${geist.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-screen overflow-x-hidden">{children}</body>
+      <body className="min-h-screen overflow-x-hidden">
+        <PostHogProvider>{children}</PostHogProvider>
+      </body>
     </html>
   );
 }
