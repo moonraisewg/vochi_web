@@ -8,11 +8,11 @@ export type Lang = "vi" | "en";
 
 const COPY = {
   vi: {
-    features: "Hoạt động sao",
-    pricing: "Giá nhiêu",
+    features: "Tính năng",
+    pricing: "Bảng giá",
     docs: "Cẩm nang",
-    changelog: "Có gì mới",
-    download: "Tải free",
+    changelog: "Cập nhật",
+    download: "Tải miễn phí",
   },
   en: {
     features: "How it works",

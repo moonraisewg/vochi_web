@@ -7,22 +7,22 @@ import type { Lang } from "./Nav";
 
 const HERO_COPY = {
   vi: {
-    eyebrow: "Beta đang mở · macOS + Windows · ghé chơi",
+    eyebrow: "Beta · macOS + Windows",
     titleA: "Học vài từ, sống vô tư.",
     titleB: "Nuôi vài thú, sống vô chi.",
-    sub: "Một sinh vật bé bỏng sống chung màn hình bạn. Nó vô tư đi loanh quanh, nhâm nhi từ mới cùng bạn. Không deadline, không stress, không guilt-trip. Chỉ chill.",
-    ctaPrimary: "Nuôi thú miễn phí",
-    ctaSecondary: "Coi tụi nó chill",
-    micro: "Khỏi thẻ. Khỏi sub. 28MB nhẹ tênh.",
+    sub: "Một sinh vật nhỏ sống trên màn hình của bạn. Nó ghé thăm khi có từ mới cần ôn, ngủ yên lúc bạn bận. Không deadline, không streak, không áp lực.",
+    ctaPrimary: "Nuôi thú nhỏ ngay",
+    ctaSecondary: "Xem cách hoạt động",
+    micro: "Miễn phí. Không cần tài khoản. 28MB.",
   },
   en: {
-    eyebrow: "Open beta · macOS + Windows · hop in",
+    eyebrow: "Beta · macOS + Windows",
     titleA: "Few words. Fewer worries.",
     titleB: "One small, carefree creature.",
-    sub: "A tiny creature lives on your screen. It wanders carefree and nibbles new words with you. No deadlines, no stress, no guilt-trip. Just chill.",
-    ctaPrimary: "Adopt one (free)",
-    ctaSecondary: "Watch them chill",
-    micro: "No card. No subscription. 28MB.",
+    sub: "A small creature lives on your screen. It drops in when a word is due, naps when you're busy. No deadlines, no streaks, no pressure.",
+    ctaPrimary: "Adopt one now",
+    ctaSecondary: "See how it works",
+    micro: "Free. No account required. 28MB.",
   },
 };
 

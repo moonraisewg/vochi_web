@@ -6,70 +6,70 @@ import type { Lang } from "./Nav";
 
 const COPY = {
   vi: {
-    title: "Hỏi gì cũng được.",
-    contact: "Không thấy câu của bạn? Mail mình nha.",
+    title: "Câu hỏi thường gặp.",
+    contact: "Không thấy câu hỏi của bạn? Gửi email cho mình.",
     items: [
       {
-        q: "Có chạy trên Windows không?",
-        a: "Có. macOS 12 trở lên và Windows 10 trở lên đều chạy mượt. Linux đang trong nồi, build chạy được nhưng overlay chưa hoàn thiện.",
+        q: "App có chạy trên Windows không?",
+        a: "Có. macOS 12 trở lên và Windows 10 trở lên đều được hỗ trợ. Bản Linux đang trong quá trình hoàn thiện.",
       },
       {
-        q: "Sepay là gì, có an toàn không?",
-        a: "Sepay là cổng VietQR. Bạn mở app ngân hàng, quét mã, chuyển khoản như bình thường. Không nhập số thẻ ở đâu cả. Sau khi ngân hàng xác nhận (khoảng 30 giây đến 2 phút), license sẽ gửi vào email.",
+        q: "Sepay là gì và có an toàn không?",
+        a: "Sepay là cổng thanh toán VietQR. Bạn mở app ngân hàng, quét mã và chuyển khoản như bình thường. Không cần nhập số thẻ. Sau khi ngân hàng xác nhận (thường trong 30 giây đến 2 phút), license sẽ được gửi vào email.",
       },
       {
-        q: "Thú nhỏ có thật sự đè được fullscreen Chrome?",
-        a: "Có. Mở Chrome fullscreen, xem Netflix toàn màn hình, Zoom họp full, thú nhỏ vẫn vô tư đi loanh quanh trên đó. Tụi mình tốn khá nhiều đêm để xử vụ này.",
+        q: "Thú nhỏ có hiển thị được trên fullscreen Chrome?",
+        a: "Có. Thú nhỏ hiển thị trên cùng kể cả khi bạn xem Netflix, Chrome fullscreen hoặc trình chiếu Zoom.",
       },
       {
-        q: "Dữ liệu của tôi có bị upload?",
-        a: "Không. Từ vựng và tiến độ học nằm im trên máy. Chỉ có 1 lần gọi server lúc verify license thôi. Không telemetry, không train AI, không scrape.",
+        q: "Dữ liệu của tôi có bị upload không?",
+        a: "Không. Từ vựng và tiến độ học chỉ lưu trên máy của bạn. App chỉ gọi server một lần lúc xác thực license. Không telemetry, không thu thập, không dùng để huấn luyện AI.",
       },
       {
-        q: "Hoàn tiền?",
-        a: "Pro 14 ngày. Lifetime 30 ngày. Email mình trong thời hạn, hoàn 100%, không hỏi lý do.",
+        q: "Chính sách hoàn tiền?",
+        a: "Pro 14 ngày, Lifetime 30 ngày. Gửi email trong thời hạn để được hoàn 100%, không cần lý do.",
       },
       {
-        q: "Có buff IELTS hay TOEIC không?",
-        a: "Có. App có sẵn gần 5.300 từ chia theo cấp độ, trong đó phủ hầu hết từ thi IELTS và TOEIC. Bạn cũng có thể đẩy thêm file của riêng mình vào.",
+        q: "Có hỗ trợ ôn IELTS hoặc TOEIC không?",
+        a: "Có. App có sẵn gần 5.300 từ chia theo cấp độ, phủ hầu hết từ thi IELTS và TOEIC. Bạn cũng có thể nhập thêm danh sách của riêng mình.",
       },
       {
-        q: "Lỡ thú nhỏ chết thì sao?",
-        a: "Thú nhỏ khum chết được đâu. Hunger xuống 0 thì nó ngủ thôi, chờ bạn quay lại. Không drama, không guilt-trip kiểu Tamagotchi cũ. Vô tư là vô tư.",
+        q: "Nếu thú nhỏ chết thì sao?",
+        a: "Thú nhỏ không thể chết. Khi hunger về 0, thú nhỏ chỉ ngủ và chờ bạn quay lại. Không drama, không gây áp lực.",
       },
     ],
   },
   en: {
-    title: "Questions, maybe.",
-    contact: "Question not here?",
+    title: "Frequently asked.",
+    contact: "Question not here? Send me an email.",
     items: [
       {
         q: "Does it run on Windows?",
-        a: "Yes. macOS 12+ and Windows 10+ run smoothly. Linux is in the oven, the build runs but the overlay isn't polished.",
+        a: "Yes. macOS 12+ and Windows 10+ are both supported. A Linux build is in progress.",
       },
       {
         q: "What is Sepay, and is it safe?",
-        a: "Sepay is a VietQR gateway. Open your banking app, scan the code, transfer normally. No card details entered anywhere. After the bank confirms (30 seconds to 2 minutes), the license lands in your inbox.",
+        a: "Sepay is a VietQR payment gateway. You open your banking app, scan the code, and transfer as usual. No card details are entered anywhere. Once the bank confirms (typically 30 seconds to 2 minutes), the license is emailed to you.",
       },
       {
         q: "Does the creature really sit over fullscreen Chrome?",
-        a: "Yes. Chrome fullscreen, Netflix, Zoom presenting, the creature carefree wanders over all of them. Took a lot of late nights to get this right.",
+        a: "Yes. The creature stays on top while you watch Netflix, browse Chrome in fullscreen, or present on Zoom.",
       },
       {
         q: "Is my data uploaded?",
-        a: "No. Words and review history sit on your machine. One network call: license verify on launch. No telemetry, no AI training, no scraping.",
+        a: "No. Words and review history live on your device. The app only contacts the server once, to verify your license. No telemetry, no scraping, no AI training.",
       },
       {
-        q: "Refunds?",
+        q: "Refund policy?",
         a: "Pro: 14 days. Lifetime: 30 days. Email within the window for a full refund, no questions asked.",
       },
       {
         q: "Can I drill IELTS or TOEIC vocab?",
-        a: "Yes. The app comes with nearly 5,300 words sorted by level, covering most IELTS and TOEIC vocab. You can also drop in your own list.",
+        a: "Yes. The app includes nearly 5,300 words sorted by level, covering most IELTS and TOEIC vocabulary. You can also import your own list.",
       },
       {
         q: "What happens if my creature dies?",
-        a: "It can't. Hunger hits 0 and the creature just sleeps waiting for you. Zero drama, zero guilt-trip. Carefree means carefree.",
+        a: "It cannot. When hunger reaches zero, the creature simply sleeps and waits for you to return. No drama, no guilt.",
       },
     ],
   },

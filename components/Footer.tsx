@@ -7,9 +7,9 @@ import type { Lang } from "./Nav";
 const COPY = {
   vi: {
     cta: "Nuôi một thú nhỏ vô tư.",
-    sub: "macOS, Windows. 28MB. Khỏi cần thẻ.",
-    download: "Tải free",
-    pricing: "Coi giá",
+    sub: "macOS, Windows. 28MB. Miễn phí.",
+    download: "Tải miễn phí",
+    pricing: "Xem bảng giá",
     product: "Sản phẩm",
     legal: "Pháp lý",
     company: "Công ty",
@@ -21,11 +21,11 @@ const COPY = {
     address: "Hà Nội, Việt Nam",
     rights: "Vô chi, 2026.",
     tagline:
-      "Thú nhỏ ăn từ vựng. Bạn học mà cứ tưởng đang chill cùng nó. Đẻ ra ở một căn gác Hà Nội, nuôi bằng trà sữa.",
+      "Thú nhỏ ăn từ vựng. Bạn học mà không cảm thấy như đang học. Phát triển tại Hà Nội.",
   },
   en: {
     cta: "Adopt a carefree creature.",
-    sub: "macOS, Windows. 28MB. No card needed.",
+    sub: "macOS, Windows. 28MB. Free.",
     download: "Download free",
     pricing: "Pricing",
     product: "Product",
@@ -39,7 +39,7 @@ const COPY = {
     address: "Hanoi, Vietnam",
     rights: "Vô chi, 2026.",
     tagline:
-      "A creature that eats vocab. You learn while you chill next to it. Built in a Hanoi attic, fueled by milk tea.",
+      "A creature that eats vocab. You learn without feeling like you are studying. Built in Hanoi.",
   },
 };
 

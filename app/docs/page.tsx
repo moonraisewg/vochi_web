@@ -4,60 +4,60 @@ import { PageShell } from "@/components/PageShell";
 
 const COPY = {
   vi: {
-    title: "Cẩm nang trong 3 phút.",
+    title: "Cẩm nang sử dụng trong 3 phút.",
     sections: [
       {
-        name: "Cài app",
-        topics: ["Tải DMG / MSI", "Cấp quyền (macOS)", "Khởi động cùng máy"],
+        name: "Cài đặt",
+        topics: ["Tải DMG hoặc MSI", "Cấp quyền cần thiết (macOS)", "Khởi động cùng hệ thống"],
       },
       {
-        name: "Hai mode",
-        topics: ["Mode 1: pet đi tự do", "Mode 2: pet ngủ có lịch", "Đổi qua lại"],
+        name: "Hai chế độ học",
+        topics: ["Chế độ 1: thú nhỏ đi tự do", "Chế độ 2: thú nhỏ ngủ theo lịch", "Chuyển đổi chế độ"],
       },
       {
         name: "Từ vựng",
-        topics: ["~5.300 từ theo cấp độ", "Tự thêm từ của bạn", "Sửa và xoá"],
+        topics: ["Khoảng 5.300 từ chia theo cấp độ", "Thêm từ của riêng bạn", "Chỉnh sửa và xoá"],
       },
       {
         name: "Cách nhớ",
-        topics: ["Thuật toán FSRS — học ít, nhớ dai", "Quên rồi? Pet biết, và sẽ nhắc lại đúng lúc", "Streak và lapses"],
+        topics: ["Thuật toán FSRS, học ít nhớ lâu", "App nhắc lại đúng lúc bạn sắp quên", "Streak và lapses"],
       },
       {
         name: "License",
-        topics: ["Mua xong, key bay vô mail", "Vào app nhập key, kích hoạt", "Dùng ngon luôn"],
+        topics: ["Mua qua VietQR, key gửi qua email", "Nhập key trong app để kích hoạt", "Chuyển sang máy khác"],
       },
       {
-        name: "Lỡ bug",
-        topics: ["Pet không hiện trên fullscreen", "Bàn phím không nhập được", "Reset dữ liệu"],
+        name: "Khắc phục sự cố",
+        topics: ["Thú nhỏ không hiển thị trên fullscreen", "Bàn phím không nhập được", "Reset dữ liệu"],
       },
     ],
   },
   en: {
-    title: "Set up in 3 minutes.",
+    title: "Get set up in 3 minutes.",
     sections: [
       {
         name: "Install",
-        topics: ["Download DMG / MSI", "Grant permissions (macOS)", "Launch at login"],
+        topics: ["Download DMG or MSI", "Grant required permissions (macOS)", "Launch at login"],
       },
       {
         name: "Two modes",
-        topics: ["Mode 1: free-roam pet", "Mode 2: scheduled wake-up", "Swap between them"],
+        topics: ["Mode 1: free-roam creature", "Mode 2: scheduled wake-up", "Switch between them"],
       },
       {
-        name: "Vocab",
-        topics: ["~5,300 words by level", "Add your own words", "Edit and delete"],
+        name: "Vocabulary",
+        topics: ["About 5,300 words sorted by level", "Add your own words", "Edit and delete"],
       },
       {
         name: "How it sticks",
-        topics: ["FSRS algorithm — less study, longer memory", "Forgot? The creature knows — and brings it back at the right time", "Streaks and lapses"],
+        topics: ["FSRS algorithm, less study and longer memory", "The app surfaces words just before you forget", "Streaks and lapses"],
       },
       {
         name: "License",
-        topics: ["Buy — key lands in your inbox", "Enter key in the app, activate", "Ready to go"],
+        topics: ["Buy via VietQR, key arrives by email", "Enter the key in the app to activate", "Transfer to another device"],
       },
       {
-        name: "Bug? Here.",
-        topics: ["Pet missing on fullscreen", "Keyboard not typing", "Nuke all data"],
+        name: "Troubleshooting",
+        topics: ["Creature missing on fullscreen", "Keyboard not typing", "Reset data"],
       },
     ],
   },

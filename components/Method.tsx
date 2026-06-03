@@ -11,18 +11,18 @@ const COPY = {
     pillars: [
       {
         no: "01",
-        name: "Học ít. Gặp thường.",
-        desc: "Não nhớ từ tốt nhất khi gặp lại ngay trước lúc sắp quên. 5 từ mỗi ngày đánh bại 50 từ một lần một tháng. Thú nhỏ biết khi nào nên ghé.",
+        name: "Học ít, gặp thường.",
+        desc: "Não ghi nhớ từ tốt nhất khi gặp lại ngay trước lúc sắp quên. 5 từ mỗi ngày hiệu quả hơn 50 từ một lần một tháng. Thú nhỏ chọn đúng thời điểm để nhắc bạn.",
       },
       {
         no: "02",
-        name: "Học trong kẽ rảnh.",
-        desc: "Thú nhỏ sống trên màn hình mọi lúc. 30 giây giữa hai task, nó ghé chào, bạn nhâm nhi một từ, đi tiếp. 5 phút mỗi ngày, không cảm giác như đã học.",
+        name: "Học trong khoảng nghỉ.",
+        desc: "Thú nhỏ luôn hiện trên màn hình. Ba mươi giây giữa hai công việc đã đủ ôn một từ. Năm phút mỗi ngày cộng dồn, không cần ngồi xuống học chính thức.",
       },
       {
         no: "03",
-        name: "Nhớ qua thương.",
-        desc: "Bạn còn nhớ con Tamagotchi hồi tiểu học vì bạn thương nó. Bạn sẽ nhớ ephemeral cũng vì lý do đó. Cảm xúc gắn từ, từ ở lại lâu.",
+        name: "Nhớ qua cảm xúc.",
+        desc: "Bạn vẫn nhớ con Tamagotchi từng nuôi vì gắn bó cảm xúc. Vô chi áp dụng nguyên tắc đó: cảm xúc gắn với từ, từ ở lại trong trí nhớ lâu hơn.",
       },
     ],
   },
@@ -33,18 +33,18 @@ const COPY = {
     pillars: [
       {
         no: "01",
-        name: "Small bites. Often.",
-        desc: "The brain locks in a word best right before it forgets. Five words a day beats fifty words once a month. The creature knows when to nudge.",
+        name: "Small bites, frequent visits.",
+        desc: "The brain retains a word best when reviewed just before forgetting. Five words a day outperforms fifty words once a month. The creature picks the right moment.",
       },
       {
         no: "02",
         name: "Learn in the gaps.",
-        desc: "The creature lives on your screen all the time. Thirty seconds between tasks, it says hi, you nibble one word, you move on. Five minutes a day, never feels like study.",
+        desc: "The creature is always present on your screen. Thirty seconds between tasks is enough to review a word. Five minutes a day adds up without a formal study session.",
       },
       {
         no: "03",
-        name: "Remember through love.",
-        desc: "You still remember your childhood Tamagotchi because you loved it. You'll remember ephemeral the same way. Emotion glues the word in.",
+        name: "Remember through emotion.",
+        desc: "You still recall the Tamagotchi you raised as a child because of the bond you formed. Vô chi applies the same principle: emotion anchors vocabulary in long-term memory.",
       },
     ],
   },

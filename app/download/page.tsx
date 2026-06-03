@@ -45,17 +45,17 @@ const COPY = {
     comingSoon: "Sắp ra mắt",
   },
   en: {
-    title: "One file. One pet. Go.",
-    sub: "Beta. Free. No sign-up.",
+    title: "One file. One creature. Begin.",
+    sub: "Beta. Free. No sign-up required.",
     macDmg: "macOS, DMG (Apple Silicon + Intel)",
-    macAbout: "Requires macOS 12+, 28MB",
+    macAbout: "Requires macOS 12 or later, 28MB",
     winMsi: "Windows, MSI (x64)",
-    winAbout: "Requires Windows 10 build 1809+, 31MB",
-    linuxNote: "Linux is in the oven. Drop your email and I'll ping you.",
+    winAbout: "Requires Windows 10 build 1809 or later, 31MB",
+    linuxNote: "A Linux build is in development. Leave your email to be notified when it ships.",
     detected: "Detected system",
-    forYouMac: "For your Mac",
-    forYouWin: "For your Windows",
-    forYou: "For you",
+    forYouMac: "Recommended for your Mac",
+    forYouWin: "Recommended for your PC",
+    forYou: "Recommended for you",
     comingSoon: "Coming soon",
   },
 };
@@ -170,7 +170,7 @@ function DownloadCard({
       </div>
       <div className="mt-6 flex items-center justify-between border-t border-[var(--color-hairline)] pt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
         <span>SHA-256</span>
-        <span>{sha ?? "—"}</span>
+        <span>{sha ?? "-"}</span>
       </div>
     </>
   );

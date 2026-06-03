@@ -9,11 +9,11 @@ const COPY = {
     lines: [
       ["25 năm trước,", "một con Tamagotchi", "treo trên móc khoá."],
       ["Nó chết hai lần.", "Tới giờ", "mình vẫn nhớ tên nó."],
-      ["App học từ vựng", "không muốn bạn", "thương từ."],
-      ["Chúng muốn", "bạn sợ.", "Sợ gãy streak."],
+      ["Các app học từ vựng", "không muốn bạn", "yêu từ."],
+      ["Chúng muốn", "bạn sợ", "mất streak."],
       ["Vô chi là phản đề.", "Một thú nhỏ vô tư,", "sống cùng bạn. Đủ."],
     ],
-    caption: "Đạo nhẹ ý tưởng từ Tamagotchi, 1996. Cảm ơn Bandai.",
+    caption: "Lấy cảm hứng từ Tamagotchi, 1996. Cảm ơn Bandai.",
   },
   en: {
     eyebrow: "Why Vô chi exists",

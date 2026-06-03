@@ -8,44 +8,44 @@ const ENTRIES = [
     v: "0.1.4",
     date: "2026-05-20",
     tag: "beta",
-    title: "Mua qua VietQR, license bay vô mail",
+    title: "Mua qua VietQR, license gửi qua email",
     items: [
-      "Quét QR, license tới mail liền, không chờ đợi.",
-      "License xác thực offline, không cần mạng để mở app.",
-      "Stats panel có lịch 90 ngày và streak hiện tại.",
+      "Quét QR, license được gửi vào email ngay sau khi xác nhận.",
+      "License xác thực offline, không cần mạng để khởi động app.",
+      "Trang thống kê hiển thị lịch 90 ngày và streak hiện tại.",
     ],
   },
   {
     v: "0.1.3",
     date: "2026-04-08",
     tag: "beta",
-    title: "Mode 2: pet biết ngủ có giờ",
+    title: "Chế độ 2: thú nhỏ ngủ theo lịch",
     items: [
-      "Pet ngủ ngon khi chưa tới giờ học.",
-      "Đói quá thì pet tự thức dậy gọi bạn.",
-      "Đổi mode trong Settings, khỏi restart.",
+      "Thú nhỏ ngủ yên khi chưa tới giờ học.",
+      "Tự động thức dậy khi cần ôn từ.",
+      "Chuyển chế độ trong Settings, không cần khởi động lại.",
     ],
   },
   {
     v: "0.1.2",
     date: "2026-03-15",
     tag: "alpha",
-    title: "Windows build chào sân",
+    title: "Ra mắt bản Windows",
     items: [
-      "Có bản cài cho Windows 10 trở lên.",
-      "Pet không ăn focus của app khác.",
-      "Icon dưới khay system tray.",
+      "Bản cài cho Windows 10 trở lên.",
+      "Thú nhỏ không chiếm focus của app khác.",
+      "Icon trong khay hệ thống.",
     ],
   },
   {
     v: "0.1.1",
     date: "2026-02-28",
     tag: "alpha",
-    title: "Pet sống khoẻ trên fullscreen",
+    title: "Hỗ trợ hiển thị trên fullscreen",
     items: [
-      "Pet đè được lên fullscreen của mọi app.",
-      "Xử xong vụ pet biến mất khi đổi cửa sổ.",
-      "Pet siêu lì, không trốn nữa.",
+      "Thú nhỏ hiển thị trên cùng kể cả khi app khác ở fullscreen.",
+      "Khắc phục lỗi thú nhỏ biến mất khi chuyển cửa sổ.",
+      "Ổn định trên cả macOS và Windows.",
     ],
   },
 ];
@@ -57,12 +57,12 @@ export default function ChangelogPage() {
         <section className="relative px-6 py-16 md:py-24">
           <div className="mx-auto max-w-[900px]">
             <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[72px]">
-              {lang === "vi" ? "Pet lớn dần." : "The pet grows."}
+              {lang === "vi" ? "Cập nhật phát triển." : "Release notes."}
             </h1>
             <p className="mt-5 max-w-[520px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)]">
               {lang === "vi"
-                ? "Mỗi tuần một bản. Sửa lỗi thì im im. Có tính năng mới thì lên đây hú."
-                : "Roughly weekly. Quiet for fixes, louder for features."}
+                ? "Khoảng một bản mỗi tuần. Sửa lỗi nhỏ thì cập nhật im lặng, tính năng mới được công bố tại đây."
+                : "Roughly one release a week. Small fixes ship quietly, new features are announced here."}
             </p>
 
             <div className="mt-14 space-y-6">
