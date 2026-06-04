@@ -11,7 +11,7 @@ const COPY = {
       ["Nó chết hai lần.", "Tới giờ", "mình vẫn nhớ tên nó."],
       ["Vô chi đảo ngược", "câu chuyện đó.", ""],
       ["Bạn không cho pet ăn", "bằng việc bấm nút.", "Bạn cho nó ăn bằng từ vựng."],
-      ["Mỗi từ bạn nhớ,", "một giọt mana", "rơi vào pet."],
+      ["Mỗi từ bạn nhớ,", "một giọt linh khí", "rơi vào pet."],
       ["Pet lớn cùng nhịp", "với não bạn.", "Đủ."],
     ],
     caption: "Lấy cảm hứng từ Tamagotchi, 1996. Cảm ơn Bandai.",

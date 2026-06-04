@@ -10,7 +10,7 @@ const HERO_COPY = {
     eyebrow: "Beta · macOS + Windows",
     titleA: "Học vài từ, sống vô tư.",
     titleB: "Nuôi vài thú, sống vô chi.",
-    sub: "Mỗi từ bạn nhớ là một giọt mana nuôi sinh vật nhỏ trên màn hình. Bạn học, pet lớn. Một vòng lặp, không phải hai việc rời rạc.",
+    sub: "Mỗi từ bạn nhớ là một giọt linh khí nuôi sinh vật nhỏ trên màn hình. Bạn học, pet lớn. Một vòng lặp, không phải hai việc rời rạc.",
     ctaPrimary: "Nuôi thú nhỏ ngay",
     ctaSecondary: "Xem cách hoạt động",
     micro: "Miễn phí. Không cần tài khoản. 28MB.",

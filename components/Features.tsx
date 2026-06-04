@@ -30,8 +30,8 @@ const COPY = {
       },
       {
         no: "05",
-        name: "Từ vựng là mana, không chỉ là streak",
-        desc: "Trả lời đúng tạo ra mana. Mana nuôi pet, pet lên cấp và mở khoá hình hài mới. Bạn không học và nuôi pet riêng. Bạn học chính là bạn nuôi pet.",
+        name: "Từ vựng là linh khí, không chỉ là streak",
+        desc: "Trả lời đúng tạo ra linh khí. Linh khí nuôi pet, pet lên cấp và mở khoá hình hài mới. Bạn không học và nuôi pet riêng. Bạn học chính là bạn nuôi pet.",
       },
       {
         no: "06",
