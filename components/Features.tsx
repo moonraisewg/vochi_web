@@ -30,8 +30,8 @@ const COPY = {
       },
       {
         no: "05",
-        name: "Streak, level, EXP không gây áp lực",
-        desc: "Trả lời đúng, thú nhỏ vui, bạn lên cấp và mở khoá thú mới. Bỏ một ngày không bị mất streak. Học vào lúc bạn sẵn sàng.",
+        name: "Từ vựng là mana, không chỉ là streak",
+        desc: "Trả lời đúng tạo ra mana. Mana nuôi pet, pet lên cấp và mở khoá hình hài mới. Bạn không học và nuôi pet riêng. Bạn học chính là bạn nuôi pet.",
       },
       {
         no: "06",
@@ -66,8 +66,8 @@ const COPY = {
       },
       {
         no: "05",
-        name: "Streaks and levels, without pressure",
-        desc: "Correct answers earn experience and unlock new creatures. Skip a day without losing your progress. Learn at your own pace.",
+        name: "Vocabulary is mana, not just a streak",
+        desc: "Every correct answer mints mana. Mana feeds the creature, levels it up, and unlocks new forms. Learning and raising the creature are not two activities. They are the same activity.",
       },
       {
         no: "06",
