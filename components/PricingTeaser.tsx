@@ -8,7 +8,7 @@ const COPY = {
   vi: {
     eyebrow: "Bảng giá",
     title: "Trả một lần. Học trọn đời.",
-    sub: "Không subscription phiền phức. Quét VietQR qua Sepay, license tự gửi vào email trong khoảng ba mươi giây.",
+    sub: "Không subscription phiền phức. Quét VietQR chuyển khoản, license tự gửi vào email trong khoảng ba mươi giây.",
     plans: [
       {
         name: "Free",
@@ -84,7 +84,7 @@ const COPY = {
   en: {
     eyebrow: "Pricing",
     title: "Pay once. Learn for life.",
-    sub: "No subscription. Scan VietQR through Sepay and your license arrives by email in about thirty seconds.",
+    sub: "No subscription. Scan a VietQR code, transfer normally, and your license arrives by email in about thirty seconds.",
     plans: [
       {
         name: "Free",

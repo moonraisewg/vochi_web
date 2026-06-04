@@ -77,21 +77,20 @@ function CheckoutInner() {
     <section className="relative px-6 py-16 md:py-24">
       <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
-          <div className="micro mb-4">Thanh toán qua SePay</div>
+          <div className="micro mb-4">Thanh toán</div>
           <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">
-            Đặt hàng. <span className="italic text-[var(--color-ink-soft)]">SePay lo thanh toán.</span>
+            Bốn bước. <span className="italic text-[var(--color-ink-soft)]">License vô mail.</span>
           </h1>
           <p className="mt-5 max-w-[560px] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
-            Điền email nhận license, chọn gói, rồi qua cổng SePay. License chỉ được gửi sau khi
-            SePay báo thanh toán thành công về server.
+            Chọn gói, để lại email, quét QR chuyển khoản như bình thường. License sẽ tự gửi vào email khi giao dịch xong.
           </p>
 
           <ol className="mt-12 space-y-7">
             {[
-              ["01", "Tạo đơn hàng", "Server tạo invoice riêng và ký payload thanh toán."],
-              ["02", "Thanh toán trên SePay", "Bạn quét/chuyển khoản trong cổng thanh toán của SePay."],
-              ["03", "SePay gửi IPN", "Server xác nhận IPN hợp lệ rồi mới phát hành license."],
-              ["04", "Mở mail", "License key được gửi tới email bạn nhập ở đây."],
+              ["01", "Chọn gói và nhập email", "Email này sẽ nhận license, hãy dùng email bạn đang dùng thường xuyên."],
+              ["02", "Quét mã QR", "Mở app ngân hàng, quét mã, kiểm tra số tiền và nội dung chuyển khoản đã có sẵn."],
+              ["03", "Xác nhận chuyển khoản", "Bấm chuyển trong app ngân hàng. Thường mất 30 giây đến 2 phút để xác nhận."],
+              ["04", "Mở email", "License tự gửi vào hộp thư. Mở app, dán license, dùng ngay."],
             ].map(([n, title, desc]) => (
               <li key={n} className="flex items-start gap-5">
                 <span className="pt-1 font-mono text-[12px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
@@ -163,7 +162,7 @@ function CheckoutInner() {
                 disabled={loading}
                 className="mt-6 w-full rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)] disabled:cursor-wait disabled:opacity-70"
               >
-                {loading ? "Đang tạo đơn..." : "Qua SePay thanh toán"}
+                {loading ? "Đang tạo đơn..." : "Sang trang thanh toán"}
               </button>
             </form>
 

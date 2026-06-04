@@ -14,8 +14,8 @@ const COPY = {
         a: "Có. macOS 12 trở lên và Windows 10 trở lên đều được hỗ trợ. Bản Linux đang trong quá trình hoàn thiện.",
       },
       {
-        q: "Sepay là gì và có an toàn không?",
-        a: "Sepay là cổng thanh toán VietQR. Bạn mở app ngân hàng, quét mã và chuyển khoản như bình thường. Không cần nhập số thẻ. Sau khi ngân hàng xác nhận (thường trong 30 giây đến 2 phút), license sẽ được gửi vào email.",
+        q: "Thanh toán bằng cách nào, có an toàn không?",
+        a: "Bạn quét mã VietQR trong app ngân hàng và chuyển khoản như bình thường. Không cần nhập số thẻ. Sau khi ngân hàng xác nhận (thường trong 30 giây đến 2 phút), license sẽ được gửi vào email.",
       },
       {
         q: "Thú nhỏ có hiển thị được trên fullscreen Chrome?",
@@ -48,8 +48,8 @@ const COPY = {
         a: "Yes. macOS 12+ and Windows 10+ are both supported. A Linux build is in progress.",
       },
       {
-        q: "What is Sepay, and is it safe?",
-        a: "Sepay is a VietQR payment gateway. You open your banking app, scan the code, and transfer as usual. No card details are entered anywhere. Once the bank confirms (typically 30 seconds to 2 minutes), the license is emailed to you.",
+        q: "How does payment work? Is it safe?",
+        a: "Scan a VietQR code in your banking app and transfer as usual. No card details are entered anywhere. Once the bank confirms (typically 30 seconds to 2 minutes), the license is emailed to you.",
       },
       {
         q: "Does the creature really sit over fullscreen Chrome?",

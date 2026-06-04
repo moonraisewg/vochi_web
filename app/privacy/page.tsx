@@ -21,7 +21,7 @@ export default function PrivacyPage() {
                 license key, device id cài đặt ngẫu nhiên và trạng thái kích hoạt.
               </p>
               <p>
-                Dữ liệu thanh toán được xử lý qua SePay. Vô chi không lưu thông tin thẻ ngân hàng.
+                Dữ liệu thanh toán được xử lý qua cổng thanh toán bên thứ ba. Vô chi không lưu thông tin thẻ ngân hàng.
               </p>
               <p>Liên hệ: hi@vochi.xyz.</p>
             </div>

@@ -75,8 +75,7 @@ export function CheckoutResult({
           {title}
         </h1>
         <p className="mt-5 text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">
-          SePay có thể mất một chút thời gian để gửi IPN. Trang này chỉ đọc trạng thái từ server,
-          không tự đánh dấu đơn đã thanh toán.
+          Ngân hàng và cổng thanh toán cần một chút thời gian để xác nhận chuyển khoản. Trang này tự cập nhật trạng thái khi đơn được xử lý.
         </p>
 
         <div className="mt-10 rounded-2xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-6 lift">
