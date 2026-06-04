@@ -24,6 +24,15 @@ export default function TermsPage() {
                 App đang trong giai đoạn beta. Vô chi sẽ ưu tiên sửa lỗi ảnh hưởng đến dữ liệu học
                 và quyền truy cập trả phí.
               </p>
+              <p>
+                Khi sử dụng Vô chi, bạn đồng ý rằng app gửi dữ liệu sử dụng <strong>ẩn danh</strong>
+                {" "}(không có email, tên hay nội dung từ vựng) để cải thiện sản phẩm. Bạn có thể
+                tắt tính năng này bất kỳ lúc nào trong Cài đặt. Chi tiết tại trang Quyền riêng tư.
+              </p>
+              <p>
+                Báo cáo lỗi (crash report) chỉ được gửi khi bạn chủ động bấm nút gửi trong hộp
+                thoại lỗi hiện ra. Không có thông tin gì được gửi ngầm.
+              </p>
               <p>Liên hệ: hi@vochi.xyz.</p>
             </div>
           </div>
