@@ -9,7 +9,7 @@ const HERO_COPY = {
   vi: {
     eyebrow: "Beta · macOS + Windows",
     titleA: "Học ngoại ngữ, nuôi từng thú nhỏ,",
-    titleB: "cùng vô chill thế giới mới bao la.",
+    titleB: ["cùng vô chill", "thế giới mới bao la."],
     sub: "Những điều lớn lao được nuôi bằng những điều nhỏ bé. Hãy để những thú cưng nhỏ bé lớn lên cùng thế giới ngoại ngữ của bạn.",
     ctaPrimary: "Nuôi thú nhỏ ngay",
     ctaSecondary: "Xem cách hoạt động",
@@ -18,7 +18,7 @@ const HERO_COPY = {
   en: {
     eyebrow: "Beta · macOS + Windows",
     titleA: "Learn languages, raise tiny creatures,",
-    titleB: "drift carefree through a vast new world.",
+    titleB: ["drift carefree", "through a vast new world."],
     sub: "Great things are grown from small ones. Let tiny creatures grow alongside the new world of language you are learning.",
     ctaPrimary: "Adopt one now",
     ctaSecondary: "See how it works",
@@ -55,14 +55,21 @@ export function Hero({ lang }: { lang: Lang }) {
             >
               {t.titleA}
             </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="block italic text-[var(--color-ink-soft)]"
-            >
-              {t.titleB}
-            </motion.span>
+            {t.titleB.map((line, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.08 + i * 0.06,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="block italic text-[var(--color-ink-soft)]"
+              >
+                {line}
+              </motion.span>
+            ))}
           </h1>
 
           <motion.p
