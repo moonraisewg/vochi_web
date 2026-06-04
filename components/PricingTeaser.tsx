@@ -47,20 +47,6 @@ const COPY = {
           "Tiết kiệm 48.000đ so với mua từng tháng",
           "Mở khoá thêm 3 thú nhỏ (đã và sắp ra mắt)",
         ],
-        featured: false,
-      },
-      {
-        name: "6 tháng",
-        price: "239.000đ",
-        priceNote: "khoảng 40.000đ mỗi tháng",
-        cta: "Chốt 6 tháng",
-        href: "/checkout?plan=six_months",
-        features: [
-          "Đầy đủ tính năng của gói 3 tháng",
-          "Tặng 6 thú nhỏ (đã và sắp ra mắt)",
-          "3 thiết bị cùng lúc",
-          "Lịch streak chi tiết",
-        ],
         featured: true,
       },
       {
@@ -70,7 +56,7 @@ const COPY = {
         cta: "Chốt deal",
         href: "/checkout?plan=lifetime",
         features: [
-          "Đầy đủ tính năng của gói 6 tháng",
+          "Đầy đủ tính năng của gói 3 tháng",
           "Không bao giờ hết hạn",
           "Tặng toàn bộ thú nhỏ đã và sắp ra mắt",
           "Hỗ trợ ưu tiên qua email",
@@ -123,20 +109,6 @@ const COPY = {
           "Save 48k vs monthly billing",
           "Unlock 3 creatures (current and upcoming)",
         ],
-        featured: false,
-      },
-      {
-        name: "6 months",
-        price: "239.000đ",
-        priceNote: "about 40k a month",
-        cta: "Get 6 months",
-        href: "/checkout?plan=six_months",
-        features: [
-          "Everything in 3 months",
-          "6 free creatures (current and upcoming)",
-          "3 devices",
-          "Detailed streak calendar",
-        ],
         featured: true,
       },
       {
@@ -146,7 +118,7 @@ const COPY = {
         cta: "Lock it in",
         href: "/checkout?plan=lifetime",
         features: [
-          "Everything in 6 months",
+          "Everything in 3 months",
           "Never expires",
           "All current and future creatures included",
           "Priority email support",
@@ -178,7 +150,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {t.plans.map((plan, idx) => (
             <motion.div
               key={plan.name}
