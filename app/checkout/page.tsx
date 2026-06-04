@@ -9,11 +9,12 @@ import { PageShell } from "@/components/PageShell";
 const PLANS = {
   one_month: { name: "1 tháng", amount: "59.000đ", note: "2 thiết bị, 1 tháng" },
   three_months: { name: "3 tháng", amount: "129.000đ", note: "2 thiết bị, 3 tháng" },
+  six_months: { name: "6 tháng", amount: "239.000đ", note: "3 thiết bị, 6 tháng" },
   lifetime: { name: "Lifetime", amount: "599.000đ", note: "5 thiết bị, trọn đời" },
 } as const;
 
 type PlanId = keyof typeof PLANS;
-const DEFAULT_PLAN: PlanId = "three_months";
+const DEFAULT_PLAN: PlanId = "six_months";
 type CheckoutResponse = {
   invoiceNumber: string;
   checkoutUrl: string;
