@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { Nav, type Lang } from "@/components/Nav";
+import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
 import { Method } from "@/components/Method";
@@ -9,9 +8,10 @@ import { Manifesto } from "@/components/Manifesto";
 import { PricingTeaser } from "@/components/PricingTeaser";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
+import { useLang } from "@/components/LangProvider";
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("vi");
+  const { lang, setLang } = useLang();
 
   return (
     <main className="relative">

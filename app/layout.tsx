@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { LangProvider } from "@/components/LangProvider";
+import type { Lang } from "@/components/Nav";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -31,7 +34,7 @@ export const metadata: Metadata = {
     template: "%s · Vô chi",
   },
   description:
-    "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Pet ảo sống trên màn hình macOS và Windows. Tải miễn phí.",
+    "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill thế giới mới bao la. Pet ảo sống trên màn hình macOS và Windows. Tải miễn phí.",
   applicationName: "Vô chi",
   authors: [{ name: "himitsuko" }],
   creator: "himitsuko",
@@ -69,7 +72,7 @@ export const metadata: Metadata = {
     siteName: "Vô chi",
     title: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ",
     description:
-      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Pet ảo cho macOS và Windows.",
+      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill thế giới mới bao la. Pet ảo cho macOS và Windows.",
     locale: "vi_VN",
     alternateLocale: ["en_US"],
     images: [
@@ -85,7 +88,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ",
     description:
-      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Tải miễn phí cho macOS và Windows.",
+      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill thế giới mới bao la. Tải miễn phí cho macOS và Windows.",
     creator: "@himitsuko",
     images: ["/og.png"],
   },
@@ -106,14 +109,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const rawLang = cookieStore.get("vochi_lang")?.value;
+  const initialLang: Lang = rawLang === "en" ? "en" : "vi";
+
   return (
     <html
-      lang="vi"
+      lang={initialLang === "en" ? "en" : "vi"}
       className={`${bricolage.variable} ${geist.variable} ${geistMono.variable}`}
     >
       <body className="min-h-screen overflow-x-hidden">
-        <PostHogProvider>{children}</PostHogProvider>
+        <PostHogProvider>
+          <LangProvider initialLang={initialLang}>{children}</LangProvider>
+        </PostHogProvider>
       </body>
     </html>
   );

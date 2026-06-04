@@ -9,7 +9,7 @@ const HERO_COPY = {
   vi: {
     eyebrow: "Beta · macOS + Windows",
     titleA: "Học ngoại ngữ, nuôi từng thú nhỏ,",
-    titleB: "cùng vô chill trong thế giới mới bao la.",
+    titleB: "cùng vô chill thế giới mới bao la.",
     sub: "Những điều lớn lao được nuôi bằng những điều nhỏ bé. Hãy để những thú cưng nhỏ bé lớn lên cùng thế giới ngoại ngữ của bạn.",
     ctaPrimary: "Nuôi thú nhỏ ngay",
     ctaSecondary: "Xem cách hoạt động",

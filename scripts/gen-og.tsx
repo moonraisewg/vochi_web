@@ -415,7 +415,7 @@ async function build() {
               cùng vô chill
             </div>
             <div style={{ fontWeight: 600, color: "#6b7066" }}>
-              trong thế giới bao la.
+              thế giới bao la.
             </div>
           </div>
         </div>

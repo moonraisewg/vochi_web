@@ -1,17 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { Nav, type Lang } from "./Nav";
+import { Nav } from "./Nav";
 import { Footer } from "./Footer";
+import { useLang } from "./LangProvider";
+import type { Lang } from "./Nav";
 
 export function PageShell({
   children,
-  initialLang = "vi",
 }: {
   children: (lang: Lang) => React.ReactNode;
-  initialLang?: Lang;
 }) {
-  const [lang, setLang] = useState<Lang>(initialLang);
+  const { lang, setLang } = useLang();
   return (
     <main className="relative">
       <Nav lang={lang} onLangChange={setLang} />
