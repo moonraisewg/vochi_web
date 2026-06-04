@@ -8,8 +8,8 @@ import type { Lang } from "./Nav";
 const HERO_COPY = {
   vi: {
     eyebrow: "Beta · macOS + Windows",
-    titleA: "Học vài từ, sống vô tư.",
-    titleB: "Nuôi vài thú, sống vô chi.",
+    titleA: "Học ngoại ngữ, nuôi từng thú nhỏ,",
+    titleB: "cùng vô chill trong thế giới mới bao la.",
     sub: "Những điều lớn lao được nuôi bằng những điều nhỏ bé. Hãy để những thú cưng nhỏ bé lớn lên cùng năng lực ngoại ngữ của bạn.",
     ctaPrimary: "Nuôi thú nhỏ ngay",
     ctaSecondary: "Xem cách hoạt động",
@@ -17,8 +17,8 @@ const HERO_COPY = {
   },
   en: {
     eyebrow: "Beta · macOS + Windows",
-    titleA: "Few words. Fewer worries.",
-    titleB: "One small, carefree creature.",
+    titleA: "Learn languages, raise tiny creatures,",
+    titleB: "drift carefree through a vast new world.",
     sub: "Great things are grown from small ones. Let a tiny creature grow alongside your fluency, one word at a time.",
     ctaPrimary: "Adopt one now",
     ctaSecondary: "See how it works",

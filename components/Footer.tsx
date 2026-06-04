@@ -6,7 +6,7 @@ import type { Lang } from "./Nav";
 
 const COPY = {
   vi: {
-    cta: "Nuôi một thú nhỏ vô tư.",
+    cta: "Học ngoại ngữ, nuôi thú nhỏ, vô chill.",
     sub: "macOS, Windows. 28MB. Miễn phí.",
     download: "Tải miễn phí",
     pricing: "Xem bảng giá",
@@ -24,7 +24,7 @@ const COPY = {
       "Thú nhỏ ăn từ vựng. Bạn học mà không cảm thấy như đang học. Phát triển tại Hà Nội.",
   },
   en: {
-    cta: "Adopt a carefree creature.",
+    cta: "Learn languages. Raise creatures. Drift carefree.",
     sub: "macOS, Windows. 28MB. Free.",
     download: "Download free",
     pricing: "Pricing",

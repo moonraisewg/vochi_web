@@ -27,11 +27,11 @@ const SITE_URL = "https://vochi.xyz";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Vô chi · Học từ vựng tiếng Anh cùng thú nhỏ vô tư",
+    default: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ, cùng vô chill",
     template: "%s · Vô chi",
   },
   description:
-    "Pet ảo sống trên màn hình bạn, vừa làm việc vừa nhâm nhi từ vựng tiếng Anh. Không streak, không stress. Phương pháp Vô chi cho macOS và Windows. Tải miễn phí.",
+    "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Pet ảo sống trên màn hình macOS và Windows. Tải miễn phí.",
   applicationName: "Vô chi",
   authors: [{ name: "himitsuko" }],
   creator: "himitsuko",
@@ -67,9 +67,9 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "Vô chi",
-    title: "Vô chi · Học từ vựng cùng thú nhỏ vô tư",
+    title: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ",
     description:
-      "Pet ảo sống trên màn hình macOS và Windows. Nhâm nhi từ vựng tiếng Anh trong kẽ rảnh, không streak, không stress.",
+      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Pet ảo cho macOS và Windows.",
     locale: "vi_VN",
     alternateLocale: ["en_US"],
     images: [
@@ -83,9 +83,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vô chi · Học từ vựng cùng thú nhỏ vô tư",
+    title: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ",
     description:
-      "Pet ảo sống trên màn hình. Không streak, không stress. Tải miễn phí cho macOS và Windows.",
+      "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill trong thế giới mới bao la. Tải miễn phí cho macOS và Windows.",
     creator: "@himitsuko",
     images: ["/og.png"],
   },
