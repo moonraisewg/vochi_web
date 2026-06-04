@@ -35,7 +35,8 @@ export default function PrivacyPage() {
               <p>
                 Dữ liệu thu thập gồm: phiên bản app, hệ điều hành, các hành động dạng sự kiện
                 (click pet, ôn từ, đổi chế độ, kích hoạt license), kèm các thuộc tính kỹ thuật
-                (ví dụ: kích thước pet, ngôn ngữ giao diện, gói license đang dùng).
+                (ví dụ: kích thước pet, ngôn ngữ giao diện, gói license đang dùng). Khi app gặp
+                lỗi, loại lỗi và stack trace cũng được ghi nhận cùng đường này.
               </p>
               <p>
                 <strong>Vô chi không gửi nội dung từ vựng, định nghĩa, ví dụ, hay bất kỳ
@@ -43,22 +44,8 @@ export default function PrivacyPage() {
                 (us.i.posthog.com) làm bên thứ ba.
               </p>
               <p>
-                Bạn có thể tắt việc gửi dữ liệu sử dụng bất kỳ lúc nào trong Cài đặt
-                {" "}→{" "}<em>Giúp Vô chi tốt hơn</em>.
-              </p>
-
-              <h2 className="font-display text-[22px] tracking-tight pt-4">
-                Báo cáo lỗi (crash report)
-              </h2>
-              <p>
-                Khi app gặp lỗi không mong muốn, Vô chi hiển thị một hộp thoại hỏi bạn có muốn
-                gửi báo cáo lỗi hay không. <strong>Báo cáo chỉ được gửi khi bạn chủ động bấm
-                nút gửi.</strong> Không có thông tin gì được gửi ngầm trong nền.
-              </p>
-              <p>
-                Nội dung báo cáo: loại lỗi, stack trace, phiên bản app, hệ điều hành. Không có
-                install_id, không có nội dung từ vựng, không có thông tin cá nhân. Dữ liệu được
-                xử lý bởi Sentry (ingest.sentry.io) làm bên thứ ba.
+                Bạn có thể tắt việc gửi dữ liệu sử dụng (gồm cả ghi nhận lỗi) bất kỳ lúc nào
+                trong Cài đặt {" "}→{" "}<em>Giúp Vô chi tốt hơn</em>.
               </p>
 
               <h2 className="font-display text-[22px] tracking-tight pt-4">
