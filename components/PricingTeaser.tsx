@@ -16,7 +16,7 @@ const COPY = {
         name: "Free",
         price: "0đ",
         priceNote: "miễn phí, dùng mãi mãi",
-        cta: "Lụm free",
+        cta: "Nhận em về nuôi",
         href: "/download",
         features: [
           "1 thú nhỏ, học thử 100 từ đầu tiên",
@@ -32,7 +32,7 @@ const COPY = {
         priceNote: "thử trước khi chốt lâu dài",
         compare: "Đủ thời gian để xem thú nhỏ có hợp với bạn không.",
         compareStudent: "Đủ thời gian để xem thú nhỏ có hợp với bạn không.",
-        cta: "Thử 1 tháng",
+        cta: "Nuôi thử 1 tháng",
         href: "/checkout?plan=one_month",
         features: [
           "Đầy đủ tính năng của Free",
@@ -48,7 +48,7 @@ const COPY = {
         priceNote: "khoảng 43.000đ mỗi tháng",
         compare: "Đủ thời gian để nhìn thấy cả hai cùng lớn lên.",
         compareStudent: "Đủ thời gian để nhìn thấy cả hai cùng lớn lên.",
-        cta: "Thử 3 tháng",
+        cta: "Nuôi thử 3 tháng",
         href: "/checkout?plan=three_months",
         features: [
           "Đầy đủ tính năng của gói 1 tháng",
@@ -64,7 +64,7 @@ const COPY = {
         priceNote: "trả một lần, dùng trọn đời",
         compare: "Một lần nhận nuôi. Nuôi mãi mãi.",
         compareStudent: "Một lần nhận nuôi. Nuôi mãi mãi.",
-        cta: "Chốt deal",
+        cta: "Bên nhau trọn đời",
         href: "/checkout?plan=lifetime",
         features: [
           "Đầy đủ tính năng của gói 3 tháng",
@@ -88,7 +88,7 @@ const COPY = {
         name: "Free",
         price: "0đ",
         priceNote: "free, forever",
-        cta: "Try it",
+        cta: "Adopt one",
         href: "/download",
         features: [
           "1 creature, try the first 100 words",
@@ -104,7 +104,7 @@ const COPY = {
         priceNote: "try before you commit",
         compare: "Enough time to see if the creature suits you.",
         compareStudent: "Enough time to see if the creature suits you.",
-        cta: "Try 1 month",
+        cta: "Raise it for 1 month",
         href: "/checkout?plan=one_month",
         features: [
           "Everything in Free",
@@ -120,7 +120,7 @@ const COPY = {
         priceNote: "about 43k a month",
         compare: "Enough time to watch both of you grow.",
         compareStudent: "Enough time to watch both of you grow.",
-        cta: "Get 3 months",
+        cta: "Raise it for 3 months",
         href: "/checkout?plan=three_months",
         features: [
           "Everything in 1 month",
@@ -136,7 +136,7 @@ const COPY = {
         priceNote: "pay once, keep forever",
         compare: "One adoption. Yours forever.",
         compareStudent: "One adoption. Yours forever.",
-        cta: "Lock it in",
+        cta: "Stay together forever",
         href: "/checkout?plan=lifetime",
         features: [
           "Everything in 3 months",
