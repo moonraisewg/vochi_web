@@ -8,7 +8,7 @@ const COPY = {
   vi: {
     eyebrow: "Bảng giá",
     title: "Trả một lần. Học trọn đời.",
-    sub: "Không subscription phiền phức. Quét VietQR chuyển khoản, license tự gửi vào email trong khoảng ba mươi giây.",
+    sub: "",
     plans: [
       {
         name: "Free",
@@ -70,7 +70,7 @@ const COPY = {
   en: {
     eyebrow: "Pricing",
     title: "Pay once. Learn for life.",
-    sub: "No subscription. Scan a VietQR code, transfer normally, and your license arrives by email in about thirty seconds.",
+    sub: "",
     plans: [
       {
         name: "Free",
@@ -143,11 +143,13 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
               {t.title}
             </h2>
           </div>
-          <div className="md:col-span-5 md:pt-6">
-            <p className="max-w-[420px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[17px]">
-              {t.sub}
-            </p>
-          </div>
+          {t.sub && (
+            <div className="md:col-span-5 md:pt-6">
+              <p className="max-w-[420px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[17px]">
+                {t.sub}
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
