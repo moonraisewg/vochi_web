@@ -8,6 +8,12 @@ const COPY = {
     eyebrow: "Phương pháp Vô chi",
     title: "Vì sao thú nhỏ",
     titleItalic: "giúp bạn nhớ lâu hơn.",
+    proofTitle: "Được xây dựng dựa trên ghi nhớ ngắt quãng.",
+    proofBullets: [
+      "Nhắc lại đúng lúc trước khi quên.",
+      "Lịch ôn theo trí nhớ của riêng bạn, không theo công thức chung.",
+      "Học ít nhưng đều đặn.",
+    ],
     pillars: [
       {
         no: "01",
@@ -30,6 +36,12 @@ const COPY = {
     eyebrow: "The Vô chi method",
     title: "Why a tiny creature",
     titleItalic: "helps you remember longer.",
+    proofTitle: "Built on spaced repetition.",
+    proofBullets: [
+      "Reviews land just before you would forget.",
+      "Schedule follows your memory, not a one-size formula.",
+      "Small sessions, kept up over time.",
+    ],
     pillars: [
       {
         no: "01",
@@ -93,6 +105,38 @@ export function Method({ lang }: { lang: Lang }) {
             </motion.li>
           ))}
         </ol>
+
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-14 grid grid-cols-1 gap-6 rounded-2xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-7 md:mt-20 md:grid-cols-12 md:gap-10 md:p-10 lift"
+        >
+          <div className="md:col-span-4">
+            <div className="micro mb-3 text-[var(--color-accent-deep)]">
+              {lang === "vi" ? "Bằng chứng nhỏ" : "Quiet proof"}
+            </div>
+            <p className="font-display text-[20px] leading-[1.2] tracking-tight md:text-[22px]">
+              {t.proofTitle}
+            </p>
+          </div>
+          <ul className="md:col-span-8 grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-6">
+            {t.proofBullets.map((b, i) => (
+              <li
+                key={i}
+                className="flex flex-col gap-2 border-t border-[var(--color-hairline)] pt-4 md:border-t-0 md:border-l md:pl-6 md:pt-0"
+              >
+                <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="text-[14.5px] leading-[1.45] text-[var(--color-ink)]">
+                  {b}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </motion.div>
       </div>
     </section>
   );

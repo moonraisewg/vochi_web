@@ -402,20 +402,20 @@ async function build() {
             style={{
               display: "flex",
               flexDirection: "column",
-              gap: 4,
+              gap: 6,
               fontSize: 56,
               lineHeight: 1.08,
               letterSpacing: -1.8,
               flex: 1,
             }}
           >
-            <div style={{ fontWeight: 600 }}>Học ngoại ngữ,</div>
-            <div style={{ fontWeight: 600 }}>nuôi từng thú nhỏ,</div>
-            <div style={{ fontWeight: 600, color: "#6b7066", marginTop: 12 }}>
-              cùng vô chill
+            <div style={{ fontWeight: 600 }}>Học ngoại ngữ</div>
+            <div style={{ fontWeight: 600 }}>bằng cách</div>
+            <div style={{ fontWeight: 600, color: "#6b7066", marginTop: 14 }}>
+              nuôi một
             </div>
             <div style={{ fontWeight: 600, color: "#6b7066" }}>
-              thế giới bao la.
+              thú nhỏ.
             </div>
           </div>
         </div>
