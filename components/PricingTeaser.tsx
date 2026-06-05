@@ -30,6 +30,8 @@ const COPY = {
         name: "1 tháng",
         price: "59.000đ",
         priceNote: "thử trước khi chốt lâu dài",
+        compare: "≈ 1 ly cà phê sữa Highlands",
+        compareStudent: "≈ 1 ly trà chanh vỉa hè",
         cta: "Thử 1 tháng",
         href: "/checkout?plan=one_month",
         features: [
@@ -44,6 +46,8 @@ const COPY = {
         name: "3 tháng",
         price: "129.000đ",
         priceNote: "khoảng 43.000đ mỗi tháng",
+        compare: "≈ 1 bữa cơm tấm sườn bì chả",
+        compareStudent: "≈ 1 ly bạc xỉu Highlands",
         cta: "Thử 3 tháng",
         href: "/checkout?plan=three_months",
         features: [
@@ -58,6 +62,8 @@ const COPY = {
         name: "Lifetime",
         price: "1.000đ",
         priceNote: "trả một lần, dùng trọn đời",
+        compare: "≈ 1 buổi xem phim CGV cùng bắp nước",
+        compareStudent: "≈ 2 buổi cà phê cuối tuần",
         cta: "Chốt deal",
         href: "/checkout?plan=lifetime",
         features: [
@@ -96,6 +102,8 @@ const COPY = {
         name: "1 month",
         price: "59.000đ",
         priceNote: "try before you commit",
+        compare: "≈ one coffee in town",
+        compareStudent: "≈ one street-side iced tea",
         cta: "Try 1 month",
         href: "/checkout?plan=one_month",
         features: [
@@ -110,6 +118,8 @@ const COPY = {
         name: "3 months",
         price: "129.000đ",
         priceNote: "about 43k a month",
+        compare: "≈ one cơm tấm lunch",
+        compareStudent: "≈ one specialty drink",
         cta: "Get 3 months",
         href: "/checkout?plan=three_months",
         features: [
@@ -124,6 +134,8 @@ const COPY = {
         name: "Lifetime",
         price: "1.000đ",
         priceNote: "pay once, keep forever",
+        compare: "≈ one movie night with snacks",
+        compareStudent: "≈ two weekend café visits",
         cta: "Lock it in",
         href: "/checkout?plan=lifetime",
         features: [
@@ -236,6 +248,11 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
                 <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                   {plan.priceNote}
                 </div>
+                {(isStudent ? plan.compareStudent : plan.compare) && (
+                  <div className="mt-2 text-[12.5px] italic leading-snug text-[var(--color-ink-soft)]">
+                    {isStudent ? plan.compareStudent : plan.compare}
+                  </div>
+                )}
               </div>
 
               <ul className="mt-6 flex-1 space-y-2.5 border-t border-[var(--color-hairline)] pt-5 text-[13.5px] leading-[1.45] text-[var(--color-ink-soft)]">
