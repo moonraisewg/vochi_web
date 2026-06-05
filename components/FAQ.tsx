@@ -80,7 +80,7 @@ export function FAQ({ lang }: { lang: Lang }) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="relative px-6 py-28 md:py-40">
+    <section className="relative px-6 py-16 md:py-24">
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
           <h2 className="font-display text-[40px] italic leading-[1.02] tracking-tight md:text-[56px]">

@@ -43,13 +43,13 @@ export function CtaBand({ lang, variant }: { lang: Lang; variant: Variant }) {
   const secondaryHref = variant === "convert" ? "/download" : "#pricing";
 
   return (
-    <section className="relative px-6 py-12 md:py-16">
+    <section className="relative px-6 py-8 md:py-10">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-80px" }}
         transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-        className="mx-auto flex max-w-[1100px] flex-col items-start justify-between gap-6 rounded-3xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-7 md:flex-row md:items-center md:gap-10 md:p-10 lift-md"
+        className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-6 rounded-3xl border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-7 md:flex-row md:items-center md:gap-10 md:p-10 lift-md"
       >
         <div className="max-w-[560px]">
           <h3 className="font-display text-[24px] leading-[1.15] tracking-tight md:text-[32px]">

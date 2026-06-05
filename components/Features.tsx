@@ -81,7 +81,7 @@ const COPY = {
 export function Features({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
-    <section id="features" className="relative px-6 py-28 md:py-40">
+    <section id="features" className="relative px-6 py-16 md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-16 max-w-[760px]">
           <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">

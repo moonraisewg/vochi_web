@@ -65,8 +65,8 @@ const COPY = {
 export function Method({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
-    <section className="relative px-6 py-28 md:py-40">
-      <div className="mx-auto max-w-[1100px]">
+    <section className="relative px-6 py-16 md:py-24">
+      <div className="mx-auto max-w-[1280px]">
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="md:col-span-6">
             <div className="micro mb-4">{t.eyebrow}</div>

@@ -30,7 +30,7 @@ export function Hero({ lang }: { lang: Lang }) {
   const t = HERO_COPY[lang];
 
   return (
-    <section className="relative pb-24 pt-16 md:pb-32 md:pt-20">
+    <section className="relative pb-16 pt-10 md:pb-20 md:pt-14">
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-16 px-6 md:grid-cols-12 md:gap-10">
         {/* left column: copy */}
         <div className="md:col-span-7">

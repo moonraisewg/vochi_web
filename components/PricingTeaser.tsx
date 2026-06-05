@@ -157,7 +157,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
   const [isStudent, setIsStudent] = useState(false);
 
   return (
-    <section id="pricing" className="relative px-6 py-28 md:py-40">
+    <section id="pricing" className="relative px-6 py-16 md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="md:col-span-7">
