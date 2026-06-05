@@ -80,13 +80,13 @@ export function Nav({
         </nav>
 
         <div className="flex items-center gap-3">
-          <LangSwitch lang={lang} onChange={onLangChange} />
           <Link
             href="/download"
             className="hidden rounded-full bg-[var(--color-ink)] px-4 py-2 text-[13px] font-medium text-[var(--color-surface)] transition-all hover:bg-[var(--color-accent-deep)] md:inline-block"
           >
             {t.download}
           </Link>
+          <LangSwitch lang={lang} onChange={onLangChange} />
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle menu"
