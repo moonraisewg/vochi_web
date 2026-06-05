@@ -5,7 +5,6 @@ import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
 import { Method } from "@/components/Method";
 import { Manifesto } from "@/components/Manifesto";
-import { Interlude } from "@/components/Interlude";
 import { PricingTeaser } from "@/components/PricingTeaser";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
@@ -23,7 +22,6 @@ export default function Home() {
       <Features lang={lang} />
       <Manifesto lang={lang} />
       <Method lang={lang} />
-      <Interlude lang={lang} />
       <PricingTeaser lang={lang} />
       <FAQ lang={lang} />
       <Footer lang={lang} />

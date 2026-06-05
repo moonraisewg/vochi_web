@@ -9,6 +9,7 @@ const COPY = {
   vi: {
     eyebrow: "Bảng giá",
     title: "Trả một lần. Học trọn đời.",
+    subline: "Có bao giờ ta quên những gì gắn bó nhất?",
     sub: "",
     plans: [
       {
@@ -84,6 +85,7 @@ const COPY = {
   en: {
     eyebrow: "Pricing",
     title: "Pay once. Learn for life.",
+    subline: "Do we ever forget what we hold closest?",
     sub: "",
     plans: [
       {
@@ -171,6 +173,9 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
             <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
               {t.title}
             </h2>
+            <p className="mt-5 max-w-[560px] font-display italic text-[18px] leading-[1.4] tracking-tight text-[var(--color-ink-soft)] md:text-[22px]">
+              {t.subline}
+            </p>
             <div className="mt-8 flex items-center">
               <label className="group flex cursor-pointer items-center gap-3 rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] py-2 pl-3 pr-4 transition-all hover:border-[var(--color-ink)] hover:shadow-sm">
                 <div

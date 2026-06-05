@@ -8,7 +8,6 @@ const SECTIONS: { id: string; vi: string; en: string }[] = [
   { id: "features", vi: "Tính năng", en: "Features" },
   { id: "manifesto", vi: "Câu chuyện", en: "Story" },
   { id: "method", vi: "Phương pháp", en: "Method" },
-  { id: "interlude", vi: "Chiêm nghiệm", en: "Reflection" },
   { id: "pricing", vi: "Bảng giá", en: "Pricing" },
   { id: "faq", vi: "Câu hỏi", en: "FAQ" },
 ];
