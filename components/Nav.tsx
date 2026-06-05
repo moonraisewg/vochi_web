@@ -90,7 +90,7 @@ export function Nav({
           <button
             onClick={() => setOpen((o) => !o)}
             aria-label="Toggle menu"
-            className="grid h-9 w-9 place-items-center rounded-md border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] md:hidden"
+            className="grid h-9 w-9 place-items-center rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] md:hidden"
           >
             <span className="block text-base">≡</span>
           </button>
