@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Link from "next/link";
 import type { Lang } from "./Nav";
 
 const COPY = {
@@ -151,6 +152,21 @@ export function Manifesto({ lang }: { lang: Lang }) {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-10 md:mt-14"
+        >
+          <Link
+            href="/download"
+            className="font-display text-[22px] italic tracking-tight text-[var(--color-accent-deep)] underline decoration-[var(--color-accent)]/40 decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)] md:text-[28px]"
+          >
+            {lang === "vi" ? "Mang một em về nuôi →" : "Bring one home →"}
+          </Link>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}

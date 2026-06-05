@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import Link from "next/link";
 import type { Lang } from "./Nav";
 
 const COPY = {
@@ -112,6 +113,23 @@ export function Features({ lang }: { lang: Lang }) {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="mt-12 md:mt-16"
+        >
+          <Link
+            href="/download"
+            className="font-display text-[18px] italic tracking-tight text-[var(--color-accent-deep)] underline decoration-[var(--color-accent)]/40 decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)] md:text-[22px]"
+          >
+            {lang === "vi"
+              ? "Để thú nhỏ kể tiếp câu chuyện này trên máy bạn →"
+              : "Let the creature continue this story on your machine →"}
+          </Link>
+        </motion.div>
       </div>
     </section>
   );
