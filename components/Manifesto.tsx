@@ -6,27 +6,68 @@ import type { Lang } from "./Nav";
 const COPY = {
   vi: {
     eyebrow: "Vì sao Vô chi tồn tại",
-    lines: [
-      ["25 năm trước,", "một con Tamagotchi", "treo trên móc khoá."],
-      ["Nó chết hai lần.", "Tới giờ", "mình vẫn nhớ tên nó."],
-      ["Vô chi đảo ngược", "câu chuyện đó.", ""],
-      ["Bạn không cho pet ăn", "bằng việc bấm nút.", "Bạn cho nó ăn bằng từ vựng."],
-      ["Mỗi từ bạn nhớ,", "một giọt linh khí", "rơi vào pet."],
-      ["Pet lớn cùng nhịp", "với não bạn.", "Đủ."],
+    stanzas: [
+      ["Năm 1996, người ta phát minh ra Tamagotchi.", "Một sinh vật nhỏ sống trong chiếc máy bé hơn lòng bàn tay."],
+      ["Bạn cho nó ăn.", "Chơi với nó.", "Dọn dẹp cho nó."],
+      ["Nếu quên mất vài ngày,", "nó sẽ chết."],
+      ["Nghe có vẻ vô nghĩa."],
+      ["Nhưng hàng triệu đứa trẻ đã yêu nó.", "Mình cũng vậy."],
+      [
+        "Đến bây giờ, mình không còn nhớ những bài kiểm tra hồi đó.",
+        "Không nhớ đã học những gì ở trường.",
+      ],
+      ["Nhưng vẫn nhớ cảm giác lo lắng khi con Tamagotchi của mình sắp chết."],
+      ["Ký ức có một điều kỳ lạ."],
+      ["Nó không giữ lại những gì quan trọng nhất."],
+      ["Nó giữ lại những gì ta gắn bó nhất."],
+      ["Rồi một ngày mình tự hỏi:"],
+      [
+        "Nếu cảm xúc có thể khiến ta nhớ một con thú nhỏ suốt hàng chục năm,",
+        "liệu nó có thể giúp ta nhớ từ vựng lâu hơn không?",
+      ],
+      ["Vô chi bắt đầu từ câu hỏi đó."],
+      ["Ở đây, bạn không nuôi pet bằng cách bấm nút.", "Bạn nuôi nó bằng những từ mình học được."],
+      [
+        "Mỗi từ được ghi nhớ,",
+        "một chút năng lượng lại chảy vào thế giới của nó.",
+      ],
+      ["Pet lớn lên.", "Và vốn từ của bạn cũng vậy."],
+      ["Không áp lực.", "Không streak.", "Không cảm giác bị ép học."],
+      ["Chỉ là một sinh vật nhỏ đang đợi bạn quay lại.", "Và vài từ mới trên đường đi."],
     ],
-    caption: "Lấy cảm hứng từ Tamagotchi, 1996. Cảm ơn Bandai.",
+    caption:
+      "Lấy cảm hứng từ Tamagotchi (1996). Cảm ơn Bandai vì đã vô tình gieo nên ý tưởng này từ rất lâu trước đó.",
   },
   en: {
     eyebrow: "Why Vô chi exists",
-    lines: [
-      ["Twenty-five years ago,", "a Tamagotchi", "hung on a keychain."],
-      ["It died twice.", "I still remember", "its name."],
-      ["Vô chi inverts", "that story.", ""],
-      ["You do not feed the creature", "by tapping a button.", "You feed it with vocabulary."],
-      ["Every word you remember,", "a drop of mana", "falls into the creature."],
-      ["The creature grows", "at the pace of", "your mind."],
+    stanzas: [
+      ["In 1996, someone invented Tamagotchi.", "A small creature living in a machine smaller than your palm."],
+      ["You fed it.", "Played with it.", "Cleaned up after it."],
+      ["If you forgot for a few days,", "it died."],
+      ["It sounds meaningless."],
+      ["But millions of children loved it.", "Including me."],
+      [
+        "Today I no longer remember the tests I took back then.",
+        "I do not remember what I studied at school.",
+      ],
+      ["But I still remember the worry of my Tamagotchi being about to die."],
+      ["Memory has a strange habit."],
+      ["It does not keep what is most important."],
+      ["It keeps what we are most attached to."],
+      ["Then one day I asked myself:"],
+      [
+        "If emotion can keep a small creature in my head for decades,",
+        "could it help me remember vocabulary longer?",
+      ],
+      ["Vô chi started from that question."],
+      ["Here, you do not feed the pet by pressing a button.", "You feed it with the words you learn."],
+      ["For every word remembered,", "a little energy flows into its world."],
+      ["The creature grows.", "And so does your vocabulary."],
+      ["No pressure.", "No streaks.", "No feeling of being forced to study."],
+      ["Just a small creature waiting for you to return.", "And a few new words along the way."],
     ],
-    caption: "Borrowed from Tamagotchi, 1996. Thank you, Bandai.",
+    caption:
+      "Inspired by Tamagotchi (1996). Thank you, Bandai, for unknowingly planting this idea long before.",
   },
 };
 
@@ -34,21 +75,24 @@ export function Manifesto({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
     <section className="relative bg-[var(--color-tint)] px-6 py-32 md:py-44">
-      <div className="mx-auto max-w-[1000px]">
-        <div className="micro mb-10 text-[var(--color-ink-soft)]">{t.eyebrow}</div>
-        <div className="space-y-3 font-display text-[36px] leading-[1.1] tracking-tight md:text-[52px]">
-          {t.lines.map((line, idx) => (
+      <div className="mx-auto max-w-[760px]">
+        <div className="micro mb-12 text-[var(--color-ink-soft)]">{t.eyebrow}</div>
+
+        <div className="font-display text-[24px] leading-[1.4] tracking-tight md:text-[32px] md:leading-[1.35] space-y-7 md:space-y-9">
+          {t.stanzas.map((stanza, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.65, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-wrap items-baseline gap-x-3"
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.55, delay: Math.min(idx, 6) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+              className="space-y-1.5"
             >
-              <span>{line[0]}</span>
-              <span className="italic text-[var(--color-ink-soft)]">{line[1]}</span>
-              <span>{line[2]}</span>
+              {stanza.map((line, i) => (
+                <p key={i} className={i === 0 ? "" : "text-[var(--color-ink-soft)]"}>
+                  {line}
+                </p>
+              ))}
             </motion.div>
           ))}
         </div>
@@ -57,10 +101,9 @@ export function Manifesto({ lang }: { lang: Lang }) {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-16 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]"
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-20 border-t border-[var(--color-hairline-strong)] pt-6 text-[13px] leading-[1.55] text-[var(--color-ink-muted)] italic"
         >
-          <span className="h-px w-10 bg-[var(--color-hairline-strong)]" />
           {t.caption}
         </motion.div>
       </div>
