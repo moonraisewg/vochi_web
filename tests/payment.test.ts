@@ -90,10 +90,10 @@ describe("payment helpers", () => {
     expect(getPlan("one_month")?.amountVnd).toBe(59000);
     expect(getPlan("one_month")?.durationDays).toBe(30);
     expect(getPlan("three_months")?.amountVnd).toBe(129000);
-    expect(getPlan("lifetime")?.amountVnd).toBe(1000);
+    expect(getPlan("lifetime")?.amountVnd).toBe(599000);
     expect(getPlan("lifetime")?.deviceLimit).toBe(5);
     // student stays in the backend (hidden from UI) for the planned .edu.vn flow
-    expect(getPlan("student")?.amountVnd).toBe(299000);
+    expect(getPlan("student")?.amountVnd).toBe(249000);
     // retired plans must no longer resolve
     expect(getPlan("six_months")).toBeNull();
     expect(getPlan("pro_annual")).toBeNull();

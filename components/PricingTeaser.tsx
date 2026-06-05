@@ -60,7 +60,7 @@ const COPY = {
       {
         id: "lifetime",
         name: "Lifetime",
-        price: "1.000đ",
+        price: "599.000đ",
         priceNote: "trả một lần, dùng trọn đời",
         compare: "≈ 1 buổi xem phim CGV cùng bắp nước",
         compareStudent: "≈ 2 buổi cà phê cuối tuần",
@@ -132,7 +132,7 @@ const COPY = {
       {
         id: "lifetime",
         name: "Lifetime",
-        price: "1.000đ",
+        price: "599.000đ",
         priceNote: "pay once, keep forever",
         compare: "≈ one movie night with snacks",
         compareStudent: "≈ two weekend café visits",
@@ -237,7 +237,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
                     <div className="mt-1 font-display text-[30px] leading-none tracking-tight text-[var(--color-accent)]">
                       {plan.id === "one_month" ? "29.000đ" :
                        plan.id === "three_months" ? "65.000đ" :
-                       "299.000đ"}
+                       "249.000đ"}
                     </div>
                   </>
                 ) : (

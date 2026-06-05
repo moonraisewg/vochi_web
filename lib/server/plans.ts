@@ -32,7 +32,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   lifetime: {
     id: "lifetime",
     name: "Lifetime",
-    amountVnd: 1_000,
+    amountVnd: 599_000,
     deviceLimit: 5,
     durationDays: null,
     features: ["mode2", "unlimited_vocab", "skins", "stats", "future_skins"],
@@ -40,7 +40,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   student: {
     id: "student",
     name: "Student Lifetime",
-    amountVnd: 299_000,
+    amountVnd: 249_000,
     deviceLimit: 5,
     durationDays: null,
     features: ["mode2", "unlimited_vocab", "skins", "stats", "future_skins"],
