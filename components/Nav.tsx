@@ -51,9 +51,9 @@ export function Nav({
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-colors duration-300 ${
+      className={`sticky top-0 z-40 transition-[background-color,box-shadow] duration-300 ${
         scrolled
-          ? "border-b border-[var(--color-hairline)] bg-[var(--color-bg)]/85 backdrop-blur-md"
+          ? "bg-[var(--color-bg)]/85 shadow-[0_1px_0_rgba(15,19,17,0.04)] backdrop-blur-md"
           : "bg-transparent"
       }`}
       style={{ height: 72 }}
