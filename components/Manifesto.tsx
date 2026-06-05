@@ -6,6 +6,12 @@ import type { Lang } from "./Nav";
 const COPY = {
   vi: {
     eyebrow: "Vì sao Vô chi tồn tại",
+    pullQuote: [
+      "Ta không nhớ những gì",
+      "quan trọng nhất.",
+      "Ta nhớ những gì",
+      "mình gắn bó nhất.",
+    ],
     stanzas: [
       [
         "Năm 1996, người ta phát minh ra Tamagotchi,",
@@ -53,6 +59,12 @@ const COPY = {
   },
   en: {
     eyebrow: "Why Vô chi exists",
+    pullQuote: [
+      "We don't remember",
+      "what was most important.",
+      "We remember",
+      "what we were most attached to.",
+    ],
     stanzas: [
       [
         "In 1996, someone invented Tamagotchi,",
@@ -107,7 +119,21 @@ export function Manifesto({ lang }: { lang: Lang }) {
       <div className="mx-auto max-w-[1100px]">
         <div className="micro mb-12 text-[var(--color-ink-soft)]">{t.eyebrow}</div>
 
-        <div className="font-display text-[32px] leading-[1.18] tracking-tight md:text-[44px] md:leading-[1.15] space-y-7 md:space-y-10">
+        <motion.blockquote
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 border-l-2 border-[var(--color-accent)] pl-6 font-display italic text-[28px] leading-[1.2] tracking-tight md:mb-24 md:pl-10 md:text-[44px] md:leading-[1.15] md:max-w-[820px]"
+        >
+          {t.pullQuote.map((line, i) => (
+            <p key={i} className={i >= 2 ? "text-[var(--color-ink-soft)]" : ""}>
+              {line}
+            </p>
+          ))}
+        </motion.blockquote>
+
+        <div className="font-display text-[28px] leading-[1.2] tracking-tight md:text-[36px] md:leading-[1.18] space-y-7 md:space-y-10">
           {t.stanzas.map((stanza, idx) => (
             <motion.div
               key={idx}

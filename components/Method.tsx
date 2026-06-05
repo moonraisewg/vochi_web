@@ -6,8 +6,8 @@ import type { Lang } from "./Nav";
 const COPY = {
   vi: {
     eyebrow: "Phương pháp Vô chi",
-    title: "Học theo cách não muốn,",
-    titleItalic: "không theo cách app muốn.",
+    title: "Vì sao thú nhỏ",
+    titleItalic: "giúp bạn nhớ lâu hơn.",
     pillars: [
       {
         no: "01",
@@ -28,8 +28,8 @@ const COPY = {
   },
   en: {
     eyebrow: "The Vô chi method",
-    title: "Learn the way the brain wants,",
-    titleItalic: "not the way an app wants.",
+    title: "Why a tiny creature",
+    titleItalic: "helps you remember longer.",
     pillars: [
       {
         no: "01",

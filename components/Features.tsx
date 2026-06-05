@@ -31,7 +31,7 @@ const COPY = {
       {
         no: "05",
         name: "Mỗi từ là một chút lớn lên",
-        desc: "Ở Vô chi, từ vựng không biến thành điểm số. Mỗi từ bạn nhớ được trở thành linh khí nuôi dưỡng sinh vật nhỏ ấy. Bạn học một chút. Nó lớn lên một chút. Rồi một ngày nhìn lại, cả hai đều đã đi được rất xa.",
+        desc: "Ở Vô chi, từ vựng không biến thành điểm số. Mỗi từ bạn nhớ được trở thành linh khí nuôi dưỡng sinh vật nhỏ ấy. Bạn học một chút. Nó lớn lên một chút. Rồi một ngày nhìn lại, bạn có thêm một vốn từ. Và nó có thêm cả một cuộc đời.",
       },
       {
         no: "06",
@@ -67,7 +67,7 @@ const COPY = {
       {
         no: "05",
         name: "Every word is a little growth",
-        desc: "In Vô chi, vocabulary does not turn into a score. Every word you remember becomes mana that nourishes the small creature. You learn a little. It grows a little. Then one day you look back and both of you have come a long way.",
+        desc: "In Vô chi, vocabulary does not turn into a score. Every word you remember becomes mana that nourishes the small creature. You learn a little. It grows a little. Then one day you look back: you have a richer vocabulary, and it has a whole life.",
       },
       {
         no: "06",

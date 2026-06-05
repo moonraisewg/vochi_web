@@ -134,7 +134,9 @@ export function Footer({ lang }: { lang: Lang }) {
           <span>© {t.rights}</span>
           <span className="flex items-center gap-2">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
-            {lang === "vi" ? "Thú nhỏ vẫn vô tư" : "Creatures still carefree"}
+            {lang === "vi"
+              ? "Thú nhỏ vẫn vô tư. Còn từ vựng thì ở lại."
+              : "The creatures stay carefree. The words stay too."}
           </span>
         </div>
       </section>

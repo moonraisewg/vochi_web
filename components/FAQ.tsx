@@ -10,6 +10,10 @@ const COPY = {
     contact: "Không thấy câu hỏi của bạn? Gửi email cho mình.",
     items: [
       {
+        q: "Nếu thú nhỏ chết thì sao?",
+        a: "Nó sẽ không chết chỉ vì bạn bận vài ngày. Vô chi không dùng cảm giác tội lỗi để giữ chân bạn. Thú nhỏ chỉ ngủ và đợi bạn quay lại. Học vài từ là nó tỉnh dậy.",
+      },
+      {
         q: "App có chạy trên Windows không?",
         a: "Có. macOS 12 trở lên và Windows 10 trở lên đều được hỗ trợ. Bản Linux đang trong quá trình hoàn thiện.",
       },
@@ -33,16 +37,16 @@ const COPY = {
         q: "Có hỗ trợ ôn IELTS hoặc TOEIC không?",
         a: "Có. App có sẵn gần 5.300 từ chia theo cấp độ, phủ hầu hết từ thi IELTS và TOEIC. Bạn cũng có thể nhập thêm danh sách của riêng mình.",
       },
-      {
-        q: "Nếu thú nhỏ chết thì sao?",
-        a: "Khác với Tamagotchi, thú nhỏ ở Vô chi không thể chết hẳn. Khi lâu không gặp, nó chỉ hơi hờn dỗi, cuộn lại thành một cái kén nhỏ rồi ngủ chờ bạn quay lại. Học vài từ là nó hồi sinh và lon ton chạy ra ngay. Vô chi không có drama, chỉ có chờ đợi.",
-      },
     ],
   },
   en: {
     title: "Frequently asked.",
     contact: "Question not here? Send me an email.",
     items: [
+      {
+        q: "What happens if my creature dies?",
+        a: "It will not die just because you are busy for a few days. Vô chi does not use guilt to keep you around. The creature simply sleeps and waits for you to come back. A few words wake it right up.",
+      },
       {
         q: "Does it run on Windows?",
         a: "Yes. macOS 12+ and Windows 10+ are both supported. A Linux build is in progress.",
@@ -66,10 +70,6 @@ const COPY = {
       {
         q: "Can I drill IELTS or TOEIC vocab?",
         a: "Yes. The app includes nearly 5,300 words sorted by level, covering most IELTS and TOEIC vocabulary. You can also import your own list.",
-      },
-      {
-        q: "What happens if my creature dies?",
-        a: "Unlike a Tamagotchi, the creature in Vô chi cannot truly die. After a long absence it just sulks a little, curls into a small cocoon and sleeps until you return. A few words revive it and it scurries right back out. No drama, just patience.",
       },
     ],
   },
