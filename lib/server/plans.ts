@@ -1,6 +1,6 @@
 // `student` is kept in the backend (planned: .edu.vn verification) but is
 // intentionally NOT surfaced on the pricing/teaser UI — see WEB_MERGE_PLAN.md.
-export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student"] as const;
+export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student", "one_month_student", "three_months_student"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
 export type PlanDefinition = {
@@ -32,17 +32,33 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   lifetime: {
     id: "lifetime",
     name: "Lifetime",
-    amountVnd: 599_000,
+    amountVnd: 1_000,
     deviceLimit: 5,
     durationDays: null,
     features: ["mode2", "unlimited_vocab", "skins", "stats", "future_skins"],
   },
   student: {
     id: "student",
-    name: "Student, 12 months",
-    amountVnd: 490_000,
-    deviceLimit: 1,
-    durationDays: 365,
+    name: "Student Lifetime",
+    amountVnd: 299_000,
+    deviceLimit: 5,
+    durationDays: null,
+    features: ["mode2", "unlimited_vocab", "skins", "stats", "future_skins"],
+  },
+  one_month_student: {
+    id: "one_month_student",
+    name: "1 month (Student)",
+    amountVnd: 29_000,
+    deviceLimit: 2,
+    durationDays: 30,
+    features: ["mode2", "unlimited_vocab", "skins", "stats"],
+  },
+  three_months_student: {
+    id: "three_months_student",
+    name: "3 months (Student)",
+    amountVnd: 65_000,
+    deviceLimit: 2,
+    durationDays: 90,
     features: ["mode2", "unlimited_vocab", "skins", "stats"],
   },
 };

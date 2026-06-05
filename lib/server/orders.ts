@@ -12,8 +12,8 @@ export const createCheckoutSchema = z.object({
 export async function createOrder(input: z.infer<typeof createCheckoutSchema>) {
   const plan = getPlan(input.plan);
   if (!plan) throw new Error("Unknown plan");
-  if (plan.id === "student" && !input.email.endsWith(".edu.vn")) {
-    throw new Error("Student plan requires a .edu.vn email address");
+  if (plan.id.includes("student") && !input.email.endsWith(".edu.vn")) {
+    throw new Error("Gói sinh viên yêu cầu sử dụng email có đuôi .edu.vn");
   }
 
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);

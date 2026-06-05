@@ -12,6 +12,8 @@ enum Plan {
   three_months
   lifetime
   student
+  one_month_student
+  three_months_student
 }
 
 enum OrderStatus {

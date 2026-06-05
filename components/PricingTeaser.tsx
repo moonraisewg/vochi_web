@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import type { Lang } from "./Nav";
@@ -11,6 +12,7 @@ const COPY = {
     sub: "",
     plans: [
       {
+        id: "free",
         name: "Free",
         price: "0đ",
         priceNote: "miễn phí, dùng mãi mãi",
@@ -24,6 +26,7 @@ const COPY = {
         featured: false,
       },
       {
+        id: "one_month",
         name: "1 tháng",
         price: "59.000đ",
         priceNote: "thử trước khi chốt lâu dài",
@@ -37,6 +40,7 @@ const COPY = {
         featured: false,
       },
       {
+        id: "three_months",
         name: "3 tháng",
         price: "129.000đ",
         priceNote: "khoảng 43.000đ mỗi tháng",
@@ -50,15 +54,16 @@ const COPY = {
         featured: true,
       },
       {
+        id: "lifetime",
         name: "Lifetime",
-        price: "599.000đ",
+        price: "1.000đ",
         priceNote: "trả một lần, dùng trọn đời",
         cta: "Chốt deal",
         href: "/checkout?plan=lifetime",
         features: [
           "Đầy đủ tính năng của gói 3 tháng",
           "Không bao giờ hết hạn",
-          "Tặng toàn bộ thú nhỏ đã và sắp ra mắt",
+          "Tặng 10 bộ thú nhỏ đã và sắp ra mắt",
           "Hỗ trợ ưu tiên qua email",
         ],
         featured: false,
@@ -73,6 +78,7 @@ const COPY = {
     sub: "",
     plans: [
       {
+        id: "free",
         name: "Free",
         price: "0đ",
         priceNote: "free, forever",
@@ -86,6 +92,7 @@ const COPY = {
         featured: false,
       },
       {
+        id: "one_month",
         name: "1 month",
         price: "59.000đ",
         priceNote: "try before you commit",
@@ -99,6 +106,7 @@ const COPY = {
         featured: false,
       },
       {
+        id: "three_months",
         name: "3 months",
         price: "129.000đ",
         priceNote: "about 43k a month",
@@ -112,15 +120,16 @@ const COPY = {
         featured: true,
       },
       {
+        id: "lifetime",
         name: "Lifetime",
-        price: "599.000đ",
+        price: "1.000đ",
         priceNote: "pay once, keep forever",
         cta: "Lock it in",
         href: "/checkout?plan=lifetime",
         features: [
           "Everything in 3 months",
           "Never expires",
-          "All current and future creatures included",
+          "10 creature skins included",
           "Priority email support",
         ],
         featured: false,
@@ -133,6 +142,8 @@ const COPY = {
 
 export function PricingTeaser({ lang }: { lang: Lang }) {
   const t = COPY[lang];
+  const [isStudent, setIsStudent] = useState(false);
+
   return (
     <section id="pricing" className="relative px-6 py-28 md:py-40">
       <div className="mx-auto max-w-[1280px]">
@@ -142,6 +153,35 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
             <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
               {t.title}
             </h2>
+            <div className="mt-8 flex items-center">
+              <label className="group flex cursor-pointer items-center gap-3 rounded-full border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] py-2 pl-3 pr-4 transition-all hover:border-[var(--color-ink)] hover:shadow-sm">
+                <div
+                  className={`relative flex h-6 w-11 items-center rounded-full transition-colors ${
+                    isStudent ? "bg-[var(--color-ink)]" : "bg-[var(--color-hairline-strong)]"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isStudent}
+                    onChange={(e) => setIsStudent(e.target.checked)}
+                    className="sr-only"
+                  />
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      isStudent ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[14px] font-medium text-[var(--color-ink)]">
+                    {lang === "vi" ? "Dành cho sinh viên" : "Student discount"}
+                  </span>
+                  <span className="rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-white">
+                    -50%
+                  </span>
+                </div>
+              </label>
+            </div>
           </div>
           {t.sub && (
             <div className="md:col-span-5 md:pt-6">
@@ -155,7 +195,7 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {t.plans.map((plan, idx) => (
             <motion.div
-              key={plan.name}
+              key={plan.id}
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
@@ -177,9 +217,22 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
               </div>
 
               <div className="mt-5">
-                <div className="font-display text-[30px] leading-none tracking-tight">
-                  {plan.price}
-                </div>
+                {isStudent && plan.id !== "free" ? (
+                  <>
+                    <div className="font-display text-[20px] leading-none tracking-tight text-[var(--color-ink-muted)] line-through decoration-[var(--color-hairline-strong)]">
+                      {plan.price}
+                    </div>
+                    <div className="mt-1 font-display text-[30px] leading-none tracking-tight text-[var(--color-accent)]">
+                      {plan.id === "one_month" ? "29.000đ" :
+                       plan.id === "three_months" ? "65.000đ" :
+                       "299.000đ"}
+                    </div>
+                  </>
+                ) : (
+                  <div className="font-display text-[30px] leading-none tracking-tight">
+                    {plan.price}
+                  </div>
+                )}
                 <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                   {plan.priceNote}
                 </div>
@@ -195,7 +248,11 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
               </ul>
 
               <Link
-                href={plan.href}
+                href={isStudent && plan.id !== "free" ? (
+                  plan.id === "one_month" ? "/checkout?plan=one_month_student" :
+                  plan.id === "three_months" ? "/checkout?plan=three_months_student" :
+                  "/checkout?plan=student"
+                ) : plan.href}
                 className={`mt-6 inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-[13px] font-medium transition-colors ${
                   plan.featured
                     ? "bg-[var(--color-ink)] text-[var(--color-surface)] hover:bg-[var(--color-accent-deep)]"

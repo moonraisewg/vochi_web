@@ -5,11 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 
 // Plans shown in the checkout selector. `student` is intentionally omitted from
-// the UI (backend still accepts it for the planned .edu.vn flow).
 const PLANS = {
   one_month: { name: "1 tháng", amount: "59.000đ", note: "2 thiết bị, 1 tháng" },
   three_months: { name: "3 tháng", amount: "129.000đ", note: "2 thiết bị, 3 tháng" },
-  lifetime: { name: "Lifetime", amount: "599.000đ", note: "5 thiết bị, trọn đời" },
+  lifetime: { name: "Lifetime", amount: "1.000đ", note: "5 thiết bị, trọn đời" },
+  student: { name: "Student Lifetime", amount: "299.000đ", note: "5 thiết bị, trọn đời (cần email .edu.vn)" },
+  one_month_student: { name: "1 tháng (Sinh viên)", amount: "29.000đ", note: "2 thiết bị, 1 tháng (cần email .edu.vn)" },
+  three_months_student: { name: "3 tháng (Sinh viên)", amount: "65.000đ", note: "2 thiết bị, 3 tháng (cần email .edu.vn)" },
 } as const;
 
 type PlanId = keyof typeof PLANS;
