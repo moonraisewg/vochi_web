@@ -90,10 +90,10 @@ export function FAQ({ lang }: { lang: Lang }) {
             {t.contact}
             <br />
             <a
-              href="mailto:hi@vochi.app"
+              href="mailto:hi@vochi.xyz"
               className="mt-2 inline-block text-[var(--color-ink)] underline decoration-[var(--color-hairline-strong)] decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)]"
             >
-              hi@vochi.app
+              hi@vochi.xyz
             </a>
           </div>
         </div>

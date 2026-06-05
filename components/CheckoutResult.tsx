@@ -114,7 +114,7 @@ export function CheckoutResult({
             Quay lại giá
           </Link>
           <a
-            href="mailto:hi@vochi.app"
+            href="mailto:hi@vochi.xyz"
             className="rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-white"
           >
             Cần hỗ trợ

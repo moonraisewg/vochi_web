@@ -18,10 +18,10 @@ const COPY = {
     contact: "Liên hệ",
     docs: "Cẩm nang",
     changelog: "Cập nhật",
-    address: "Hà Nội, Việt Nam",
+    address: "Việt Nam",
     rights: "Vô chi, 2026.",
     tagline:
-      "Thú nhỏ ăn từ vựng. Bạn học mà không cảm thấy như đang học. Phát triển tại Hà Nội.",
+      "Thú nhỏ ăn từ vựng. Bạn học mà không cảm thấy như đang học.",
   },
   en: {
     cta: "Learn languages. Raise creatures. Drift carefree.",
@@ -36,10 +36,10 @@ const COPY = {
     contact: "Contact",
     docs: "Handbook",
     changelog: "Updates",
-    address: "Hanoi, Vietnam",
+    address: "Vietnam",
     rights: "Vô chi, 2026.",
     tagline:
-      "A creature that eats vocab. You learn without feeling like you are studying. Built in Hanoi.",
+      "A creature that eats vocab. You learn without feeling like you are studying.",
   },
 };
 
@@ -114,8 +114,8 @@ export function Footer({ lang }: { lang: Lang }) {
               <li><Link href="/privacy" className="hover:text-[var(--color-ink)]">{t.privacy}</Link></li>
               <li><Link href="/terms" className="hover:text-[var(--color-ink)]">{t.terms}</Link></li>
               <li>
-                <a href="mailto:hi@vochi.app" className="hover:text-[var(--color-ink)]">
-                  hi@vochi.app
+                <a href="mailto:hi@vochi.xyz" className="hover:text-[var(--color-ink)]">
+                  hi@vochi.xyz
                 </a>
               </li>
             </ul>
@@ -125,8 +125,8 @@ export function Footer({ lang }: { lang: Lang }) {
             <div className="micro mb-4">{t.contact}</div>
             <ul className="space-y-2.5 text-[14px] text-[var(--color-ink-soft)]">
               <li>
-                <a href="mailto:hi@vochi.app" className="hover:text-[var(--color-ink)]">
-                  hi@vochi.app
+                <a href="mailto:hi@vochi.xyz" className="hover:text-[var(--color-ink)]">
+                  hi@vochi.xyz
                 </a>
               </li>
             </ul>
