@@ -170,10 +170,10 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
         <div className="mb-10 grid grid-cols-1 gap-6 md:grid-cols-12 md:mb-12">
           <div className="md:col-span-7">
             <div className="micro mb-4">{t.eyebrow}</div>
-            <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
+            <h2 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[64px] md:leading-[1.02]">
               {t.title}
             </h2>
-            <p className="mt-5 max-w-[560px] font-display italic text-[18px] leading-[1.4] tracking-tight text-[var(--color-ink-soft)] md:text-[22px]">
+            <p className="mt-4 max-w-[560px] font-display italic text-[17px] leading-[1.4] tracking-tight text-[var(--color-ink-soft)] md:mt-5 md:text-[22px]">
               {t.subline}
             </p>
             <div className="mt-8 flex items-center">

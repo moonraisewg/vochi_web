@@ -46,7 +46,7 @@ export function Hero({ lang }: { lang: Lang }) {
             </span>
           </motion.div>
 
-          <h1 className="mt-7 font-display text-[44px] leading-[1.02] tracking-tight text-balance md:text-[72px]">
+          <h1 className="mt-7 font-display text-[40px] leading-[1.05] tracking-tight text-balance md:text-[72px] md:leading-[1.02]">
             <motion.span
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ export function Hero({ lang }: { lang: Lang }) {
           >
             <Link
               href="/download"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-ink)] px-6 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-ink)] px-6 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)] sm:w-auto sm:justify-start"
             >
               {t.ctaPrimary}
               <span aria-hidden className="text-[16px] leading-none">↓</span>

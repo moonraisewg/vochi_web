@@ -85,7 +85,7 @@ export function Features({ lang }: { lang: Lang }) {
     <section id="features" className="relative px-6 py-16 md:py-24">
       <div className="mx-auto max-w-[1280px]">
         <div className="mb-16 max-w-[760px]">
-          <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
+          <h2 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[64px] md:leading-[1.02]">
             {t.title}
             <br />
             <span className="italic text-[var(--color-ink-soft)]">{t.titleItalic}</span>

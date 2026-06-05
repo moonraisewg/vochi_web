@@ -83,7 +83,7 @@ export function FAQ({ lang }: { lang: Lang }) {
     <section id="faq" className="relative px-6 py-16 md:py-24">
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-16">
         <div className="md:col-span-4">
-          <h2 className="font-display text-[40px] italic leading-[1.02] tracking-tight md:text-[56px]">
+          <h2 className="font-display text-[34px] italic leading-[1.05] tracking-tight md:text-[56px] md:leading-[1.02]">
             {t.title}
           </h2>
           <div className="mt-8 text-[14px] text-[var(--color-ink-soft)]">

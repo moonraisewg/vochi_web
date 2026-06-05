@@ -50,7 +50,7 @@ export function Footer({ lang }: { lang: Lang }) {
       <section className="border-t border-[var(--color-hairline)] bg-[var(--color-surface)] px-6 py-16 md:py-20">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-10 md:flex-row md:items-end">
           <div className="max-w-[640px]">
-            <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[64px]">
+            <h2 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[64px] md:leading-[1.02]">
               {t.cta}
             </h2>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">

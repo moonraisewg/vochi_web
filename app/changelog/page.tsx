@@ -56,7 +56,7 @@ export default function ChangelogPage() {
       {(lang) => (
         <section className="relative px-6 py-16 md:py-24">
           <div className="mx-auto max-w-[1280px]">
-            <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[72px]">
+            <h1 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[72px] md:leading-[1.02]">
               {lang === "vi" ? "Cập nhật phát triển." : "Release notes."}
             </h1>
             <p className="mt-5 max-w-[520px] text-[16px] leading-[1.55] text-[var(--color-ink-soft)]">

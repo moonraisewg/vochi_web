@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Lang } from "./Nav";
 
 const SECTIONS: { id: string; vi: string; en: string }[] = [
@@ -12,41 +12,41 @@ const SECTIONS: { id: string; vi: string; en: string }[] = [
   { id: "faq", vi: "Câu hỏi", en: "FAQ" },
 ];
 
+const NAV_OFFSET = 100;
+
 export function ScrollDots({ lang }: { lang: Lang }) {
   const [active, setActive] = useState<string>("top");
   const [visible, setVisible] = useState(false);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      (el): el is HTMLElement => el != null,
-    );
-    if (els.length === 0) return;
+    const compute = () => {
+      rafRef.current = null;
+      const probe = window.scrollY + NAV_OFFSET;
+      let current = SECTIONS[0].id;
+      for (const s of SECTIONS) {
+        const el = document.getElementById(s.id);
+        if (!el) continue;
+        const top = el.offsetTop;
+        if (top <= probe) current = s.id;
+        else break;
+      }
+      setActive(current);
+      setVisible(window.scrollY > window.innerHeight * 0.8);
+    };
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        const inView = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (inView[0]) setActive(inView[0].target.id);
-      },
-      { threshold: [0.25, 0.5, 0.75], rootMargin: "-30% 0px -30% 0px" },
-    );
-    els.forEach((el) => io.observe(el));
+    const onScroll = () => {
+      if (rafRef.current != null) return;
+      rafRef.current = requestAnimationFrame(compute);
+    };
 
-    const sentinel = document.createElement("div");
-    sentinel.style.cssText =
-      "position:absolute;top:80vh;left:0;height:1px;width:1px;pointer-events:none;";
-    document.body.prepend(sentinel);
-    const showIo = new IntersectionObserver(
-      ([entry]) => setVisible(!entry.isIntersecting),
-      { threshold: 0 },
-    );
-    showIo.observe(sentinel);
-
+    compute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     return () => {
-      io.disconnect();
-      showIo.disconnect();
-      sentinel.remove();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 

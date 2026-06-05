@@ -70,7 +70,7 @@ export default function DownloadPage() {
         return (
           <section className="relative px-6 py-20 md:py-28">
             <div className="mx-auto max-w-[1280px]">
-              <h1 className="font-display text-[48px] leading-[1.02] tracking-tight md:text-[80px]">
+              <h1 className="font-display text-[36px] leading-[1.05] tracking-tight md:text-[80px] md:leading-[1.02]">
                 {t.title}
               </h1>
               <p className="mt-5 max-w-[560px] text-[17px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[19px]">

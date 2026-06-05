@@ -86,7 +86,7 @@ export function PetDevice({ className = "" }: { className?: string }) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative ml-auto w-[320px] md:w-[360px]"
+        className="relative mx-auto w-[300px] sm:w-[320px] md:ml-auto md:mr-0 md:w-[360px]"
       >
         {/* device chassis */}
         <div className="relative rounded-[28px] border border-[var(--color-hairline-strong)] bg-[var(--color-surface)] p-5 lift-md">

@@ -40,15 +40,6 @@ export function FloatingActions() {
       }`}
       aria-hidden={!visible}
     >
-      <Link
-        href="/download"
-        className={`pointer-events-auto inline-flex items-center gap-2 rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] shadow-[0_10px_30px_rgba(15,19,17,0.18)] transition-colors hover:bg-[var(--color-accent-deep)] ${
-          visible ? "" : "pointer-events-none"
-        }`}
-      >
-        {t.adopt}
-        <span aria-hidden className="text-[15px] leading-none">↓</span>
-      </Link>
       <button
         type="button"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -59,6 +50,15 @@ export function FloatingActions() {
       >
         <span aria-hidden>↑</span>
       </button>
+      <Link
+        href="/download"
+        className={`pointer-events-auto inline-flex items-center gap-2 rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] shadow-[0_10px_30px_rgba(15,19,17,0.18)] transition-colors hover:bg-[var(--color-accent-deep)] ${
+          visible ? "" : "pointer-events-none"
+        }`}
+      >
+        {t.adopt}
+        <span aria-hidden className="text-[15px] leading-none">↓</span>
+      </Link>
     </div>
   );
 }

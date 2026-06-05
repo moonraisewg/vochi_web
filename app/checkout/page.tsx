@@ -79,7 +79,7 @@ function CheckoutInner() {
       <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
           <div className="micro mb-4">Thanh toán</div>
-          <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">
+          <h1 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[64px] md:leading-[1.02]">
             Bốn bước. <span className="italic text-[var(--color-ink-soft)]">License vô mail.</span>
           </h1>
           <p className="mt-5 max-w-[560px] text-[16px] leading-[1.6] text-[var(--color-ink-soft)]">

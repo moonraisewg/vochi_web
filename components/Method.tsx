@@ -71,7 +71,7 @@ export function Method({ lang }: { lang: Lang }) {
         <div className="mb-16 grid grid-cols-1 gap-6 md:grid-cols-12">
           <div className="md:col-span-6">
             <div className="micro mb-4">{t.eyebrow}</div>
-            <h2 className="font-display text-[40px] leading-[1.02] tracking-tight md:text-[60px]">
+            <h2 className="font-display text-[34px] leading-[1.05] tracking-tight md:text-[60px] md:leading-[1.02]">
               {t.title}{" "}
               <span className="italic text-[var(--color-ink-soft)]">{t.titleItalic}</span>
             </h2>
