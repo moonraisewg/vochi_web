@@ -12,7 +12,7 @@ const COPY = {
       },
       {
         name: "Hai chế độ học",
-        topics: ["Chế độ 1: thú nhỏ đi tự do", "Chế độ 2: thú nhỏ ngủ theo lịch", "Chuyển đổi chế độ"],
+        topics: ["Thú nhỏ đi tự do", "Thú nhỏ ngủ theo lịch", "Chuyển đổi hai nhịp"],
       },
       {
         name: "Từ vựng",
@@ -41,7 +41,7 @@ const COPY = {
       },
       {
         name: "Two modes",
-        topics: ["Mode 1: free-roam creature", "Mode 2: scheduled wake-up", "Switch between them"],
+        topics: ["Free-roam creature", "Scheduled wake-up", "Switching between them"],
       },
       {
         name: "Vocabulary",

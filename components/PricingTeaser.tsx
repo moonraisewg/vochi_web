@@ -20,7 +20,7 @@ const COPY = {
         href: "/download",
         features: [
           "1 thú nhỏ, học thử 100 từ đầu tiên",
-          "Chế độ 1, 1 thiết bị",
+          "Thú nhỏ đi tự do trên màn hình",
           "Tham gia cộng đồng Discord",
         ],
         featured: false,
@@ -36,7 +36,7 @@ const COPY = {
         href: "/checkout?plan=one_month",
         features: [
           "Đầy đủ tính năng của Free",
-          "Chế độ 2, không giới hạn từ",
+          "Thú nhỏ ngủ theo lịch, không giới hạn từ",
           "2 thiết bị cùng lúc",
         ],
         featured: false,
@@ -92,7 +92,7 @@ const COPY = {
         href: "/download",
         features: [
           "1 creature, try the first 100 words",
-          "Mode 1, 1 device",
+          "Free-roam creature on your screen",
           "Community Discord",
         ],
         featured: false,
@@ -108,7 +108,7 @@ const COPY = {
         href: "/checkout?plan=one_month",
         features: [
           "Everything in Free",
-          "Mode 2, unlimited words",
+          "Scheduled wake-up, unlimited words",
           "2 devices",
         ],
         featured: false,

@@ -19,7 +19,7 @@ const ENTRIES = [
     v: "0.1.3",
     date: "2026-04-08",
     tag: "beta",
-    title: "Chế độ 2: thú nhỏ ngủ theo lịch",
+    title: "Thú nhỏ ngủ theo lịch",
     items: [
       "Thú nhỏ ngủ yên khi chưa tới giờ học.",
       "Tự động thức dậy khi cần ôn từ.",
