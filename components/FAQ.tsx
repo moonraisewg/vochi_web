@@ -35,7 +35,7 @@ const COPY = {
       },
       {
         q: "Nếu thú nhỏ chết thì sao?",
-        a: "Thú nhỏ không thể chết. Khi hunger về 0, thú nhỏ chỉ ngủ và chờ bạn quay lại. Không drama, không gây áp lực.",
+        a: "Khác với Tamagotchi, thú nhỏ ở Vô chi không thể chết hẳn. Khi lâu không gặp, nó chỉ hơi hờn dỗi, cuộn lại thành một cái kén nhỏ rồi ngủ chờ bạn quay lại. Học vài từ là nó hồi sinh và lon ton chạy ra ngay. Vô chi không có drama, chỉ có chờ đợi.",
       },
     ],
   },
@@ -69,7 +69,7 @@ const COPY = {
       },
       {
         q: "What happens if my creature dies?",
-        a: "It cannot. When hunger reaches zero, the creature simply sleeps and waits for you to return. No drama, no guilt.",
+        a: "Unlike a Tamagotchi, the creature in Vô chi cannot truly die. After a long absence it just sulks a little, curls into a small cocoon and sleeps until you return. A few words revive it and it scurries right back out. No drama, just patience.",
       },
     ],
   },
