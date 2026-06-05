@@ -93,9 +93,6 @@ export function Footer({ lang }: { lang: Lang }) {
             <p className="mt-5 max-w-[300px] text-[14px] leading-[1.55] text-[var(--color-ink-soft)]">
               {t.tagline}
             </p>
-            <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-              {t.address}
-            </p>
           </div>
 
           <div>
