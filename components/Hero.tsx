@@ -11,18 +11,18 @@ const HERO_COPY = {
     titleA: "Học ngoại ngữ, nuôi từng thú nhỏ,",
     titleB: ["cùng vô chill", "thế giới mới bao la."],
     sub: "Những điều lớn lao được nuôi bằng những điều nhỏ bé. Hãy để những thú cưng nhỏ bé lớn lên cùng thế giới ngoại ngữ của bạn.",
-    ctaPrimary: "Nuôi thú nhỏ ngay",
-    ctaSecondary: "Xem cách hoạt động",
-    micro: "Miễn phí. Không cần tài khoản. 28MB.",
+    ctaPrimary: "Tải miễn phí cho Mac & Windows",
+    ctaSecondary: "Xem bảng giá",
+    micro: "Không cần tài khoản. 28MB. Beta.",
   },
   en: {
     eyebrow: "Beta · macOS + Windows",
     titleA: "Learn languages, raise tiny creatures,",
     titleB: ["drift carefree", "through a vast new world."],
     sub: "Great things are grown from small ones. Let tiny creatures grow alongside the new world of language you are learning.",
-    ctaPrimary: "Adopt one now",
-    ctaSecondary: "See how it works",
-    micro: "Free. No account required. 28MB.",
+    ctaPrimary: "Download free for Mac & Windows",
+    ctaSecondary: "See pricing",
+    micro: "No account required. 28MB. Beta.",
   },
 };
 
@@ -95,10 +95,11 @@ export function Hero({ lang }: { lang: Lang }) {
               <span aria-hidden className="text-[16px] leading-none">↓</span>
             </Link>
             <a
-              href="#features"
+              href="#pricing"
               className="inline-flex items-center gap-1.5 text-[14px] font-medium text-[var(--color-ink)] underline decoration-[var(--color-hairline-strong)] decoration-[1.5px] underline-offset-[6px] transition-colors hover:decoration-[var(--color-accent)]"
             >
               {t.ctaSecondary}
+              <span aria-hidden>→</span>
             </a>
           </motion.div>
 
