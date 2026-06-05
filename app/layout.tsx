@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   description:
     "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill thế giới mới bao la. Pet ảo sống trên màn hình macOS và Windows. Tải miễn phí.",
   applicationName: "Vô chi",
-  authors: [{ name: "himitsuko" }],
-  creator: "himitsuko",
+  authors: [{ name: "Vô chi" }],
+  creator: "Vô chi",
   publisher: "Vô chi",
   keywords: [
     "vô chi",
@@ -89,7 +89,6 @@ export const metadata: Metadata = {
     title: "Vô chi · Học ngoại ngữ, nuôi từng thú nhỏ",
     description:
       "Học ngoại ngữ nuôi từng thú nhỏ, cùng vô chill thế giới mới bao la. Tải miễn phí cho macOS và Windows.",
-    creator: "@himitsuko",
     images: ["/og.png"],
   },
   robots: {

@@ -25,11 +25,10 @@ const COPY: Record<
         body: (
           <>
             <p>
-              Vô chi (sau đây gọi là "chúng tôi") là một sản phẩm cá nhân được phát triển và vận
-              hành bởi himitsuko, một nhà phát triển độc lập tại Việt Nam. Khi bạn dùng app hoặc
-              website vochi.xyz, chúng tôi là bên kiểm soát dữ liệu cá nhân theo Nghị định
-              13/2023/NĐ-CP về Bảo vệ Dữ liệu Cá nhân (PDPL) và Quy định Bảo vệ Dữ liệu Chung
-              của EU (GDPR) khi áp dụng.
+              Vô chi (sau đây gọi là "chúng tôi") là một sản phẩm được phát triển và vận hành tại
+              Việt Nam. Khi bạn dùng app hoặc website vochi.xyz, chúng tôi là bên kiểm soát dữ
+              liệu cá nhân theo Nghị định 13/2023/NĐ-CP về Bảo vệ Dữ liệu Cá nhân (PDPL) và Quy
+              định Bảo vệ Dữ liệu Chung của EU (GDPR) khi áp dụng.
             </p>
             <p>
               Liên hệ về dữ liệu cá nhân: <a className="underline" href="mailto:hi@vochi.xyz">hi@vochi.xyz</a>.
@@ -209,11 +208,10 @@ const COPY: Record<
         body: (
           <>
             <p>
-              Vô chi ("we", "us") is a personal product developed and operated by himitsuko, an
-              independent developer based in Vietnam. When you use the app or the website
-              vochi.xyz, we act as the data controller under Vietnam's Decree 13/2023/ND-CP on
-              Personal Data Protection (PDPL) and the EU General Data Protection Regulation
-              (GDPR) where applicable.
+              Vô chi ("we", "us") is a product developed and operated in Vietnam. When you use
+              the app or the website vochi.xyz, we act as the data controller under Vietnam's
+              Decree 13/2023/ND-CP on Personal Data Protection (PDPL) and the EU General Data
+              Protection Regulation (GDPR) where applicable.
             </p>
             <p>
               For privacy matters, contact{" "}
