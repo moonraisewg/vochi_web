@@ -116,7 +116,7 @@ const COPY = {
 export function Manifesto({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
-    <section className="relative bg-[var(--color-tint)] px-6 py-20 md:py-28">
+    <section id="manifesto" className="relative bg-[var(--color-tint)] px-6 py-20 md:py-28">
       <div className="mx-auto max-w-[1280px]">
         <div className="micro mb-12 text-[var(--color-ink-soft)]">{t.eyebrow}</div>
 

@@ -10,6 +10,7 @@ import { PricingTeaser } from "@/components/PricingTeaser";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { FloatingActions } from "@/components/FloatingActions";
+import { ScrollDots } from "@/components/ScrollDots";
 import { useLang } from "@/components/LangProvider";
 
 export default function Home() {
@@ -26,6 +27,7 @@ export default function Home() {
       <PricingTeaser lang={lang} />
       <FAQ lang={lang} />
       <Footer lang={lang} />
+      <ScrollDots lang={lang} />
       <FloatingActions />
     </main>
   );

@@ -23,7 +23,7 @@ const COPY = {
 export function Interlude({ lang }: { lang: Lang }) {
   const t = COPY[lang];
   return (
-    <section className="relative px-6 py-28 md:py-40">
+    <section id="interlude" className="relative px-6 py-28 md:py-40">
       <div className="mx-auto max-w-[1280px]">
         <div className="grid grid-cols-1 md:grid-cols-12">
           <div className="md:col-span-2">
