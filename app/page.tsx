@@ -18,8 +18,8 @@ export default function Home() {
       <Nav lang={lang} onLangChange={setLang} />
       <Hero lang={lang} />
       <Features lang={lang} />
-      <Method lang={lang} />
       <Manifesto lang={lang} />
+      <Method lang={lang} />
       <PricingTeaser lang={lang} />
       <FAQ lang={lang} />
       <Footer lang={lang} />

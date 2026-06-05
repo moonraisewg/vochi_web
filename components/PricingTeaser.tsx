@@ -19,7 +19,7 @@ const COPY = {
         cta: "Lụm free",
         href: "/download",
         features: [
-          "1 thú nhỏ, 100 từ mẫu",
+          "1 thú nhỏ, học thử 100 từ đầu tiên",
           "Chế độ 1, 1 thiết bị",
           "Tham gia cộng đồng Discord",
         ],
@@ -91,7 +91,7 @@ const COPY = {
         cta: "Try it",
         href: "/download",
         features: [
-          "1 creature, 100 starter words",
+          "1 creature, try the first 100 words",
           "Mode 1, 1 device",
           "Community Discord",
         ],

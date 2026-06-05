@@ -26,7 +26,7 @@ const COPY = {
       {
         no: "04",
         name: "Bắt đầu ngay, hoặc mang theo thế giới của riêng mình",
-        desc: "Hơn 5.300 từ vựng được chuẩn bị sẵn theo cấp độ. Hoặc bạn có thể mang theo danh sách của riêng mình: IELTS, TOEIC, công việc hay bất kỳ điều gì bạn đang theo đuổi.",
+        desc: "Hơn 5.300 từ vựng được chuẩn bị sẵn theo cấp độ, mở khoá trọn bộ ở các gói trả phí. Hoặc bạn có thể mang theo danh sách của riêng mình: IELTS, TOEIC, công việc hay bất kỳ điều gì bạn đang theo đuổi.",
       },
       {
         no: "05",
@@ -62,7 +62,7 @@ const COPY = {
       {
         no: "04",
         name: "Start now, or bring your own world",
-        desc: "Over 5,300 words are prepared by level. Or you can bring your own list: IELTS, TOEIC, work, or anything you are pursuing.",
+        desc: "Over 5,300 words are prepared by level, fully unlocked on paid plans. Or you can bring your own list: IELTS, TOEIC, work, or anything you are pursuing.",
       },
       {
         no: "05",
