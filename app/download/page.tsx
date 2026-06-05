@@ -69,7 +69,7 @@ export default function DownloadPage() {
         const t = COPY[lang];
         return (
           <section className="relative px-6 py-20 md:py-28">
-            <div className="mx-auto max-w-[1000px]">
+            <div className="mx-auto max-w-[1280px]">
               <h1 className="font-display text-[48px] leading-[1.02] tracking-tight md:text-[80px]">
                 {t.title}
               </h1>

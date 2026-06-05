@@ -76,7 +76,7 @@ function CheckoutInner() {
 
   return (
     <section className="relative px-6 py-16 md:py-24">
-      <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-12 md:grid-cols-12">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
           <div className="micro mb-4">Thanh toán</div>
           <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">

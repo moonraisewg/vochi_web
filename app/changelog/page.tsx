@@ -55,7 +55,7 @@ export default function ChangelogPage() {
     <PageShell>
       {(lang) => (
         <section className="relative px-6 py-16 md:py-24">
-          <div className="mx-auto max-w-[900px]">
+          <div className="mx-auto max-w-[1280px]">
             <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[72px]">
               {lang === "vi" ? "Cập nhật phát triển." : "Release notes."}
             </h1>
@@ -65,7 +65,7 @@ export default function ChangelogPage() {
                 : "Roughly one release a week. Small fixes ship quietly, new features are announced here."}
             </p>
 
-            <div className="mt-14 space-y-6">
+            <div className="mt-14 max-w-[860px] space-y-6">
               {ENTRIES.map((e, idx) => (
                 <motion.article
                   key={e.v}

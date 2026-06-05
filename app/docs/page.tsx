@@ -70,7 +70,7 @@ export default function DocsPage() {
         const t = COPY[lang];
         return (
           <section className="relative px-6 py-16 md:py-24">
-            <div className="mx-auto max-w-[1100px]">
+            <div className="mx-auto max-w-[1280px]">
               <h1 className="font-display text-[44px] italic leading-[1.02] tracking-tight md:text-[72px]">
                 {t.title}
               </h1>

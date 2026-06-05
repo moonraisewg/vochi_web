@@ -360,14 +360,14 @@ function TermsContent() {
   const t = COPY[lang];
   return (
     <section className="px-6 py-16 md:py-24">
-      <div className="mx-auto max-w-[820px]">
+      <div className="mx-auto max-w-[1280px]">
         <h1 className="font-display text-[44px] leading-[1.02] tracking-tight md:text-[64px]">
           {t.title}
         </h1>
         <p className="mt-3 text-[13px] text-[var(--color-ink-muted)] font-mono uppercase tracking-[0.14em]">
           {t.updated}
         </p>
-        <div className="mt-10 space-y-10 text-[15px] leading-[1.7] text-[var(--color-ink-soft)]">
+        <div className="mt-10 max-w-[760px] space-y-10 text-[15px] leading-[1.7] text-[var(--color-ink-soft)]">
           {t.sections.map((s, i) => (
             <section key={i} className="space-y-3">
               <h2 className="font-display text-[22px] tracking-tight text-[var(--color-ink)]">
