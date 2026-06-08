@@ -17,7 +17,7 @@ type Tx = Prisma.TransactionClient | PrismaClient;
 export const activateLicenseSchema = z.object({
   licenseKey: z.string().min(16).max(64),
   deviceId: z.string().min(12).max(128),
-  deviceLabel: z.string().trim().max(120).optional(),
+  deviceLabel: z.string().trim().max(512).optional(),
 });
 
 export const verifyLicenseSchema = z.object({
