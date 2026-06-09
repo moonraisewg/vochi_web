@@ -16,6 +16,8 @@ const COPY = {
     privacy: "Quyền riêng tư",
     terms: "Điều khoản",
     contact: "Liên hệ",
+    fanpage: "Fanpage Facebook",
+    community: "Cộng đồng Facebook",
     docs: "Cẩm nang",
     changelog: "Cập nhật",
     address: "Việt Nam",
@@ -34,6 +36,8 @@ const COPY = {
     privacy: "Privacy",
     terms: "Terms",
     contact: "Contact",
+    fanpage: "Facebook Fanpage",
+    community: "Facebook Community",
     docs: "Handbook",
     changelog: "Updates",
     address: "Vietnam",
@@ -124,6 +128,26 @@ export function Footer({ lang }: { lang: Lang }) {
               <li>
                 <a href="mailto:hi@vochi.xyz" className="hover:text-[var(--color-ink)]">
                   hi@vochi.xyz
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/vochi.xyz/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--color-ink)]"
+                >
+                  {t.fanpage}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/groups/vochi.xyz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--color-ink)]"
+                >
+                  {t.community}
                 </a>
               </li>
             </ul>
