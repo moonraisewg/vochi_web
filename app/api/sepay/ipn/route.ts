@@ -30,7 +30,10 @@ export async function POST(req: Request) {
   try {
     const payload = await req.json();
     const result = await processSepayIpn(payload);
-    processEmailOutboxOnce(3).catch((error) => {
+    // Await the send: on serverless, fire-and-forget after the response can be
+    // frozen before the email actually goes out. Best-effort — never fail the
+    // IPN ack over an email hiccup (the order-status poll flushes as a backup).
+    await processEmailOutboxOnce(3).catch((error) => {
       console.error(JSON.stringify({ event: "email_outbox_async_failed", error: String(error) }));
     });
     return jsonOk({ ok: true, result });
