@@ -34,14 +34,6 @@ export function generateInvoiceNumber() {
   return `VOCHI-${day}-${suffix}`;
 }
 
-// Admin-issued licenses get an ADMIN- prefixed invoice so they stay
-// distinguishable from real paid orders in reports and `admin:license lookup`.
-export function generateAdminInvoiceNumber() {
-  const day = new Date().toISOString().slice(0, 10).replaceAll("-", "");
-  const suffix = crypto.randomBytes(5).toString("hex").toUpperCase();
-  return `ADMIN-${day}-${suffix}`;
-}
-
 export function generateLicenseKey() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const chars = Array.from(crypto.randomBytes(16), (byte) => alphabet[byte % alphabet.length]);
