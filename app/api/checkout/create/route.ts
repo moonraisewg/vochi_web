@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const order = await createOrder(input);
     const plan = getPlan(order.plan);
     if (!plan) throw new Error("Unsupported plan");
-    const checkout = buildCheckout({ id: order.id, invoiceNumber: order.invoiceNumber, email: order.email, plan });
+    const checkout = buildCheckout({ id: order.id, invoiceNumber: order.invoiceNumber, email: order.email, plan, amountVnd: order.amountVnd });
 
     return jsonOk({ invoiceNumber: order.invoiceNumber, ...checkout });
   } catch (error) {

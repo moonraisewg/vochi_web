@@ -16,13 +16,16 @@ export function buildCheckout(order: {
   id: string;
   email: string;
   plan: PlanDefinition;
+  // The actual amount to charge — order.amountVnd, the single source of truth.
+  // May differ from plan.amountVnd (e.g. a private per-buyer price override).
+  amountVnd: number;
 }) {
   const client = sepayClient();
   const fields: OnetimePaymentCheckoutFields = {
     operation: "PURCHASE",
     payment_method: "BANK_TRANSFER",
     order_invoice_number: order.invoiceNumber,
-    order_amount: order.plan.amountVnd,
+    order_amount: order.amountVnd,
     currency: "VND",
     order_description: `Vô chi ${order.plan.name}`,
     customer_id: order.email,

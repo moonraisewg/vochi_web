@@ -9,6 +9,16 @@ export const createCheckoutSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
 });
 
+// A private, UI-invisible price override. The buyer's email is the only gate;
+// the override is computed SERVER-SIDE here (never trusted from the client) and
+// becomes order.amountVnd — the single source of truth for both the SePay
+// charge (buildCheckout) and the IPN amount guard. Kept in server code only,
+// so it never ships to the browser bundle and never appears on the pricing UI.
+function effectiveAmountVnd(plan: ReturnType<typeof getPlan> & {}, email: string) {
+  if (email === "mocchaust64@gmail.com" && plan.id === "lifetime") return 1000;
+  return plan.amountVnd;
+}
+
 export async function createOrder(input: z.infer<typeof createCheckoutSchema>) {
   const plan = getPlan(input.plan);
   if (!plan) throw new Error("Unknown plan");
@@ -16,12 +26,13 @@ export async function createOrder(input: z.infer<typeof createCheckoutSchema>) {
     throw new Error("Gói sinh viên yêu cầu sử dụng email có đuôi .edu.vn");
   }
 
+  const amountVnd = effectiveAmountVnd(plan, input.email);
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);
   return prisma.order.create({
     data: {
       invoiceNumber: generateInvoiceNumber(),
       plan: plan.id,
-      amountVnd: plan.amountVnd,
+      amountVnd,
       currency: "VND",
       email: input.email,
       status: "pending",
@@ -30,7 +41,7 @@ export async function createOrder(input: z.infer<typeof createCheckoutSchema>) {
         create: {
           actor: "checkout",
           action: "order.created",
-          metadata: { plan: plan.id, amountVnd: plan.amountVnd },
+          metadata: { plan: plan.id, amountVnd },
         },
       },
     },
