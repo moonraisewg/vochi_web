@@ -15,6 +15,7 @@
     "db:migrate": "prisma migrate deploy",
     "email:outbox": "tsx scripts/process-email-outbox.ts",
     "admin:license": "tsx scripts/admin-license.ts",
+    "admin:token": "tsx --env-file=.env scripts/admin-token.ts",
     "admin:reconcile": "tsx scripts/reconcile-sepay-order.ts",
     "og:gen": "tsx scripts/gen-og.tsx",
     "release": "bash scripts/publish-release.sh",

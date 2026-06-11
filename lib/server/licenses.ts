@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { Prisma, PrismaClient } from "@prisma/client";
 import { prisma } from "./prisma";
 import {
+  generateAdminInvoiceNumber,
   generateLicenseKey,
   hashDeviceId,
   hashLicenseKey,
@@ -9,7 +10,7 @@ import {
   sealString,
   signEntitlement,
 } from "./crypto";
-import { expiresAtForPlan, getPlan } from "./plans";
+import { expiresAtForPlan, getPlan, PLAN_IDS } from "./plans";
 import { ApiError } from "./http";
 
 type Tx = Prisma.TransactionClient | PrismaClient;
@@ -25,12 +26,16 @@ export const verifyLicenseSchema = z.object({
   deviceId: z.string().min(12).max(128),
 });
 
-export async function issueLicenseForOrder(tx: Tx, order: {
-  id: string;
-  email: string;
-  plan: string;
-  paidAt: Date | null;
-}) {
+export async function issueLicenseForOrder(
+  tx: Tx,
+  order: {
+    id: string;
+    email: string;
+    plan: string;
+    paidAt: Date | null;
+  },
+  opts?: { deliverByEmail?: boolean; adminIssued?: boolean },
+) {
   const existing = await tx.license.findUnique({ where: { orderId: order.id } });
   if (existing) return { license: existing, licenseKey: null };
 
@@ -51,31 +56,122 @@ export async function issueLicenseForOrder(tx: Tx, order: {
       licenseKeyPrefix: licensePrefix(licenseKey),
       audits: {
         create: {
-          actor: "system",
+          actor: opts?.adminIssued ? "admin" : "system",
           action: "license.issued",
           orderId: order.id,
-          metadata: { plan: plan.id },
+          metadata: { plan: plan.id, ...(opts?.adminIssued ? { adminIssued: true } : {}) },
         },
       },
     },
   });
 
-  await tx.emailOutbox.create({
-    data: {
-      dedupeKey: `license-issued:${license.id}`,
-      type: "license_issued",
-      recipient: order.email,
-      orderId: order.id,
-      licenseId: license.id,
-      payload: {
-        plan: plan.name,
-        encryptedLicenseKey: sealString(licenseKey),
-        expiresAt: license.expiresAt?.toISOString() ?? null,
+  // Safe-by-default: anything other than an explicit `false` still queues the
+  // delivery email, so the paid-order path is unchanged. Admin issuance opts
+  // out — the Vercel admin route never runs the outbox processor, so a queued
+  // email would just sit pending forever.
+  if (opts?.deliverByEmail !== false) {
+    await tx.emailOutbox.create({
+      data: {
+        dedupeKey: `license-issued:${license.id}`,
+        type: "license_issued",
+        recipient: order.email,
+        orderId: order.id,
+        licenseId: license.id,
+        payload: {
+          plan: plan.name,
+          encryptedLicenseKey: sealString(licenseKey),
+          expiresAt: license.expiresAt?.toISOString() ?? null,
+        },
       },
-    },
-  });
+    });
+  }
 
   return { license, licenseKey };
+}
+
+export const adminIssueLicenseSchema = z.object({
+  plan: z.enum(PLAN_IDS),
+  email: z.string().trim().toLowerCase().email(),
+  // Optional caller-supplied key making retries idempotent: a repeated call
+  // with the same key returns the existing license instead of minting a new one.
+  idempotencyKey: z.string().trim().min(8).max(64).optional(),
+});
+
+// Mints a production license without a real paid order — for complimentary
+// keys, partners, support, and prod smoke tests. Reuses issueLicenseForOrder
+// (key gen, License row, audit) so admin keys behave exactly like bought ones.
+export async function issueAdminLicense(input: z.infer<typeof adminIssueLicenseSchema>) {
+  const plan = getPlan(input.plan);
+  if (!plan) throw new ApiError("UnknownPlan", `Unknown plan: ${input.plan}`, 400);
+
+  return prisma.$transaction(async (tx) => {
+    const invoiceNumber = input.idempotencyKey
+      ? `ADMIN-${input.idempotencyKey}`
+      : generateAdminInvoiceNumber();
+
+    const existingOrder = await tx.order.findUnique({
+      where: { invoiceNumber },
+      include: { license: true },
+    });
+    if (existingOrder) {
+      // Idempotent replay: the license already exists. We can't return the
+      // plaintext key again (only the hash is stored), so flag it so the
+      // caller knows to retrieve the key through another channel.
+      const license = existingOrder.license;
+      return {
+        alreadyIssued: true as const,
+        licenseKey: null,
+        license: license
+          ? {
+              id: license.id,
+              plan: license.plan,
+              deviceLimit: license.deviceLimit,
+              expiresAt: license.expiresAt?.toISOString() ?? null,
+              invoiceNumber,
+            }
+          : null,
+      };
+    }
+
+    const paidAt = new Date();
+    const order = await tx.order.create({
+      data: {
+        invoiceNumber,
+        plan: plan.id,
+        amountVnd: 0,
+        currency: "VND",
+        email: input.email,
+        status: "paid",
+        paidAt,
+        expiresAt: paidAt,
+        audits: {
+          create: {
+            actor: "admin",
+            action: "order.admin_issued",
+            metadata: { plan: plan.id },
+          },
+        },
+      },
+    });
+
+    const { license, licenseKey } = await issueLicenseForOrder(
+      tx,
+      { id: order.id, email: order.email, plan: order.plan, paidAt },
+      { deliverByEmail: false, adminIssued: true },
+    );
+
+    return {
+      alreadyIssued: false as const,
+      licenseKey,
+      license: {
+        id: license.id,
+        plan: license.plan,
+        deviceLimit: license.deviceLimit,
+        expiresAt: license.expiresAt?.toISOString() ?? null,
+        invoiceNumber,
+      },
+    };
+  });
 }
 
 export async function createEntitlement(licenseId: string, deviceId: string) {

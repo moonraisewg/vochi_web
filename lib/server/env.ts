@@ -12,7 +12,6 @@ const envSchema = z.object({
   LICENSE_SIGNING_PRIVATE_KEY: z.string().min(32),
   LICENSE_PUBLIC_KEY: z.string().min(32),
   LICENSE_KEY_ENCRYPTION_SECRET: z.string().min(32),
-  JOB_SECRET: z.string().min(24).optional(),
 });
 
 let cachedEnv: z.infer<typeof envSchema> | null = null;
