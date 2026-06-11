@@ -25,20 +25,30 @@ export function readJobSecret(req: Request) {
 
 const ADMIN_TOKEN_LABEL = "admin-license-issue/v1";
 
-// Derives the admin bearer token from LICENSE_KEY_ENCRYPTION_SECRET via a
-// one-way HMAC. This gates the admin endpoint WITHOUT provisioning a new env
-// var, while never putting the source secret on the wire: the token is
-// irreversible, so a leaked token cannot recover the encryption key, and it
-// can be rotated by bumping ADMIN_TOKEN_LABEL. We deliberately do NOT derive
-// from LICENSE_SIGNING_PRIVATE_KEY — that key stays confined to signEntitlement.
-// (If a dedicated JOB_SECRET is ever provisioned in prod, switch to it here.)
+// Derives the admin bearer token from a secret via a one-way HMAC with a
+// domain-separation label. This gates the admin endpoint WITHOUT provisioning
+// a new env var, and never puts the source secret on the wire: the token is
+// irreversible (a leaked token cannot recover the key) and rotates by bumping
+// ADMIN_TOKEN_LABEL.
+//
+// NOTE: we HMAC the FULL secret — never a substring, and we never mix in
+// public values like APP_BASE_URL (those add zero entropy and only a false
+// sense of security). The token's strength is exactly the secret's.
 export function deriveAdminToken(secret: string) {
   return crypto.createHmac("sha256", secret).update(ADMIN_TOKEN_LABEL).digest("hex");
 }
 
 // The bearer token the admin endpoint expects.
+//
+// Seeded from LICENSE_SIGNING_PRIVATE_KEY because that keypair is pinned to the
+// shipped desktop app (its public half ships as VITE_LICENSE_PUBLIC_KEY), so
+// the value is guaranteed identical between local and production — unlike
+// LICENSE_KEY_ENCRYPTION_SECRET, which had drifted. Trade-off: this widens
+// where the signing key is read. Acceptable only because the HMAC is one-way —
+// the raw key never leaves the server and the token can't reveal it. Prefer a
+// dedicated JOB_SECRET if one is ever provisioned in prod.
 export function adminToken() {
-  return deriveAdminToken(serverEnv().LICENSE_KEY_ENCRYPTION_SECRET);
+  return deriveAdminToken(serverEnv().LICENSE_SIGNING_PRIVATE_KEY);
 }
 
 // Gate for admin/job-only endpoints.
