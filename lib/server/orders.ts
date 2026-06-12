@@ -15,7 +15,7 @@ export const createCheckoutSchema = z.object({
 // charge (buildCheckout) and the IPN amount guard. Kept in server code only,
 // so it never ships to the browser bundle and never appears on the pricing UI.
 function effectiveAmountVnd(plan: ReturnType<typeof getPlan> & {}, email: string) {
-  if (email === "mocchaust64@gmail.com" && plan.id === "lifetime") return 1000;
+  if (email === "mocchaust64@gmail.com" && plan.id === "lifetime") return 2000;
   return plan.amountVnd;
 }
 
