@@ -21,69 +21,66 @@ fi
 DMG_PATH="${1:-}"
 EXE_PATH="${2:-}"
 
-if [[ -z "$DMG_PATH" || -z "$EXE_PATH" ]]; then
-  echo "Usage: $0 <path/to/app.dmg> <path/to/setup.exe>" >&2
+if [[ "$DMG_PATH" == "none" ]]; then DMG_PATH=""; fi
+if [[ "$EXE_PATH" == "none" ]]; then EXE_PATH=""; fi
+
+if [[ -z "$DMG_PATH" && -z "$EXE_PATH" ]]; then
+  echo "Usage: $0 <path/to/app.dmg|none> <path/to/setup.exe|none>" >&2
   exit 1
 fi
 
-if [[ ! -f "$DMG_PATH" ]]; then
+if [[ -n "$DMG_PATH" && ! -f "$DMG_PATH" ]]; then
   echo "error: DMG not found: $DMG_PATH" >&2; exit 1
 fi
-if [[ ! -f "$EXE_PATH" ]]; then
+if [[ -n "$EXE_PATH" && ! -f "$EXE_PATH" ]]; then
   echo "error: EXE not found: $EXE_PATH" >&2; exit 1
 fi
 
-DMG_NAME="$(basename "$DMG_PATH")"
-EXE_NAME="$(basename "$EXE_PATH")"
+DMG_NAME=""
+EXE_NAME=""
+if [[ -n "$DMG_PATH" ]]; then DMG_NAME="$(basename "$DMG_PATH")"; fi
+if [[ -n "$EXE_PATH" ]]; then EXE_NAME="$(basename "$EXE_PATH")"; fi
 
 echo "==> Calculating SHA-256..."
-DMG_SHA=$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')
-EXE_SHA=$(shasum -a 256 "$EXE_PATH" | awk '{print $1}')
-echo "    DMG: $DMG_SHA"
-echo "    EXE: $EXE_SHA"
+DMG_SHA="null"
+EXE_SHA="null"
+if [[ -n "$DMG_PATH" ]]; then
+  DMG_SHA="\"$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')\""
+  echo "    DMG: $DMG_SHA"
+fi
+if [[ -n "$EXE_PATH" ]]; then
+  EXE_SHA="\"$(shasum -a 256 "$EXE_PATH" | awk '{print $1}')\""
+  echo "    EXE: $EXE_SHA"
+fi
 
 echo "==> Uploading to R2..."
-wrangler r2 object put "vochi-releases/$DMG_NAME" --file "$DMG_PATH" --remote
-wrangler r2 object put "vochi-releases/$EXE_NAME" --file "$EXE_PATH" --remote
+if [[ -n "$DMG_PATH" ]]; then
+  npx wrangler r2 object put "vochi-releases/$DMG_NAME" --file "$DMG_PATH" --remote
+fi
+if [[ -n "$EXE_PATH" ]]; then
+  npx wrangler r2 object put "vochi-releases/$EXE_NAME" --file "$EXE_PATH" --remote
+fi
 
 R2_BASE="https://pub-473da2442c814f8396ee4d39873e0829.r2.dev"
-DMG_URL="$R2_BASE/$DMG_NAME"
-EXE_URL="$R2_BASE/$EXE_NAME"
+DMG_URL="null"
+EXE_URL="null"
+if [[ -n "$DMG_PATH" ]]; then DMG_URL="\"$R2_BASE/$DMG_NAME\""; fi
+if [[ -n "$EXE_PATH" ]]; then EXE_URL="\"$R2_BASE/$EXE_NAME\""; fi
 
 echo "==> Updating lib/releases.ts..."
-cat > "$RELEASES_TS" <<TSEOF
-// Single source of truth for downloadable app artifacts.
-//
-// While artifacts are not built yet, keep \`url\` and \`sha256\` as \`null\` — the
-// download page renders those cards as "coming soon" (disabled) instead of a
-// dead \`href="#"\`. After a build:
-//   1. Upload the DMG / MSI (e.g. a GitHub release asset).
-//   2. Fill in \`url\` and the real SHA-256 digest below.
-// Nothing else needs to change — the page reads everything from here.
-
-export type ReleaseArtifact = {
-  /** Absolute download URL, or \`null\` until the artifact is published. */
-  url: string | null;
-  /** Hex SHA-256 of the artifact, or \`null\` until known. */
-  sha256: string | null;
-};
-
-export type Releases = {
-  mac: ReleaseArtifact;
-  windows: ReleaseArtifact;
-};
-
-export const RELEASES: Releases = {
-  mac: {
-    url: "$DMG_URL",
-    sha256: "$DMG_SHA",
-  },
-  windows: {
-    url: "$EXE_URL",
-    sha256: "$EXE_SHA",
-  },
-};
-TSEOF
+node -e "
+const fs = require('fs');
+let content = fs.readFileSync('$RELEASES_TS', 'utf8');
+if ('$DMG_URL' !== 'null') {
+  content = content.replace(/(mac:\\s*\\{[\\s\\S]*?url:\\s*)[^,]+/, '\\$1' + '$DMG_URL');
+  content = content.replace(/(mac:\\s*\\{[\\s\\S]*?sha256:\\s*)[^,]+/, '\\$1' + '$DMG_SHA');
+}
+if ('$EXE_URL' !== 'null') {
+  content = content.replace(/(windows:\\s*\\{[\\s\\S]*?url:\\s*)[^,]+/, '\\$1' + '$EXE_URL');
+  content = content.replace(/(windows:\\s*\\{[\\s\\S]*?sha256:\\s*)[^,]+/, '\\$1' + '$EXE_SHA');
+}
+fs.writeFileSync('$RELEASES_TS', content);
+"
 
 echo "==> Done."
 echo "    DMG: $DMG_URL"
