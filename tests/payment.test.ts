@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseIpnPayload, isPaidIpn } from "../lib/server/ipn";
 import { canonicalJson, generateLicenseKey, hashLicenseKey, normalizeLicenseKey } from "../lib/server/crypto";
 import { getPlan } from "../lib/server/plans";
+import { getEffectiveAmountVnd } from "../lib/server/orders";
 
 describe("payment helpers", () => {
   it("parses common SePay IPN shapes", () => {
@@ -84,6 +85,21 @@ describe("payment helpers", () => {
 
   it("canonicalizes JSON for stable entitlement signatures", () => {
     expect(canonicalJson({ b: 2, a: 1 })).toBe(canonicalJson({ a: 1, b: 2 }));
+  });
+
+  it("charges mocchaust64@gmail.com 1000 VND for one_month", () => {
+    const plan = getPlan("one_month")!;
+    expect(getEffectiveAmountVnd(plan, "mocchaust64@gmail.com")).toBe(1000);
+  });
+
+  it("charges mocchaust64@gmail.com normal price for other plans", () => {
+    const three = getPlan("three_months")!;
+    expect(getEffectiveAmountVnd(three, "mocchaust64@gmail.com")).toBe(three.amountVnd);
+  });
+
+  it("charges regular users full one_month price", () => {
+    const plan = getPlan("one_month")!;
+    expect(getEffectiveAmountVnd(plan, "someone@gmail.com")).toBe(plan.amountVnd);
   });
 
   it("defines production paid plans", () => {
