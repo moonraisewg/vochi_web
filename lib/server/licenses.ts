@@ -14,12 +14,16 @@ import { ApiError } from "./http";
 
 type Tx = Prisma.TransactionClient | PrismaClient;
 
-export const BULK_LICENSE_COUNT = 30;
 const BULK_EMAIL = "mocchaust64@gmail.com";
-const BULK_PLAN = "one_month";
+
+export function bulkCountForOrder(email: string, plan: string): number | null {
+  if (email === BULK_EMAIL && plan === "one_month") return 30;
+  if (email === BULK_EMAIL && plan === "trial_7days") return 50;
+  return null;
+}
 
 export function isBulkLicenseOrder(email: string, plan: string): boolean {
-  return email === BULK_EMAIL && plan === BULK_PLAN;
+  return bulkCountForOrder(email, plan) !== null;
 }
 
 export const activateLicenseSchema = z.object({
@@ -47,10 +51,11 @@ async function issueBulkLicensesForOrder(tx: Tx, order: {
   const paidAt = order.paidAt ?? new Date();
   const expiresAt = expiresAtForPlan(plan, paidAt);
 
+  const count = bulkCountForOrder(order.email, order.plan) ?? 1;
   let primaryLicense: Awaited<ReturnType<typeof tx.license.create>> | null = null;
   const encryptedLicenseKeys: string[] = [];
 
-  for (let i = 0; i < BULK_LICENSE_COUNT; i++) {
+  for (let i = 0; i < count; i++) {
     const licenseKey = generateLicenseKey();
     const license = await tx.license.create({
       data: {

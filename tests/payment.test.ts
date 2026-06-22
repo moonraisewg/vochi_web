@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { parseIpnPayload, isPaidIpn } from "../lib/server/ipn";
 import { canonicalJson, generateLicenseKey, hashLicenseKey, normalizeLicenseKey } from "../lib/server/crypto";
 import { getPlan } from "../lib/server/plans";
-import { getEffectiveAmountVnd } from "../lib/server/orders";
+import { getEffectiveAmountVnd, getTrialPlanError } from "../lib/server/orders";
 
 describe("payment helpers", () => {
   it("parses common SePay IPN shapes", () => {
@@ -85,6 +85,33 @@ describe("payment helpers", () => {
 
   it("canonicalizes JSON for stable entitlement signatures", () => {
     expect(canonicalJson({ b: 2, a: 1 })).toBe(canonicalJson({ a: 1, b: 2 }));
+  });
+
+  it("trial_7days plan exists with 7-day duration and 1 device", () => {
+    const plan = getPlan("trial_7days")!;
+    expect(plan).not.toBeNull();
+    expect(plan.durationDays).toBe(7);
+    expect(plan.deviceLimit).toBe(1);
+  });
+
+  it("charges mocchaust64@gmail.com 2000 VND for trial_7days", () => {
+    const plan = getPlan("trial_7days")!;
+    expect(getEffectiveAmountVnd(plan, "mocchaust64@gmail.com")).toBe(2000);
+  });
+
+  it("blocks other emails from buying trial_7days with fanpage URL in message", () => {
+    const err = getTrialPlanError("trial_7days", "anyone@gmail.com");
+    expect(err).not.toBeNull();
+    expect(err).toContain("https://www.facebook.com/vochi.xyz/");
+  });
+
+  it("does not block mocchaust64@gmail.com from buying trial_7days", () => {
+    expect(getTrialPlanError("trial_7days", "mocchaust64@gmail.com")).toBeNull();
+  });
+
+  it("does not block anyone from non-trial plans", () => {
+    expect(getTrialPlanError("one_month", "anyone@gmail.com")).toBeNull();
+    expect(getTrialPlanError("lifetime", "anyone@gmail.com")).toBeNull();
   });
 
   it("charges mocchaust64@gmail.com 2000 VND for one_month", () => {

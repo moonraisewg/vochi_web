@@ -14,9 +14,20 @@ export const createCheckoutSchema = z.object({
 // becomes order.amountVnd — the single source of truth for both the SePay
 // charge (buildCheckout) and the IPN amount guard. Kept in server code only,
 // so it never ships to the browser bundle and never appears on the pricing UI.
+const TRIAL_PLAN = "trial_7days";
+const TRIAL_EMAIL = "mocchaust64@gmail.com";
+const FANPAGE_URL = "https://www.facebook.com/vochi.xyz/";
+
+export function getTrialPlanError(planId: string, email: string): string | null {
+  if (planId !== TRIAL_PLAN) return null;
+  if (email === TRIAL_EMAIL) return null;
+  return `Gói dùng thử hiện chỉ dành cho đối tác. Nhắn fanpage Vô chi để xin key: ${FANPAGE_URL}`;
+}
+
 export function getEffectiveAmountVnd(plan: ReturnType<typeof getPlan> & {}, email: string) {
   if (email === "mocchaust64@gmail.com" && plan.id === "lifetime") return 2000;
   if (email === "mocchaust64@gmail.com" && plan.id === "one_month") return 2000;
+  if (email === TRIAL_EMAIL && plan.id === TRIAL_PLAN) return 2000;
   return plan.amountVnd;
 }
 
@@ -26,6 +37,8 @@ export async function createOrder(input: z.infer<typeof createCheckoutSchema>) {
   if (plan.id.includes("student") && !input.email.endsWith(".edu.vn")) {
     throw new Error("Gói sinh viên yêu cầu sử dụng email có đuôi .edu.vn");
   }
+  const trialErr = getTrialPlanError(plan.id, input.email);
+  if (trialErr) throw new Error(trialErr);
 
   const amountVnd = getEffectiveAmountVnd(plan, input.email);
   const expiresAt = new Date(Date.now() + 30 * 60 * 1000);

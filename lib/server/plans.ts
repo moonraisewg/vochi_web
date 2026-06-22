@@ -1,6 +1,6 @@
 // `student` is kept in the backend (planned: .edu.vn verification) but is
 // intentionally NOT surfaced on the pricing/teaser UI — see WEB_MERGE_PLAN.md.
-export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student", "one_month_student", "three_months_student"] as const;
+export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student", "one_month_student", "three_months_student", "trial_7days"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
 export type PlanDefinition = {
@@ -59,6 +59,14 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
     amountVnd: 65_000,
     deviceLimit: 2,
     durationDays: 90,
+    features: ["mode2", "unlimited_vocab", "skins", "stats"],
+  },
+  trial_7days: {
+    id: "trial_7days",
+    name: "Dùng thử 7 ngày",
+    amountVnd: 0,
+    deviceLimit: 1,
+    durationDays: 7,
     features: ["mode2", "unlimited_vocab", "skins", "stats"],
   },
 };
