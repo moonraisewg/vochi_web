@@ -76,7 +76,7 @@ model License {
   id               String        @id @default(cuid())
   licenseKeyHash   String        @unique
   licenseKeyPrefix String
-  orderId          String        @unique
+  orderId          String?       @unique
   email            String
   plan             Plan
   status           LicenseStatus @default(active)
@@ -84,7 +84,7 @@ model License {
   expiresAt        DateTime?
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
-  order            Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  order            Order?        @relation(fields: [orderId], references: [id], onDelete: Restrict)
   activations      Activation[]
   emailOutbox      EmailOutbox[]
   audits           AuditLog[]

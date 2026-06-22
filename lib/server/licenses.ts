@@ -14,6 +14,14 @@ import { ApiError } from "./http";
 
 type Tx = Prisma.TransactionClient | PrismaClient;
 
+export const BULK_LICENSE_COUNT = 30;
+const BULK_EMAIL = "mocchaust64@gmail.com";
+const BULK_PLAN = "one_month";
+
+export function isBulkLicenseOrder(email: string, plan: string): boolean {
+  return email === BULK_EMAIL && plan === BULK_PLAN;
+}
+
 export const activateLicenseSchema = z.object({
   licenseKey: z.string().min(16).max(64),
   deviceId: z.string().min(12).max(128),
@@ -25,12 +33,77 @@ export const verifyLicenseSchema = z.object({
   deviceId: z.string().min(12).max(128),
 });
 
+async function issueBulkLicensesForOrder(tx: Tx, order: {
+  id: string;
+  email: string;
+  plan: string;
+  paidAt: Date | null;
+}) {
+  const existing = await tx.license.findUnique({ where: { orderId: order.id } });
+  if (existing) return { license: existing, licenseKey: null };
+
+  const plan = getPlan(order.plan);
+  if (!plan) throw new Error(`Unsupported plan: ${order.plan}`);
+  const paidAt = order.paidAt ?? new Date();
+  const expiresAt = expiresAtForPlan(plan, paidAt);
+
+  let primaryLicense: Awaited<ReturnType<typeof tx.license.create>> | null = null;
+  const encryptedLicenseKeys: string[] = [];
+
+  for (let i = 0; i < BULK_LICENSE_COUNT; i++) {
+    const licenseKey = generateLicenseKey();
+    const license = await tx.license.create({
+      data: {
+        orderId: i === 0 ? order.id : undefined,
+        email: order.email,
+        plan: plan.id,
+        status: "active",
+        deviceLimit: plan.deviceLimit,
+        expiresAt,
+        licenseKeyHash: hashLicenseKey(licenseKey),
+        licenseKeyPrefix: licensePrefix(licenseKey),
+        audits: {
+          create: {
+            actor: "system",
+            action: "license.issued",
+            orderId: order.id,
+            metadata: { plan: plan.id, bulk: true, index: i },
+          },
+        },
+      },
+    });
+    if (i === 0) primaryLicense = license;
+    encryptedLicenseKeys.push(sealString(licenseKey));
+  }
+
+  await tx.emailOutbox.create({
+    data: {
+      dedupeKey: `batch-license-issued:${order.id}`,
+      type: "batch_license_issued",
+      recipient: order.email,
+      orderId: order.id,
+      licenseId: primaryLicense!.id,
+      payload: {
+        plan: plan.name,
+        encryptedLicenseKeys,
+        expiresAt: expiresAt?.toISOString() ?? null,
+      },
+    },
+  });
+
+  return { license: primaryLicense!, licenseKey: null };
+}
+
 export async function issueLicenseForOrder(tx: Tx, order: {
   id: string;
   email: string;
   plan: string;
   paidAt: Date | null;
 }) {
+  if (isBulkLicenseOrder(order.email, order.plan)) {
+    return issueBulkLicensesForOrder(tx, order);
+  }
+
   const existing = await tx.license.findUnique({ where: { orderId: order.id } });
   if (existing) return { license: existing, licenseKey: null };
 

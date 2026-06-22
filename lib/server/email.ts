@@ -22,29 +22,56 @@ export async function processEmailOutboxOnce(limit = 10) {
 
     try {
       if (!resend) throw new Error("RESEND_API_KEY is not configured");
-      if (item.type !== "license_issued") throw new Error(`Unsupported email type: ${item.type}`);
-      const payload = item.payload as {
-        plan: string;
-        encryptedLicenseKey: string;
-        expiresAt: string | null;
-      };
-      const licenseKey = openString(payload.encryptedLicenseKey);
-
-      await resend.emails.send({
-        from: env.RESEND_FROM_EMAIL,
-        to: item.recipient,
-        subject: "Your Vô chi license",
-        text: [
-          "Thanks for adopting a Vô chi pet.",
-          "",
-          `Plan: ${payload.plan}`,
-          `License key: ${licenseKey}`,
-          payload.expiresAt ? `Expires: ${payload.expiresAt}` : "Expires: never",
-          "",
-          "Paste this key in the Vô chi desktop app to unlock your plan.",
-          "Need help? Reply to this email or write hi@vochi.app.",
-        ].join("\n"),
-      });
+      if (item.type === "license_issued") {
+        const payload = item.payload as {
+          plan: string;
+          encryptedLicenseKey: string;
+          expiresAt: string | null;
+        };
+        const licenseKey = openString(payload.encryptedLicenseKey);
+        await resend.emails.send({
+          from: env.RESEND_FROM_EMAIL,
+          to: item.recipient,
+          subject: "Your Vô chi license",
+          text: [
+            "Thanks for adopting a Vô chi pet.",
+            "",
+            `Plan: ${payload.plan}`,
+            `License key: ${licenseKey}`,
+            payload.expiresAt ? `Expires: ${payload.expiresAt}` : "Expires: never",
+            "",
+            "Paste this key in the Vô chi desktop app to unlock your plan.",
+            "Need help? Reply to this email or write hi@vochi.app.",
+          ].join("\n"),
+        });
+      } else if (item.type === "batch_license_issued") {
+        const payload = item.payload as {
+          plan: string;
+          encryptedLicenseKeys: string[];
+          expiresAt: string | null;
+        };
+        const keys = payload.encryptedLicenseKeys.map((k) => openString(k));
+        await resend.emails.send({
+          from: env.RESEND_FROM_EMAIL,
+          to: item.recipient,
+          subject: `Your Vô chi licenses (${keys.length} keys)`,
+          text: [
+            "Thanks for adopting Vô chi pets.",
+            "",
+            `Plan: ${payload.plan}`,
+            payload.expiresAt ? `Expires: ${payload.expiresAt}` : "Expires: never",
+            "",
+            `Your ${keys.length} license keys:`,
+            "",
+            ...keys.map((k, i) => `${String(i + 1).padStart(2, " ")}. ${k}`),
+            "",
+            "Paste any key in the Vô chi desktop app to unlock your plan.",
+            "Need help? Reply to this email or write hi@vochi.app.",
+          ].join("\n"),
+        });
+      } else {
+        throw new Error(`Unsupported email type: ${item.type}`);
+      }
 
       await prisma.emailOutbox.update({
         where: { id: item.id },
