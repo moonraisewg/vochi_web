@@ -87,9 +87,9 @@ describe("payment helpers", () => {
     expect(canonicalJson({ b: 2, a: 1 })).toBe(canonicalJson({ a: 1, b: 2 }));
   });
 
-  it("charges mocchaust64@gmail.com 1000 VND for one_month", () => {
+  it("charges mocchaust64@gmail.com 2000 VND for one_month", () => {
     const plan = getPlan("one_month")!;
-    expect(getEffectiveAmountVnd(plan, "mocchaust64@gmail.com")).toBe(1000);
+    expect(getEffectiveAmountVnd(plan, "mocchaust64@gmail.com")).toBe(2000);
   });
 
   it("charges mocchaust64@gmail.com normal price for other plans", () => {

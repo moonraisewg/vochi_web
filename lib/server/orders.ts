@@ -16,7 +16,7 @@ export const createCheckoutSchema = z.object({
 // so it never ships to the browser bundle and never appears on the pricing UI.
 export function getEffectiveAmountVnd(plan: ReturnType<typeof getPlan> & {}, email: string) {
   if (email === "mocchaust64@gmail.com" && plan.id === "lifetime") return 2000;
-  if (email === "mocchaust64@gmail.com" && plan.id === "one_month") return 1000;
+  if (email === "mocchaust64@gmail.com" && plan.id === "one_month") return 2000;
   return plan.amountVnd;
 }
 
