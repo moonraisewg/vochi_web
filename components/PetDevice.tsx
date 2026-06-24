@@ -6,15 +6,14 @@ import { motion, useAnimationFrame } from "motion/react";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-type Animation = "carry" | "eating" | "happy" | "sleeping" | "learning" | "hi";
+type Animation = "carry" | "eating" | "happy" | "sleeping" | "learning";
 
 const SRC: Record<Animation, string> = {
   carry: "/lottie/carry.json",
-  eating: "/lottie/eating.json",
-  happy: "/lottie/Hoanho.json",
+  eating: "/lottie/petdoi.json",
+  happy: "/lottie/vochihi.json",
   sleeping: "/lottie/sleeping.json",
   learning: "/lottie/Learning.json",
-  hi: "/lottie/hi.json",
 };
 
 const WORDS = [

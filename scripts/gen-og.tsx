@@ -7,6 +7,10 @@ import path from "node:path";
 const SIZE = { width: 1200, height: 630 } as const;
 const OUT = path.join(process.cwd(), "public", "og.png");
 
+// Brand accent (matches the husky mascot — lavender/violet).
+const ACCENT = "#8b6fd6";
+const ACCENT_DEEP = "#6d52c4";
+
 async function loadTtf(url: string): Promise<ArrayBuffer> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
@@ -27,6 +31,12 @@ async function build() {
       "https://github.com/google/fonts/raw/main/ofl/ibmplexmono/IBMPlexMono-Medium.ttf",
     ),
   ]);
+
+  // The mascot logo, embedded as a data URI (Satori has no fs access).
+  const logoBytes = await fs.readFile(
+    path.join(process.cwd(), "design", "icon-web-source.png"),
+  );
+  const logo = `data:image/png;base64,${logoBytes.toString("base64")}`;
 
   const fonts = [
     {
@@ -59,8 +69,7 @@ async function build() {
         style={{
           position: "absolute",
           inset: 0,
-          background:
-            "radial-gradient(900px 600px at 100% 100%, rgba(61,155,98,0.18) 0%, rgba(61,155,98,0) 60%)",
+          background: `radial-gradient(900px 600px at 100% 100%, rgba(139,111,214,0.18) 0%, rgba(139,111,214,0) 60%)`,
           display: "flex",
         }}
       />
@@ -95,23 +104,12 @@ async function build() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                background: "#3d9b62",
-                color: "#ffffff",
-                fontSize: 34,
-                fontWeight: 700,
-                borderRadius: 14,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 8px 24px rgba(61,155,98,0.35)",
-              }}
-            >
-              V
-            </div>
+            <img
+              src={logo}
+              width={56}
+              height={56}
+              style={{ borderRadius: 14 }}
+            />
             <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: -0.8 }}>
               Vô chi
             </div>
@@ -136,7 +134,7 @@ async function build() {
               style={{
                 width: 8,
                 height: 8,
-                background: "#3d9b62",
+                background: ACCENT,
                 borderRadius: 999,
                 display: "flex",
               }}
@@ -178,7 +176,7 @@ async function build() {
                   style={{
                     width: 7,
                     height: 7,
-                    background: "#3d9b62",
+                    background: ACCENT,
                     borderRadius: 999,
                     display: "flex",
                   }}
@@ -192,7 +190,8 @@ async function build() {
               style={{
                 flex: 1,
                 borderRadius: 16,
-                background: "linear-gradient(180deg, #f3f0e8 0%, #e6e2d4 100%)",
+                background:
+                  "linear-gradient(180deg, #efeafb 0%, #ddd2f4 100%)",
                 position: "relative",
                 display: "flex",
                 alignItems: "center",
@@ -200,152 +199,7 @@ async function build() {
                 overflow: "hidden",
               }}
             >
-              <div
-                style={{
-                  position: "relative",
-                  width: 150,
-                  height: 130,
-                  display: "flex",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: -8,
-                    left: 20,
-                    width: 110,
-                    height: 14,
-                    borderRadius: 999,
-                    background: "rgba(15,19,17,0.18)",
-                    display: "flex",
-                    filter: "blur(2px)",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 8,
-                    left: 0,
-                    width: 150,
-                    height: 122,
-                    background: "#3d9b62",
-                    borderRadius: 999,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 14,
-                    boxShadow:
-                      "inset 0 -8px 16px rgba(0,0,0,0.18), inset 0 6px 0 rgba(255,255,255,0.18)",
-                  }}
-                >
-                  <div style={{ display: "flex", gap: 22, marginTop: 6 }}>
-                    <div
-                      style={{
-                        width: 14,
-                        height: 18,
-                        background: "#0f1311",
-                        borderRadius: 999,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 5,
-                          height: 5,
-                          background: "#fafaf7",
-                          borderRadius: 999,
-                          marginTop: -6,
-                          display: "flex",
-                        }}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        width: 14,
-                        height: 18,
-                        background: "#0f1311",
-                        borderRadius: 999,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 5,
-                          height: 5,
-                          background: "#fafaf7",
-                          borderRadius: 999,
-                          marginTop: -6,
-                          display: "flex",
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 48,
-                      left: 18,
-                      width: 18,
-                      height: 10,
-                      background: "rgba(255,180,140,0.55)",
-                      borderRadius: 999,
-                      display: "flex",
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 48,
-                      right: 18,
-                      width: 18,
-                      height: 10,
-                      background: "rgba(255,180,140,0.55)",
-                      borderRadius: 999,
-                      display: "flex",
-                    }}
-                  />
-                  <div
-                    style={{
-                      width: 24,
-                      height: 12,
-                      borderBottomLeftRadius: 24,
-                      borderBottomRightRadius: 24,
-                      background: "#0f1311",
-                      display: "flex",
-                      marginTop: -4,
-                    }}
-                  />
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: -2,
-                    left: 38,
-                    width: 26,
-                    height: 12,
-                    background: "#2c7548",
-                    borderRadius: 999,
-                    display: "flex",
-                  }}
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: -2,
-                    right: 38,
-                    width: 26,
-                    height: 12,
-                    background: "#2c7548",
-                    borderRadius: 999,
-                    display: "flex",
-                  }}
-                />
-              </div>
+              <img src={logo} width={190} height={190} />
             </div>
 
             <div
@@ -380,7 +234,7 @@ async function build() {
                 <div
                   style={{
                     width: "72%",
-                    background: "#3d9b62",
+                    background: ACCENT,
                     borderRadius: 999,
                     display: "flex",
                   }}
@@ -411,12 +265,10 @@ async function build() {
           >
             <div style={{ fontWeight: 600 }}>Học ngoại ngữ</div>
             <div style={{ fontWeight: 600 }}>bằng cách</div>
-            <div style={{ fontWeight: 600, color: "#6b7066", marginTop: 14 }}>
+            <div style={{ fontWeight: 600, color: ACCENT_DEEP, marginTop: 14 }}>
               nuôi một
             </div>
-            <div style={{ fontWeight: 600, color: "#6b7066" }}>
-              thú nhỏ.
-            </div>
+            <div style={{ fontWeight: 600, color: ACCENT_DEEP }}>thú nhỏ.</div>
           </div>
         </div>
 
