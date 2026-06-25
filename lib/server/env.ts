@@ -13,6 +13,13 @@ const envSchema = z.object({
   LICENSE_PUBLIC_KEY: z.string().min(32),
   LICENSE_KEY_ENCRYPTION_SECRET: z.string().min(32),
   JOB_SECRET: z.string().min(24).optional(),
+  // Source the updater manifest is proxied from. Defaulted so it works without
+  // extra config; override via Vercel env to point at new storage without
+  // re-shipping desktop apps (they bake the stable vochi.xyz endpoint, not this).
+  UPDATER_MANIFEST_SOURCE: z
+    .string()
+    .url()
+    .default("https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/latest.json"),
 });
 
 let cachedEnv: z.infer<typeof envSchema> | null = null;
