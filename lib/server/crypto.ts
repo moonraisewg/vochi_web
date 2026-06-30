@@ -46,6 +46,34 @@ export function licensePrefix(licenseKey: string) {
   return normalizeLicenseKey(licenseKey).slice(0, 10);
 }
 
+/** Feature flag granting the paid "HSK nâng cao" pack (HSK 4/5/6). Must match
+ *  the desktop app's `license::PACK_HSK_ADVANCED_FEATURE`. */
+export const FEATURE_PACK_HSK_ADVANCED = "pack_hsk_advanced";
+/** Pack id used as the key in the entitlement's `packKeys` map and as the AAD tag
+ *  the app binds ciphertext to. Matches `license::PACK_HSK_ADVANCED_ID`. */
+export const PACK_ID_HSK_ADVANCED = "hsk_advanced";
+
+/** The `packKeys` map to embed in a signed entitlement, or `undefined` when the
+ *  features don't include the pack (so non-pack entitlements stay byte-identical
+ *  and existing signatures never change).
+ *
+ *  The value is the 32-byte MASTER key (base64url) the app build sealed HSK 4/5/6
+ *  with (`VOCHI_PACK_KEY_HSK_ADVANCED`); the app derives the content subkey from
+ *  it. Fails loud if a pack entitlement is requested without the key configured —
+ *  shipping a keyless pack license would lock the buyer out of what they paid for. */
+export function packKeysForFeatures(
+  features: string[],
+  hskAdvancedKey: string | undefined,
+): Record<string, string> | undefined {
+  if (!features.includes(FEATURE_PACK_HSK_ADVANCED)) return undefined;
+  if (!hskAdvancedKey) {
+    throw new Error(
+      "PACK_KEY_HSK_ADVANCED is not configured but a pack_hsk_advanced entitlement was requested",
+    );
+  }
+  return { [PACK_ID_HSK_ADVANCED]: hskAdvancedKey };
+}
+
 export function canonicalJson(value: unknown): string {
   if (value == null || typeof value !== "object") return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;

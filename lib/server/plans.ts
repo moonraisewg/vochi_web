@@ -1,6 +1,6 @@
 // `student` is kept in the backend (planned: .edu.vn verification) but is
 // intentionally NOT surfaced on the pricing/teaser UI — see WEB_MERGE_PLAN.md.
-export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student", "one_month_student", "three_months_student", "trial_7days"] as const;
+export const PLAN_IDS = ["one_month", "three_months", "lifetime", "student", "one_month_student", "three_months_student", "trial_7days", "hsk_advanced"] as const;
 export type PlanId = (typeof PLAN_IDS)[number];
 
 export type PlanDefinition = {
@@ -68,6 +68,17 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
     deviceLimit: 1,
     durationDays: 7,
     features: ["mode2", "unlimited_vocab", "skins", "stats"],
+  },
+  // Separately-bought "HSK nâng cao" content pack (HSK 4/5/6). Grants ONLY the
+  // pack feature — base Pro (Oxford / HSK 1-3 / skins / stats) is a separate buy.
+  // Lifetime (mua đứt). TODO(giá): 50k là giá tạm — chốt lại trước khi mở bán.
+  hsk_advanced: {
+    id: "hsk_advanced",
+    name: "HSK nâng cao",
+    amountVnd: 50_000,
+    deviceLimit: 5,
+    durationDays: null,
+    features: ["pack_hsk_advanced"],
   },
 };
 

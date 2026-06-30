@@ -12,6 +12,11 @@ const envSchema = z.object({
   LICENSE_SIGNING_PRIVATE_KEY: z.string().min(32),
   LICENSE_PUBLIC_KEY: z.string().min(32),
   LICENSE_KEY_ENCRYPTION_SECRET: z.string().min(32),
+  // 32-byte base64url MASTER key for the "HSK nâng cao" pack — MUST equal the app
+  // build secret VOCHI_PACK_KEY_HSK_ADVANCED (the app derives the content subkey
+  // from it). Optional so non-pack deploys/tests don't need it; issuing a pack
+  // entitlement without it fails loud (packKeysForFeatures).
+  PACK_KEY_HSK_ADVANCED: z.string().min(43).optional(),
   JOB_SECRET: z.string().min(24).optional(),
   // Source the updater manifest is proxied from. Defaulted so it works without
   // extra config; override via Vercel env to point at new storage without

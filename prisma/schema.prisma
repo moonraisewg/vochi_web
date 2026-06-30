@@ -15,6 +15,7 @@ enum Plan {
   one_month_student
   three_months_student
   trial_7days
+  hsk_advanced
 }
 
 enum OrderStatus {

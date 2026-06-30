@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseIpnPayload, isPaidIpn } from "../lib/server/ipn";
-import { canonicalJson, generateLicenseKey, hashLicenseKey, normalizeLicenseKey } from "../lib/server/crypto";
+import { canonicalJson, generateLicenseKey, hashLicenseKey, normalizeLicenseKey, packKeysForFeatures } from "../lib/server/crypto";
 import { getPlan } from "../lib/server/plans";
 import { getEffectiveAmountVnd, getTrialPlanError } from "../lib/server/orders";
 
@@ -140,5 +140,39 @@ describe("payment helpers", () => {
     // retired plans must no longer resolve
     expect(getPlan("six_months")).toBeNull();
     expect(getPlan("pro_annual")).toBeNull();
+  });
+
+  // ── "HSK nâng cao" pack (HSK 4/5/6) — the separately-bought content pack ──────
+
+  it("hsk_advanced is a lifetime pack granting ONLY the pack feature", () => {
+    const plan = getPlan("hsk_advanced")!;
+    expect(plan).not.toBeNull();
+    expect(plan.durationDays).toBeNull(); // mua đứt
+    expect(plan.features).toEqual(["pack_hsk_advanced"]);
+    // It must NOT carry base Pro (Oxford/HSK1-3 stay separate).
+    expect(plan.features).not.toContain("unlimited_vocab");
+  });
+
+  it("packKeysForFeatures attaches the pack key only for pack entitlements", () => {
+    // Non-pack entitlement: no packKeys field at all (keeps existing Pro
+    // signatures byte-identical).
+    expect(packKeysForFeatures(["unlimited_vocab", "stats"], "KEY")).toBeUndefined();
+    // Pack entitlement: the master key under its pack id.
+    expect(packKeysForFeatures(["pack_hsk_advanced"], "KEY")).toEqual({
+      hsk_advanced: "KEY",
+    });
+  });
+
+  it("packKeysForFeatures fails loud if the pack key is not configured", () => {
+    // Never ship a pack license without its key — the buyer would be locked out.
+    expect(() => packKeysForFeatures(["pack_hsk_advanced"], undefined)).toThrow();
+  });
+
+  it("canonicalJson sorts nested packKeys keys (matches the Rust verifier)", () => {
+    // packKeys is an OBJECT nested in the signed payload; both sides must sort it
+    // recursively or the Ed25519 signature won't verify.
+    expect(canonicalJson({ packKeys: { b: "2", a: "1" }, features: ["x"] })).toBe(
+      '{"features":["x"],"packKeys":{"a":"1","b":"2"}}',
+    );
   });
 });

@@ -6,10 +6,12 @@ import {
   hashDeviceId,
   hashLicenseKey,
   licensePrefix,
+  packKeysForFeatures,
   sealString,
   signEntitlement,
 } from "./crypto";
 import { expiresAtForPlan, getPlan } from "./plans";
+import { serverEnv } from "./env";
 import { ApiError } from "./http";
 
 type Tx = Prisma.TransactionClient | PrismaClient;
@@ -250,10 +252,14 @@ async function signedEntitlement(base: {
   expiresAt: string | null;
 }) {
   const issuedAt = new Date();
+  // Attach the pack content key only for pack entitlements; omitted entirely
+  // otherwise so existing (Pro-only) entitlement payloads stay byte-identical.
+  const packKeys = packKeysForFeatures(base.features, serverEnv().PACK_KEY_HSK_ADVANCED);
   const entitlement = {
     ...base,
     issuedAt: issuedAt.toISOString(),
     notAfter: new Date(issuedAt.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    ...(packKeys ? { packKeys } : {}),
   };
   const { signature } = await signEntitlement(entitlement);
   return { entitlement, signature };
