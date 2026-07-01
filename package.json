@@ -16,6 +16,7 @@
     "email:outbox": "tsx scripts/process-email-outbox.ts",
     "admin:license": "tsx scripts/admin-license.ts",
     "admin:gen-trial": "tsx scripts/gen-trial-keys.ts",
+    "admin:gen-pack": "tsx scripts/gen-pack-license.ts",
     "admin:reconcile": "tsx scripts/reconcile-sepay-order.ts",
     "og:gen": "tsx scripts/gen-og.tsx",
     "release": "bash scripts/publish-release.sh",

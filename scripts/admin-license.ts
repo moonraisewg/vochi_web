@@ -4,7 +4,9 @@ import { processEmailOutboxOnce } from "../lib/server/email";
 const [command, value, extra] = process.argv.slice(2);
 
 if (!command || !value) {
-  console.error("Usage: pnpm admin:license <lookup|revoke|extend|resend> <email|licenseId> [days|reason]");
+  console.error(
+    "Usage: pnpm admin:license <lookup|revoke|extend|resend|reset-devices> <email|licenseId> [days|reason]",
+  );
   process.exit(1);
 }
 
@@ -38,6 +40,21 @@ if (command === "lookup") {
     },
   });
   console.log(JSON.stringify({ extended: license.id, expiresAt: license.expiresAt }, null, 2));
+} else if (command === "reset-devices") {
+  // Free all device slots so the buyer can re-activate on a new machine WITHOUT a
+  // new key. Needed because the HSK pack is 1-device: the first machine change
+  // otherwise dead-ends on DeviceLimitExceeded. `value` is the licenseId (get it
+  // from `lookup`).
+  const { count } = await prisma.activation.deleteMany({ where: { licenseId: value } });
+  await prisma.auditLog.create({
+    data: {
+      actor: "admin",
+      action: "license.devices_reset",
+      licenseId: value,
+      metadata: { removed: count },
+    },
+  });
+  console.log(JSON.stringify({ licenseId: value, devicesReset: count }, null, 2));
 } else if (command === "resend") {
   await prisma.emailOutbox.updateMany({
     where: { licenseId: value, type: "license_issued" },

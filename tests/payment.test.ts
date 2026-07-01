@@ -148,6 +148,7 @@ describe("payment helpers", () => {
     const plan = getPlan("hsk_advanced")!;
     expect(plan).not.toBeNull();
     expect(plan.durationDays).toBeNull(); // mua đứt
+    expect(plan.deviceLimit).toBe(1); // 1 key = 1 máy
     expect(plan.features).toEqual(["pack_hsk_advanced"]);
     // It must NOT carry base Pro (Oxford/HSK1-3 stay separate).
     expect(plan.features).not.toContain("unlimited_vocab");

@@ -13,7 +13,7 @@ const PLANS = {
   one_month_student: { name: "1 tháng (Sinh viên)", amount: "29.000đ", note: "2 thiết bị, 1 tháng (cần email .edu.vn)" },
   three_months_student: { name: "3 tháng (Sinh viên)", amount: "65.000đ", note: "2 thiết bị, 3 tháng (cần email .edu.vn)" },
   trial_7days: { name: "Dùng thử 7 ngày", amount: "Liên hệ", note: "1 thiết bị, 7 ngày" },
-  hsk_advanced: { name: "HSK nâng cao", amount: "50.000đ", note: "Mở HSK 4·5·6 · 5 thiết bị, trọn đời" },
+  hsk_advanced: { name: "HSK nâng cao", amount: "50.000đ", note: "Mở HSK 4·5·6 · 1 thiết bị, trọn đời" },
 } as const;
 
 type PlanId = keyof typeof PLANS;

@@ -76,7 +76,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
     id: "hsk_advanced",
     name: "HSK nâng cao",
     amountVnd: 50_000,
-    deviceLimit: 5,
+    deviceLimit: 1, // 1 key = 1 máy (đổi máy → admin:license reset-devices)
     durationDays: null,
     features: ["pack_hsk_advanced"],
   },
