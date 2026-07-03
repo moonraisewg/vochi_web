@@ -68,19 +68,13 @@ if [[ -n "$DMG_PATH" ]]; then DMG_URL="\"$R2_BASE/$DMG_NAME\""; fi
 if [[ -n "$EXE_PATH" ]]; then EXE_URL="\"$R2_BASE/$EXE_NAME\""; fi
 
 echo "==> Updating lib/releases.ts..."
-node -e "
-const fs = require('fs');
-let content = fs.readFileSync('$RELEASES_TS', 'utf8');
-if ('$DMG_URL' !== 'null') {
-  content = content.replace(/(mac:\\s*\\{[\\s\\S]*?url:\\s*)[^,]+/, '\\$1' + '$DMG_URL');
-  content = content.replace(/(mac:\\s*\\{[\\s\\S]*?sha256:\\s*)[^,]+/, '\\$1' + '$DMG_SHA');
-}
-if ('$EXE_URL' !== 'null') {
-  content = content.replace(/(windows:\\s*\\{[\\s\\S]*?url:\\s*)[^,]+/, '\\$1' + '$EXE_URL');
-  content = content.replace(/(windows:\\s*\\{[\\s\\S]*?sha256:\\s*)[^,]+/, '\\$1' + '$EXE_SHA');
-}
-fs.writeFileSync('$RELEASES_TS', content);
-"
+# Strip the surrounding quotes ($DMG_URL etc. are quoted, or the literal "null"
+# when a platform is skipped) and hand raw values to the editor via env — never
+# interpolate them into a node -e string (that let bash eat the regex's $1).
+RELEASES_TS="$RELEASES_TS" \
+DMG_URL="${DMG_URL//\"/}" DMG_SHA="${DMG_SHA//\"/}" \
+EXE_URL="${EXE_URL//\"/}" EXE_SHA="${EXE_SHA//\"/}" \
+npx --yes tsx "$(dirname "$0")/update-releases.ts"
 
 echo "==> Done."
 echo "    DMG: $DMG_URL"
