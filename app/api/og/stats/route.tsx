@@ -19,12 +19,14 @@ export async function GET(req: Request) {
     const lang = parseLang(searchParams.get("lang") ?? undefined);
     assertRateLimit(`og-image:ip:${clientIp(req)}`, 60, 60 * 1000);
 
-    const [loadedFonts, logo] = await Promise.all([
+    const [loadedFonts, logo, book, level] = await Promise.all([
       loadOgFonts(),
       loadPublicPngDataUri("logo-bird.png"),
+      loadPublicPngDataUri("icons", "book.png"),
+      loadPublicPngDataUri("icons", "pet.png"),
     ]);
     fonts = loadedFonts;
-    props = { stats, logo, lang };
+    props = { stats, logo, lang, book, level };
   } catch (error) {
     const parsed = parseApiError(error);
     return jsonError(parsed.code, parsed.message, parsed.status);

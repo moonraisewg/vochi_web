@@ -1,8 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-// Shared rendering for the /api/og/* share images (1200×630). Visual language
-// mirrors scripts/gen-og.tsx: paper background, dotted grid, lavender mascot
-// accent, mono micro-labels, vochi.xyz footer. JSX here is rendered by Satori
-// (not the DOM), so next/image does not apply.
+// Shared rendering for the /api/og/* share images (1200×630). The card sits
+// inside a flat, div-drawn "MacBook" so a shared link reads like a product
+// screenshot; paper background, dotted grid, lavender accent, mono micro-labels,
+// vochi.xyz footer. JSX here is rendered by Satori (not the DOM), so next/image
+// does not apply and emoji come from next/og's built-in Twemoji at render time.
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { BadgeMeta } from "./badges";
@@ -10,7 +11,6 @@ import type { ShareLang, ShareStats } from "./params";
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
 
-const ACCENT = "#8b6fd6";
 const ACCENT_DEEP = "#6d52c4";
 const INK = "#0f1311";
 const INK_SOFT = "#6b7066";
@@ -46,8 +46,7 @@ export async function loadPublicPngDataUri(...segments: string[]): Promise<strin
 const COPY = {
   vi: {
     badgeEyebrow: "Thành tựu mới",
-    footer: "Học từ vựng với thú nhỏ · Không stress",
-    statsPill: "macOS · Windows",
+    footer: "Học từ vựng với thú nhỏ",
     statsTitle: "Hành trình học từ vựng của tớ",
     streak: "ngày liên tiếp",
     words: "từ đã học",
@@ -55,8 +54,7 @@ const COPY = {
   },
   en: {
     badgeEyebrow: "New achievement",
-    footer: "Learn vocabulary with a tiny pet · No stress",
-    statsPill: "macOS · Windows",
+    footer: "Learn vocabulary with a tiny pet",
     statsTitle: "My vocabulary journey",
     streak: "day streak",
     words: "words learned",
@@ -64,9 +62,15 @@ const COPY = {
   },
 } as const;
 
-function Frame({ logo, pill, footer, children }: {
+// A flat "MacBook" drawn entirely with divs (no device-image asset): dark bezel
+// + light display holding the card, a tapered silver base, brand top-left,
+// vochi.xyz footer.
+function Laptop({
+  logo,
+  footer,
+  children,
+}: {
   logo: string;
-  pill: string;
   footer: string;
   children: React.ReactNode;
 }) {
@@ -76,6 +80,9 @@ function Frame({ logo, pill, footer, children }: {
         width: "100%",
         height: "100%",
         display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         background: "#fafaf7",
         fontFamily: "Display",
         color: INK,
@@ -101,62 +108,67 @@ function Frame({ logo, pill, footer, children }: {
           opacity: 0.5,
         }}
       />
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          width: "100%",
-          height: "100%",
-          padding: 64,
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <img src={logo} alt="" width={56} height={56} style={{ borderRadius: 14 }} />
-            <div style={{ fontSize: 30, fontWeight: 600, letterSpacing: -0.8 }}>Vô chi</div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "10px 18px",
-              border: `1.5px solid ${HAIRLINE}`,
-              borderRadius: 999,
-              background: "#ffffff",
-              fontFamily: "Mono",
-              fontSize: 14,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              color: INK_SOFT,
-            }}
-          >
-            <div style={{ width: 8, height: 8, background: ACCENT, borderRadius: 999, display: "flex" }} />
-            {pill}
-          </div>
-        </div>
 
-        {children}
+      <div style={{ position: "absolute", top: 40, left: 56, display: "flex", alignItems: "center", gap: 14 }}>
+        <img src={logo} width={44} height={44} style={{ borderRadius: 11 }} alt="" />
+        <div style={{ fontSize: 26, fontWeight: 600, letterSpacing: -0.6 }}>Vô chi</div>
+      </div>
 
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div
           style={{
+            width: 900,
+            background: "#1c1b24",
+            borderRadius: 24,
+            padding: "18px 16px 16px",
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
             alignItems: "center",
-            borderTop: `1.5px solid ${HAIRLINE}`,
-            paddingTop: 22,
-            fontFamily: "Mono",
-            fontSize: 16,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: INK_SOFT,
+            boxShadow: "0 30px 70px rgba(15,19,17,0.28), 0 6px 16px rgba(15,19,17,0.16)",
           }}
         >
-          <div style={{ display: "flex" }}>{footer}</div>
-          <div style={{ display: "flex", color: INK, fontWeight: 700 }}>vochi.xyz</div>
+          <div style={{ width: 7, height: 7, borderRadius: 999, background: "#3a3846", display: "flex", marginBottom: 12 }} />
+          <div
+            style={{
+              width: "100%",
+              height: 372,
+              background: "#faf9f5",
+              borderRadius: 12,
+              display: "flex",
+              overflow: "hidden",
+            }}
+          >
+            {children}
+          </div>
         </div>
+        <div
+          style={{
+            width: 1010,
+            height: 18,
+            background: "linear-gradient(180deg, #dcdae4 0%, #b9b6c6 100%)",
+            borderBottomLeftRadius: 14,
+            borderBottomRightRadius: 14,
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div style={{ width: 150, height: 8, background: "#a7a3b5", borderBottomLeftRadius: 8, borderBottomRightRadius: 8, display: "flex" }} />
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: 34,
+          display: "flex",
+          fontFamily: "Mono",
+          fontSize: 15,
+          letterSpacing: 2,
+          textTransform: "uppercase",
+          color: INK_SOFT,
+        }}
+      >
+        {footer} ·<span style={{ color: INK, fontWeight: 700, marginLeft: 8 }}>vochi.xyz</span>
       </div>
     </div>
   );
@@ -170,100 +182,80 @@ export function BadgeOgImage({ meta, badge, logo, lang }: {
 }) {
   const copy = COPY[lang];
   return (
-    <Frame logo={logo} pill={copy.badgeEyebrow} footer={copy.footer}>
-      <div style={{ display: "flex", alignItems: "center", gap: 64 }}>
+    <Laptop logo={logo} footer={copy.footer}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 40, width: "100%", padding: "0 44px" }}>
         <div
           style={{
-            width: 340,
-            height: 340,
+            width: 220,
+            height: 220,
             background: "#ffffff",
             border: `2px solid ${HAIRLINE}`,
-            borderRadius: 28,
+            borderRadius: 26,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 2px 4px rgba(15,19,17,0.06), 0 24px 60px rgba(15,19,17,0.12)",
+            boxShadow: "0 2px 4px rgba(15,19,17,0.05), 0 18px 44px rgba(15,19,17,0.1)",
           }}
         >
-          <img src={badge} alt="" width={260} height={260} />
+          <img src={badge} width={172} height={172} alt="" />
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18, flex: 1 }}>
-          <div
-            style={{
-              fontFamily: "Mono",
-              fontSize: 16,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-              color: INK_SOFT,
-              display: "flex",
-            }}
-          >
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, maxWidth: 440 }}>
+          <div style={{ fontFamily: "Mono", fontSize: 15, letterSpacing: 2, textTransform: "uppercase", color: INK_SOFT, display: "flex" }}>
             🏆 {copy.badgeEyebrow}
           </div>
-          <div style={{ fontSize: 64, fontWeight: 600, lineHeight: 1.06, letterSpacing: -1.8, color: ACCENT_DEEP, display: "flex" }}>
+          <div style={{ fontSize: 52, fontWeight: 600, lineHeight: 1.05, letterSpacing: -1.6, color: ACCENT_DEEP, display: "flex" }}>
             {meta.name[lang]}
           </div>
-          <div style={{ fontSize: 28, color: INK_SOFT, display: "flex" }}>{meta.desc[lang]}</div>
+          <div style={{ fontSize: 26, color: INK_SOFT, display: "flex" }}>{meta.desc[lang]}</div>
         </div>
       </div>
-    </Frame>
+    </Laptop>
   );
 }
 
-export function StatsOgImage({ stats, logo, lang }: {
+export function StatsOgImage({ stats, logo, lang, book, level }: {
   stats: ShareStats;
   logo: string;
   lang: ShareLang;
+  book: string;
+  level: string;
 }) {
   const copy = COPY[lang];
   const blocks = [
-    { emoji: "🔥", value: stats.streak, label: copy.streak },
-    { emoji: "📖", value: stats.words, label: copy.words },
-    { emoji: "⭐", value: stats.level, label: copy.level },
+    { icon: <div style={{ fontSize: 40, display: "flex" }}>🔥</div>, value: stats.streak, label: copy.streak },
+    { icon: <img src={book} width={44} height={44} alt="" />, value: stats.words, label: copy.words },
+    { icon: <img src={level} width={44} height={44} alt="" />, value: stats.level, label: copy.level },
   ];
   return (
-    <Frame logo={logo} pill={copy.statsPill} footer={copy.footer}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-        <div style={{ fontSize: 44, fontWeight: 600, letterSpacing: -1.2, display: "flex" }}>
-          {copy.statsTitle}
-        </div>
-        <div style={{ display: "flex", gap: 24 }}>
-          {blocks.map((block) => (
+    <Laptop logo={logo} footer={copy.footer}>
+      <div style={{ display: "flex", flexDirection: "column", width: "100%", padding: "30px 34px", gap: 22 }}>
+        <div style={{ fontSize: 34, fontWeight: 600, letterSpacing: -1, display: "flex" }}>{copy.statsTitle}</div>
+        <div style={{ display: "flex", gap: 20 }}>
+          {blocks.map((b) => (
             <div
-              key={block.label}
+              key={b.label}
               style={{
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 10,
+                gap: 8,
                 background: "#ffffff",
                 border: `2px solid ${HAIRLINE}`,
-                borderRadius: 28,
-                padding: "34px 20px",
-                boxShadow: "0 2px 4px rgba(15,19,17,0.06), 0 24px 60px rgba(15,19,17,0.10)",
+                borderRadius: 22,
+                padding: "24px 16px",
+                boxShadow: "0 2px 4px rgba(15,19,17,0.05), 0 16px 40px rgba(15,19,17,0.08)",
               }}
             >
-              <div style={{ fontSize: 44, display: "flex" }}>{block.emoji}</div>
-              <div style={{ fontSize: 58, fontWeight: 600, letterSpacing: -1.5, color: ACCENT_DEEP, display: "flex" }}>
-                {block.value}
-              </div>
-              <div
-                style={{
-                  fontFamily: "Mono",
-                  fontSize: 14,
-                  letterSpacing: 1.6,
-                  textTransform: "uppercase",
-                  color: INK_SOFT,
-                  display: "flex",
-                }}
-              >
-                {block.label}
+              <div style={{ height: 48, display: "flex", alignItems: "center" }}>{b.icon}</div>
+              <div style={{ fontSize: 50, fontWeight: 600, letterSpacing: -1.4, color: ACCENT_DEEP, display: "flex" }}>{b.value}</div>
+              <div style={{ fontFamily: "Mono", fontSize: 13, letterSpacing: 1.4, textTransform: "uppercase", color: INK_SOFT, display: "flex" }}>
+                {b.label}
               </div>
             </div>
           ))}
         </div>
       </div>
-    </Frame>
+    </Laptop>
   );
 }

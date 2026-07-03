@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   // assets/ are not traced into serverless bundles automatically.
   outputFileTracingIncludes: {
     "/api/og/badge": ["./assets/fonts/*", "./public/badges/*", "./public/logo-bird.png"],
-    "/api/og/stats": ["./assets/fonts/*", "./public/logo-bird.png"],
+    "/api/og/stats": ["./assets/fonts/*", "./public/logo-bird.png", "./public/icons/*"],
   },
 };
 
