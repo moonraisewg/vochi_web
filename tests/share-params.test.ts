@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseStatsParams, parseLang } from "../lib/share/params";
+import { parseStatsParams, parseLang, badgeShareUrl, statsShareUrl } from "../lib/share/params";
 import { BADGE_KEYS, isBadgeKey, getBadgeMeta } from "../lib/share/badges";
 
 describe("badge catalog", () => {
@@ -81,5 +81,24 @@ describe("parseLang", () => {
     expect(parseLang("fr")).toBe("vi");
     expect(parseLang(undefined)).toBe("vi");
     expect(parseLang(["en", "vi"])).toBe("en");
+  });
+});
+
+// Self-canonical URLs. The root layout sets alternates.canonical = site root;
+// share pages MUST override it (and set og:url) to their own URL, or Facebook
+// collapses every shared link back to the homepage OG card.
+describe("share self-URLs (canonical / og:url)", () => {
+  it("badge self-url points to the badge page, never the site root", () => {
+    expect(badgeShareUrl("streak_7", "vi")).toBe("/share/badge/streak_7?lang=vi");
+    expect(badgeShareUrl("master_1", "en")).toBe("/share/badge/master_1?lang=en");
+  });
+
+  it("stats self-url carries the stat params so each card is its own object", () => {
+    expect(statsShareUrl({ streak: 5, words: 42, level: 3 }, "vi")).toBe(
+      "/share/stats?streak=5&words=42&level=3&lang=vi",
+    );
+    expect(statsShareUrl({ streak: 0, words: 0, level: 0 }, "en")).toBe(
+      "/share/stats?streak=0&words=0&level=0&lang=en",
+    );
   });
 });

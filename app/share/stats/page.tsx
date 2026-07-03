@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { parseLang, parseStatsParams } from "@/lib/share/params";
+import { parseLang, parseStatsParams, statsShareUrl } from "@/lib/share/params";
 import { ShareStatsLanding } from "@/components/ShareLanding";
 
 type Props = {
@@ -25,13 +25,18 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     lang,
   });
   const ogImage = `/api/og/stats?${query.toString()}`;
+  // Override the root layout's canonical (site root) with this page's own URL,
+  // or Facebook unfurls the link into the homepage card instead of the stats card.
+  const selfUrl = statsShareUrl(stats, lang);
   return {
     title,
     description,
     // Share pages are unfurl targets, not search content.
     robots: { index: false, follow: true },
+    alternates: { canonical: selfUrl },
     openGraph: {
       type: "website",
+      url: selfUrl,
       title,
       description,
       images: [{ url: ogImage, width: 1200, height: 630, alt: title }],

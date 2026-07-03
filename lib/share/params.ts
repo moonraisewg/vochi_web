@@ -34,3 +34,22 @@ export function parseLang(value: Param): ShareLang {
   const raw = Array.isArray(value) ? value[0] : value;
   return raw === "en" ? "en" : "vi";
 }
+
+// Self-canonical URL for a share page. The root layout declares
+// alternates.canonical = site root; a share page MUST override both
+// alternates.canonical and openGraph.url with its own URL, otherwise Facebook
+// honors the inherited root canonical and unfurls every link into the homepage
+// OG card instead of the badge/stats card.
+export function badgeShareUrl(key: string, lang: ShareLang): string {
+  return `/share/badge/${key}?lang=${lang}`;
+}
+
+export function statsShareUrl(stats: ShareStats, lang: ShareLang): string {
+  const query = new URLSearchParams({
+    streak: String(stats.streak),
+    words: String(stats.words),
+    level: String(stats.level),
+    lang,
+  });
+  return `/share/stats?${query.toString()}`;
+}
