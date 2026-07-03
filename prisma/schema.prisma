@@ -141,3 +141,20 @@ model AuditLog {
 
   @@index([action, createdAt])
 }
+
+// Short DB-backed share links (/s/<id>). Integrity is app-enforced: badge rows
+// carry badgeKey, stats rows carry streak/words/level. No PII — just the public
+// card payload. See docs/superpowers/specs/2026-07-03-share-short-links-design.md
+model ShareCard {
+  id         String   @id
+  kind       String
+  badgeKey   String?
+  streak     Int?
+  words      Int?
+  level      Int?
+  lang       String
+  clickCount Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}
