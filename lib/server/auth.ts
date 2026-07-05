@@ -7,6 +7,7 @@ import type { RegisterInput, LoginInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { assertNotLocked, recordLoginFailure, clearLoginFailures } from "./authThrottle";
 import { audit } from "./authAudit";
+import { autoClaimByEmail } from "./accountLicenses";
 
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 const RESET_TTL_MS = 60 * 60 * 1000; // 1h
@@ -68,6 +69,10 @@ export async function verifyEmail(token: string): Promise<void> {
     prisma.user.update({ where: { id: row.userId }, data: { emailVerifiedAt: new Date() } }),
   ]);
   await audit("email_verified", { userId: row.userId });
+  // Email is now verified, so attaching licenses by purchase email cannot hijack a
+  // stranger's purchase.
+  const user = await prisma.user.findUniqueOrThrow({ where: { id: row.userId }, select: { email: true } });
+  await autoClaimByEmail(row.userId, user.email);
 }
 
 export type LoginResult =

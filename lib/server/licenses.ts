@@ -244,7 +244,7 @@ export async function activateLicense(input: z.infer<typeof activateLicenseSchem
   });
 }
 
-async function signedEntitlement(base: {
+export async function signedEntitlement(base: {
   licenseId: string;
   plan: string;
   deviceIdHash: string;
