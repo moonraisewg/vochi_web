@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCr
 import { decideDeviceAdmission } from "./authPolicy";
 import type { RegisterInput, LoginInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
+import { assertNotLocked, recordLoginFailure, clearLoginFailures } from "./authThrottle";
 
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 const RESET_TTL_MS = 60 * 60 * 1000; // 1h
@@ -70,10 +71,13 @@ export type LoginResult =
 /** Authenticate, enforce the device cap, and mint a session token (returned once). */
 export async function login(input: LoginInput): Promise<LoginResult> {
   const user = await prisma.user.findUnique({ where: { email: input.email } });
+  if (user) assertNotLocked(user);
+
   // Always run an argon2 verify — dummy hash when the user is missing — so timing does
   // not leak whether the email exists. Uniform 401 hides which factor was wrong.
   const passwordOk = await verifyPassword(input.password, user?.passwordHash ?? (await dummyHash()));
   if (!user || user.status !== "active" || !passwordOk) {
+    if (user) await recordLoginFailure(user.id);
     throw new ApiError("InvalidCredentials", "Email hoặc mật khẩu không đúng.", 401);
   }
   if (!user.emailVerifiedAt) {
@@ -103,6 +107,7 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     create: data,
     update: data, // new token + reset expiry/revoked for this device
   });
+  await clearLoginFailures(user.id);
   return { ok: true, sessionToken: token };
 }
 
