@@ -6,6 +6,7 @@ import { decideDeviceAdmission } from "./authPolicy";
 import type { RegisterInput, LoginInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { assertNotLocked, recordLoginFailure, clearLoginFailures } from "./authThrottle";
+import { audit } from "./authAudit";
 
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 const RESET_TTL_MS = 60 * 60 * 1000; // 1h
@@ -62,6 +63,7 @@ export async function verifyEmail(token: string): Promise<void> {
     prisma.authToken.update({ where: { id: row.id }, data: { consumedAt: new Date() } }),
     prisma.user.update({ where: { id: row.userId }, data: { emailVerifiedAt: new Date() } }),
   ]);
+  await audit("email_verified", { userId: row.userId });
 }
 
 export type LoginResult =
@@ -78,6 +80,7 @@ export async function login(input: LoginInput): Promise<LoginResult> {
   const passwordOk = await verifyPassword(input.password, user?.passwordHash ?? (await dummyHash()));
   if (!user || user.status !== "active" || !passwordOk) {
     if (user) await recordLoginFailure(user.id);
+    await audit("login_failed", { userId: user?.id });
     throw new ApiError("InvalidCredentials", "Email hoặc mật khẩu không đúng.", 401);
   }
   if (!user.emailVerifiedAt) {
@@ -89,6 +92,7 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     select: { deviceIdHash: true },
   });
   if (decideDeviceAdmission(live, input.deviceIdHash) === "reject") {
+    await audit("device_limit_hit", { userId: user.id });
     return { ok: false, code: "device_limit" };
   }
 
@@ -108,6 +112,7 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     update: data, // new token + reset expiry/revoked for this device
   });
   await clearLoginFailures(user.id);
+  await audit("login_success", { userId: user.id });
   return { ok: true, sessionToken: token };
 }
 
@@ -127,6 +132,7 @@ export async function requireSession(bearer: string | null) {
 export async function logout(bearer: string | null): Promise<void> {
   const session = await requireSession(bearer);
   await prisma.session.update({ where: { id: session.id }, data: { revokedAt: new Date() } });
+  await audit("session_revoked", { userId: session.userId, note: "self" });
 }
 
 /** Start password reset. Always resolves the same way (no enumeration). */
@@ -160,6 +166,7 @@ export async function resetPassword(token: string, newPassword: string): Promise
       data: { revokedAt: new Date() },
     }),
   ]);
+  await audit("password_reset", { userId: row.userId });
 }
 
 export type DeviceView = {
@@ -204,4 +211,5 @@ export async function logoutDevice(bearer: string | null, sessionId: string): Pr
     throw new ApiError("NotFound", "Không tìm thấy thiết bị.", 404);
   }
   await prisma.session.update({ where: { id: sessionId }, data: { revokedAt: new Date() } });
+  await audit("session_revoked", { userId: session.userId, note: "remote" });
 }
