@@ -69,6 +69,36 @@ export async function processEmailOutboxOnce(limit = 10) {
             "Need help? Reply to this email or write hi@vochi.app.",
           ].join("\n"),
         });
+      } else if (item.type === "account_verify_email") {
+        const payload = item.payload as { verifyUrl: string };
+        await resend.emails.send({
+          from: env.RESEND_FROM_EMAIL,
+          to: item.recipient,
+          subject: "Xác nhận email Vô chi",
+          text: [
+            "Chào bạn,",
+            "",
+            "Nhấn vào liên kết dưới đây để xác nhận email và kích hoạt tài khoản Vô chi:",
+            payload.verifyUrl,
+            "",
+            "Liên kết có hiệu lực trong 24 giờ. Nếu bạn không tạo tài khoản, hãy bỏ qua email này.",
+          ].join("\n"),
+        });
+      } else if (item.type === "account_reset_password") {
+        const payload = item.payload as { resetUrl: string };
+        await resend.emails.send({
+          from: env.RESEND_FROM_EMAIL,
+          to: item.recipient,
+          subject: "Đặt lại mật khẩu Vô chi",
+          text: [
+            "Chào bạn,",
+            "",
+            "Nhấn vào liên kết dưới đây để đặt lại mật khẩu Vô chi:",
+            payload.resetUrl,
+            "",
+            "Liên kết có hiệu lực trong 1 giờ. Nếu bạn không yêu cầu, hãy bỏ qua email này.",
+          ].join("\n"),
+        });
       } else {
         throw new Error(`Unsupported email type: ${item.type}`);
       }
