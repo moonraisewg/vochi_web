@@ -5,6 +5,8 @@ import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCr
 import { decideDeviceAdmission } from "./authPolicy";
 import type { RegisterInput, LoginInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
+import { processEmailOutboxOnce } from "./email";
+import { after } from "next/server";
 import { assertNotLocked, recordLoginFailure, clearLoginFailures } from "./authThrottle";
 import { audit } from "./authAudit";
 import { autoClaimByEmail } from "./accountLicenses";
@@ -56,6 +58,17 @@ async function issueVerifyToken(userId: string, email: string): Promise<void> {
     },
   });
   await enqueueVerifyEmail(email, appUrl(`/verify-email?token=${token}`), token);
+  // Flush via after(): runs once the response is sent, so serverless can't freeze the
+  // function before delivery completes (same reliability concern as the order/sepay
+  // flows) WITHOUT adding to response latency — which matters here because register()
+  // is timing-sensitive (an inline await would reopen the account-enumeration leak
+  // fixed by hashing unconditionally: the "existing verified" branch never reaches this
+  // call at all, so an inline network wait would make that branch measurably faster).
+  after(async () => {
+    await processEmailOutboxOnce(1).catch((error) => {
+      console.error(JSON.stringify({ event: "verify_email_outbox_flush_failed", error: String(error) }));
+    });
+  });
 }
 
 /** Consume a verify token and mark the user's email verified. */
@@ -161,6 +174,18 @@ export async function forgotPassword(email: string): Promise<void> {
     },
   });
   await enqueueResetPassword(user.email, appUrl(`/reset-password?token=${token}`), token);
+  // after(), not an inline await: the no-such-user branch returns above without ever
+  // reaching this call, so an inline network wait here would make that branch
+  // measurably faster and leak account existence via timing (forgotPassword is
+  // deliberately equal-cost on both branches today — see the security review note
+  // on this function). after() runs post-response, so its presence/absence doesn't
+  // affect response latency either way; it just makes delivery survive serverless
+  // freezing the function right after responding.
+  after(async () => {
+    await processEmailOutboxOnce(1).catch((error) => {
+      console.error(JSON.stringify({ event: "reset_password_outbox_flush_failed", error: String(error) }));
+    });
+  });
 }
 
 /** Consume a reset token, set the new password, and revoke all of that user's sessions. */
