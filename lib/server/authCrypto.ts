@@ -1,10 +1,11 @@
 import { randomBytes, createHash } from "node:crypto";
-import { hash as argon2Hash, verify as argon2Verify, Algorithm } from "@node-rs/argon2";
+import { hash as argon2Hash, verify as argon2Verify } from "@node-rs/argon2";
 
-// OWASP argon2id profile. The params are embedded in the PHC string argon2 returns,
-// so they can be raised later without breaking existing hashes.
+// OWASP argon2id profile. `@node-rs/argon2` defaults `algorithm` to Argon2id, so it is
+// omitted here (its `Algorithm` is a const enum, unusable under isolatedModules). The
+// params are embedded in the PHC string argon2 returns, so they can be raised later
+// without breaking existing hashes.
 const ARGON2_OPTS = {
-  algorithm: Algorithm.Argon2id,
   memoryCost: 19456, // KiB (19 MiB)
   timeCost: 2,
   parallelism: 1,
