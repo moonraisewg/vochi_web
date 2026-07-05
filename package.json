@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:int": "vitest run tests/auth-integration.test.ts",
     "check": "pnpm typecheck && pnpm lint && pnpm test && pnpm build",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
