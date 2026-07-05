@@ -39,6 +39,17 @@ enum EmailStatus {
   failed
 }
 
+enum UserStatus {
+  active
+  disabled
+  deleted
+}
+
+enum AuthTokenKind {
+  email_verify
+  password_reset
+}
+
 model Order {
   id                 String         @id @default(cuid())
   invoiceNumber      String         @unique
@@ -84,15 +95,18 @@ model License {
   status           LicenseStatus @default(active)
   deviceLimit      Int
   expiresAt        DateTime?
+  userId           String?
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   order            Order?        @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  user             User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
   activations      Activation[]
   emailOutbox      EmailOutbox[]
   audits           AuditLog[]
 
   @@index([email])
   @@index([status])
+  @@index([userId])
 }
 
 model Activation {
@@ -157,4 +171,46 @@ model ShareCard {
   createdAt  DateTime @default(now())
 
   @@index([createdAt])
+}
+
+model User {
+  id              String      @id @default(cuid())
+  email           String      @unique
+  emailVerifiedAt DateTime?
+  passwordHash    String
+  status          UserStatus  @default(active)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  sessions        Session[]
+  authTokens      AuthToken[]
+  licenses        License[]
+}
+
+model AuthToken {
+  id         String        @id @default(cuid())
+  userId     String
+  purpose    AuthTokenKind
+  tokenHash  String        @unique
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime      @default(now())
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+}
+
+model Session {
+  id           String    @id @default(cuid())
+  userId       String
+  tokenHash    String    @unique
+  deviceIdHash String
+  deviceName   String?
+  createdAt    DateTime  @default(now())
+  lastSeenAt   DateTime  @default(now())
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, deviceIdHash])
+  @@index([userId])
 }
