@@ -25,6 +25,7 @@
   "dependencies": {
     "@noble/ed25519": "^3.1.0",
     "@noble/hashes": "^2.2.0",
+    "@node-rs/argon2": "^2.0.2",
     "@prisma/client": "^6.19.3",
     "clsx": "^2.1.1",
     "lottie-react": "^2.4.1",
