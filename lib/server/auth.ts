@@ -213,3 +213,34 @@ export async function logoutDevice(bearer: string | null, sessionId: string): Pr
   await prisma.session.update({ where: { id: sessionId }, data: { revokedAt: new Date() } });
   await audit("session_revoked", { userId: session.userId, note: "remote" });
 }
+
+/** Export everything the server stores about the account (right-to-access). */
+export async function exportAccount(bearer: string | null) {
+  const session = await requireSession(bearer);
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: session.userId },
+    select: { id: true, email: true, emailVerifiedAt: true, createdAt: true },
+  });
+  const sessions = await prisma.session.findMany({
+    where: { userId: user.id },
+    select: { deviceName: true, deviceIdHash: true, createdAt: true, lastSeenAt: true, revokedAt: true },
+  });
+  const licenses = await prisma.license.findMany({
+    where: { userId: user.id },
+    select: { licenseKeyPrefix: true, plan: true, status: true, expiresAt: true },
+  });
+  return { user, sessions, licenses };
+}
+
+/** Delete the account: detach purchased licenses (keep the record), remove sessions/tokens/user. */
+export async function deleteAccount(bearer: string | null): Promise<void> {
+  const session = await requireSession(bearer);
+  const userId = session.userId;
+  await prisma.$transaction([
+    prisma.license.updateMany({ where: { userId }, data: { userId: null } }),
+    prisma.session.deleteMany({ where: { userId } }),
+    prisma.authToken.deleteMany({ where: { userId } }),
+    prisma.user.delete({ where: { id: userId } }),
+  ]);
+  await audit("account_deleted", { userId });
+}
