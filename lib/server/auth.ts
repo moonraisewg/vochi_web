@@ -65,7 +65,7 @@ async function issueVerifyToken(userId: string, email: string): Promise<void> {
   // fixed by hashing unconditionally: the "existing verified" branch never reaches this
   // call at all, so an inline network wait would make that branch measurably faster).
   after(async () => {
-    await processEmailOutboxOnce(1).catch((error) => {
+    await processEmailOutboxOnce(5).catch((error) => {
       console.error(JSON.stringify({ event: "verify_email_outbox_flush_failed", error: String(error) }));
     });
   });
@@ -182,7 +182,7 @@ export async function forgotPassword(email: string): Promise<void> {
   // affect response latency either way; it just makes delivery survive serverless
   // freezing the function right after responding.
   after(async () => {
-    await processEmailOutboxOnce(1).catch((error) => {
+    await processEmailOutboxOnce(5).catch((error) => {
       console.error(JSON.stringify({ event: "reset_password_outbox_flush_failed", error: String(error) }));
     });
   });
