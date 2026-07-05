@@ -27,6 +27,10 @@ function dummyHash(): Promise<string> {
 /** Create (or no-op for an existing email) an unverified user and enqueue a verify email.
  *  Always resolves the same way so callers cannot enumerate accounts. */
 export async function register(input: RegisterInput): Promise<void> {
+  // Hash unconditionally so every call pays exactly one argon2 cost. Otherwise the
+  // existing-email path (which skips hashing) is measurably faster, leaking account
+  // existence via response timing despite the uniform 202. See security review #1.
+  const passwordHash = await hashPassword(input.password);
   const existing = await prisma.user.findUnique({ where: { email: input.email } });
   if (existing) {
     if (!existing.emailVerifiedAt) {
@@ -35,7 +39,7 @@ export async function register(input: RegisterInput): Promise<void> {
     return; // verified accounts: silently do nothing (no enumeration)
   }
   const user = await prisma.user.create({
-    data: { email: input.email, passwordHash: await hashPassword(input.password) },
+    data: { email: input.email, passwordHash },
   });
   await issueVerifyToken(user.id, user.email);
 }
@@ -120,8 +124,11 @@ export async function login(input: LoginInput): Promise<LoginResult> {
 export async function requireSession(bearer: string | null) {
   const token = (bearer ?? "").replace(/^Bearer\s+/i, "").trim();
   if (!token) throw new ApiError("Unauthorized", "Thiếu phiên đăng nhập.", 401);
-  const session = await prisma.session.findUnique({ where: { tokenHash: hashToken(token) } });
-  if (!session || session.revokedAt || session.expiresAt < new Date()) {
+  const session = await prisma.session.findUnique({
+    where: { tokenHash: hashToken(token) },
+    include: { user: { select: { status: true } } },
+  });
+  if (!session || session.revokedAt || session.expiresAt < new Date() || session.user.status !== "active") {
     throw new ApiError("Unauthorized", "Phiên đăng nhập không hợp lệ.", 401);
   }
   await prisma.session.update({ where: { id: session.id }, data: { lastSeenAt: new Date() } });
