@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   normalizeEmail,
   registerSchema,
+  updateProfileSchema,
   loginSchema,
   decideDeviceAdmission,
   DEVICE_CAP,
@@ -15,14 +16,94 @@ describe("normalizeEmail", () => {
 
 describe("registerSchema", () => {
   it("accepts a valid email + password and normalizes the email", () => {
-    const out = registerSchema.parse({ email: " A@B.com ", password: "longenough1" });
+    const out = registerSchema.parse({
+      email: " A@B.com ",
+      password: "longenough1",
+      name: "Moon",
+      age: 25,
+    });
     expect(out.email).toBe("a@b.com");
   });
   it("rejects a short password", () => {
-    expect(() => registerSchema.parse({ email: "a@b.com", password: "short" })).toThrow();
+    expect(() =>
+      registerSchema.parse({ email: "a@b.com", password: "short", name: "Moon", age: 25 }),
+    ).toThrow();
   });
   it("rejects a non-email", () => {
-    expect(() => registerSchema.parse({ email: "nope", password: "longenough1" })).toThrow();
+    expect(() =>
+      registerSchema.parse({ email: "nope", password: "longenough1", name: "Moon", age: 25 }),
+    ).toThrow();
+  });
+  it("trims the name and requires it non-empty", () => {
+    const out = registerSchema.parse({
+      email: "a@b.com",
+      password: "longenough1",
+      name: "  Moon  ",
+      age: 25,
+    });
+    expect(out.name).toBe("Moon");
+  });
+  it("rejects an empty name", () => {
+    expect(() =>
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "   ", age: 25 }),
+    ).toThrow();
+  });
+  it("rejects a name over 100 characters", () => {
+    expect(() =>
+      registerSchema.parse({
+        email: "a@b.com",
+        password: "longenough1",
+        name: "a".repeat(101),
+        age: 25,
+      }),
+    ).toThrow();
+  });
+  it("accepts a name at exactly 100 characters", () => {
+    const out = registerSchema.parse({
+      email: "a@b.com",
+      password: "longenough1",
+      name: "a".repeat(100),
+      age: 25,
+    });
+    expect(out.name).toHaveLength(100);
+  });
+  it("rejects an age below 13", () => {
+    expect(() =>
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "Moon", age: 12 }),
+    ).toThrow();
+  });
+  it("rejects an age above 120", () => {
+    expect(() =>
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "Moon", age: 121 }),
+    ).toThrow();
+  });
+  it("accepts boundary ages 13 and 120", () => {
+    expect(
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "Moon", age: 13 })
+        .age,
+    ).toBe(13);
+    expect(
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "Moon", age: 120 })
+        .age,
+    ).toBe(120);
+  });
+  it("rejects a non-integer age", () => {
+    expect(() =>
+      registerSchema.parse({ email: "a@b.com", password: "longenough1", name: "Moon", age: 25.5 }),
+    ).toThrow();
+  });
+});
+
+describe("updateProfileSchema", () => {
+  it("accepts a valid name + age", () => {
+    const out = updateProfileSchema.parse({ name: "Moon", age: 30 });
+    expect(out).toEqual({ name: "Moon", age: 30 });
+  });
+  it("rejects an empty name", () => {
+    expect(() => updateProfileSchema.parse({ name: "  ", age: 30 })).toThrow();
+  });
+  it("rejects an out-of-range age", () => {
+    expect(() => updateProfileSchema.parse({ name: "Moon", age: 200 })).toThrow();
   });
 });
 
