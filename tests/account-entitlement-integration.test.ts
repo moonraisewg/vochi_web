@@ -1,7 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { prisma } from "../lib/server/prisma";
 import { issueAccountEntitlement } from "../lib/server/accountEntitlement";
-import { claimLicense, unclaimLicense, listLicenses, autoClaimByEmail } from "../lib/server/accountLicenses";
+import {
+  claimLicense,
+  unclaimLicense,
+  listLicenses,
+  autoClaimByEmail,
+  findBackfillCandidates,
+  runBackfillAutoClaim,
+} from "../lib/server/accountLicenses";
 import { hashLicenseKey, normalizeLicenseKey } from "../lib/server/crypto";
 
 const hasDb = !!process.env.TEST_DATABASE_URL;
@@ -10,8 +17,10 @@ async function reset() {
   await prisma.$executeRawUnsafe('TRUNCATE TABLE "License", "User" RESTART IDENTITY CASCADE');
 }
 
-async function seedUser(email: string) {
-  return prisma.user.create({ data: { email, passwordHash: "x", emailVerifiedAt: new Date() } });
+async function seedUser(email: string, opts: { verified?: boolean } = {}) {
+  return prisma.user.create({
+    data: { email, passwordHash: "x", emailVerifiedAt: opts.verified === false ? null : new Date() },
+  });
 }
 
 async function seedLicense(opts: {
@@ -45,6 +54,12 @@ async function seedSession(opts: { userId: string; deviceIdHash: string; created
       createdAt: opts.createdAt,
       expiresAt: new Date(Date.now() + 60 * 60 * 1000),
     },
+  });
+}
+
+async function seedActivation(opts: { licenseId: string; deviceIdHash: string }) {
+  return prisma.activation.create({
+    data: { licenseId: opts.licenseId, deviceIdHash: opts.deviceIdHash },
   });
 }
 
@@ -150,5 +165,48 @@ describe.skipIf(!hasDb)("account entitlement + claim (integration)", () => {
     await seedSession({ userId: u.id, deviceIdHash: "dev-3", createdAt: new Date(3000) });
     const { entitlement } = await issueAccountEntitlement(u.id, "dev-3");
     expect(entitlement.features).toEqual([]);
+  });
+
+  it("finds a backfill candidate for an activated, unclaimed license with a matching verified user", async () => {
+    const u = await seedUser("backfill@x.com");
+    const lic = await seedLicense({ key: "VOCHI-OOOO-PPPP", email: "backfill@x.com", plan: "lifetime" });
+    await seedActivation({ licenseId: lic.id, deviceIdHash: "dev-old-1" });
+
+    const candidates = await findBackfillCandidates();
+    expect(candidates).toEqual([{ userId: u.id, email: "backfill@x.com", licenseCount: 1 }]);
+
+    const results = await runBackfillAutoClaim(candidates);
+    expect(results).toEqual([{ userId: u.id, email: "backfill@x.com", attached: 1 }]);
+    expect((await listLicenses(u.id)).length).toBe(1);
+  });
+
+  it("excludes a license that was never activated on any device", async () => {
+    await seedUser("noactivation@x.com");
+    await seedLicense({ key: "VOCHI-QQQQ-RRRR", email: "noactivation@x.com", plan: "lifetime" });
+    // no seedActivation call — this license has zero Activation rows
+
+    const candidates = await findBackfillCandidates();
+    expect(candidates).toEqual([]);
+  });
+
+  it("excludes a matching user whose email is not verified", async () => {
+    await seedUser("unverified@x.com", { verified: false });
+    const lic = await seedLicense({ key: "VOCHI-SSSS-TTTT", email: "unverified@x.com", plan: "lifetime" });
+    await seedActivation({ licenseId: lic.id, deviceIdHash: "dev-old-2" });
+
+    const candidates = await findBackfillCandidates();
+    expect(candidates).toEqual([]);
+  });
+
+  it("running the backfill twice only attaches once (idempotent)", async () => {
+    const u = await seedUser("twice@x.com");
+    const lic = await seedLicense({ key: "VOCHI-UUUU-VVVV", email: "twice@x.com", plan: "lifetime" });
+    await seedActivation({ licenseId: lic.id, deviceIdHash: "dev-old-3" });
+
+    const first = await runBackfillAutoClaim(await findBackfillCandidates());
+    expect(first).toEqual([{ userId: u.id, email: "twice@x.com", attached: 1 }]);
+
+    const second = await runBackfillAutoClaim(await findBackfillCandidates());
+    expect(second).toEqual([]); // no longer a candidate — license is claimed now
   });
 });
