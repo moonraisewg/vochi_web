@@ -216,6 +216,8 @@ export async function activateLicense(input: z.infer<typeof activateLicenseSchem
     throw new ApiError("LicenseRevoked", "License has been revoked", 403);
   if (license.expiresAt && license.expiresAt.getTime() <= Date.now())
     throw new ApiError("LicenseExpired", "License has expired", 403);
+  if (license.userId)
+    throw new ApiError("LicenseClaimed", "License is managed by an account now", 403);
 
   const existing = license.activations.find((a) => a.deviceIdHash === deviceIdHash);
   if (!existing && license.activations.length >= license.deviceLimit) {
