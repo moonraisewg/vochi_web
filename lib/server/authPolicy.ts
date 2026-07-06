@@ -35,3 +35,25 @@ export function decideDeviceAdmission(
   if (liveSessions.length >= cap) return "reject";
   return "admit";
 }
+
+/** The device cap for a user: the largest `deviceLimit` among their active
+ * licenses, or DEVICE_CAP for an account with none (free tier, unchanged). */
+export function deviceLimitFor(licenses: ReadonlyArray<{ deviceLimit: number }>): number {
+  if (licenses.length === 0) return DEVICE_CAP;
+  return Math.max(...licenses.map((l) => l.deviceLimit));
+}
+
+/** Of a user's live sessions, the ones that keep entitlement when count > limit:
+ * the `limit` oldest by `createdAt` (grandfathered) — same bias toward
+ * already-registered devices as `decideDeviceAdmission`. */
+export function selectEntitledDevices(
+  liveSessions: ReadonlyArray<{ deviceIdHash: string; createdAt: Date }>,
+  limit: number,
+): Set<string> {
+  return new Set(
+    [...liveSessions]
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      .slice(0, limit)
+      .map((s) => s.deviceIdHash),
+  );
+}

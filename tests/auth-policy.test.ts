@@ -5,6 +5,8 @@ import {
   updateProfileSchema,
   loginSchema,
   decideDeviceAdmission,
+  deviceLimitFor,
+  selectEntitledDevices,
   DEVICE_CAP,
 } from "../lib/server/authPolicy";
 
@@ -136,5 +138,47 @@ describe("decideDeviceAdmission", () => {
   });
   it("uses a cap of 2", () => {
     expect(DEVICE_CAP).toBe(2);
+  });
+});
+
+describe("deviceLimitFor", () => {
+  it("falls back to DEVICE_CAP with no active licenses", () => {
+    expect(deviceLimitFor([])).toBe(DEVICE_CAP);
+  });
+  it("uses the single license's deviceLimit", () => {
+    expect(deviceLimitFor([{ deviceLimit: 5 }])).toBe(5);
+  });
+  it("uses the largest deviceLimit across multiple licenses", () => {
+    expect(deviceLimitFor([{ deviceLimit: 1 }, { deviceLimit: 5 }])).toBe(5);
+  });
+});
+
+describe("selectEntitledDevices", () => {
+  const at = (ms: number) => new Date(ms);
+
+  it("entitles everyone when the count is below the limit", () => {
+    const sessions = [
+      { deviceIdHash: "a", createdAt: at(1) },
+      { deviceIdHash: "b", createdAt: at(2) },
+    ];
+    expect(selectEntitledDevices(sessions, 5)).toEqual(new Set(["a", "b"]));
+  });
+  it("entitles everyone at exactly the limit", () => {
+    const sessions = [
+      { deviceIdHash: "a", createdAt: at(1) },
+      { deviceIdHash: "b", createdAt: at(2) },
+    ];
+    expect(selectEntitledDevices(sessions, 2)).toEqual(new Set(["a", "b"]));
+  });
+  it("keeps only the oldest `limit` sessions when over the limit", () => {
+    const sessions = [
+      { deviceIdHash: "newest", createdAt: at(3) },
+      { deviceIdHash: "oldest", createdAt: at(1) },
+      { deviceIdHash: "middle", createdAt: at(2) },
+    ];
+    expect(selectEntitledDevices(sessions, 2)).toEqual(new Set(["oldest", "middle"]));
+  });
+  it("returns an empty set for no sessions", () => {
+    expect(selectEntitledDevices([], 2)).toEqual(new Set());
   });
 });
