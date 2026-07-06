@@ -187,6 +187,22 @@ export async function createEntitlement(licenseId: string, deviceId: string) {
   });
 }
 
+/** Purchase email for an activated license/device pair. The client only ever has
+ *  `licenseId` (never the email), so this is the one place it can be recovered —
+ *  gated on proof of possession, not just knowing the id. */
+export async function lookupLicenseEmail(licenseId: string, deviceId: string): Promise<string> {
+  const deviceIdHash = hashDeviceId(deviceId);
+  const license = await prisma.license.findUnique({
+    where: { id: licenseId },
+    include: { activations: true },
+  });
+  if (!license) throw new ApiError("LicenseNotFound", "License not found", 404);
+  const activation = license.activations.find((a) => a.deviceIdHash === deviceIdHash);
+  if (!activation)
+    throw new ApiError("DeviceNotActivated", "Device is not activated for this license", 403);
+  return license.email;
+}
+
 export async function activateLicense(input: z.infer<typeof activateLicenseSchema>) {
   const licenseKeyHash = hashLicenseKey(input.licenseKey);
   const deviceIdHash = hashDeviceId(input.deviceId);
