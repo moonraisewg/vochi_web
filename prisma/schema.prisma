@@ -178,6 +178,8 @@ model User {
   email            String      @unique
   emailVerifiedAt  DateTime?
   passwordHash     String
+  name             String?
+  age              Int?
   status           UserStatus  @default(active)
   failedLoginCount Int         @default(0)
   lockedUntil      DateTime?
