@@ -7,6 +7,7 @@ export type AuthEvent =
   | "password_reset"
   | "session_revoked"
   | "device_limit_hit"
+  | "entitlement_device_limit_hit"
   | "account_deleted";
 
 /** Fire-and-forget audit write. Never throws into the caller — auditing must not break auth.
