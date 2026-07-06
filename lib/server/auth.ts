@@ -3,7 +3,7 @@ import { ApiError } from "./http";
 import { appUrl } from "./env";
 import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCrypto";
 import { decideDeviceAdmission } from "./authPolicy";
-import type { RegisterInput, LoginInput } from "./authPolicy";
+import type { RegisterInput, LoginInput, UpdateProfileInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
 import { after } from "next/server";
@@ -37,12 +37,18 @@ export async function register(input: RegisterInput): Promise<void> {
   const existing = await prisma.user.findUnique({ where: { email: input.email } });
   if (existing) {
     if (!existing.emailVerifiedAt) {
+      // Re-submitting the whole form (e.g. the first verify email got lost) — persist
+      // whatever name/age they just typed rather than keeping stale/absent values.
+      await prisma.user.update({
+        where: { id: existing.id },
+        data: { name: input.name, age: input.age },
+      });
       await issueVerifyToken(existing.id, existing.email);
     }
     return; // verified accounts: silently do nothing (no enumeration)
   }
   const user = await prisma.user.create({
-    data: { email: input.email, passwordHash },
+    data: { email: input.email, passwordHash, name: input.name, age: input.age },
   });
   await issueVerifyToken(user.id, user.email);
 }
@@ -206,6 +212,15 @@ export async function resetPassword(token: string, newPassword: string): Promise
   await audit("password_reset", { userId: row.userId });
 }
 
+/** Update the caller's own display name/age. */
+export async function updateProfile(bearer: string | null, input: UpdateProfileInput): Promise<void> {
+  const session = await requireSession(bearer);
+  await prisma.user.update({
+    where: { id: session.userId },
+    data: { name: input.name, age: input.age },
+  });
+}
+
 export type DeviceView = {
   id: string;
   deviceName: string | null;
@@ -219,7 +234,13 @@ export async function getMe(bearer: string | null) {
   const user = await prisma.user.findUniqueOrThrow({ where: { id: session.userId } });
   const devices = await listDevices(bearer);
   return {
-    user: { id: user.id, email: user.email, emailVerified: !!user.emailVerifiedAt },
+    user: {
+      id: user.id,
+      email: user.email,
+      emailVerified: !!user.emailVerifiedAt,
+      name: user.name,
+      age: user.age,
+    },
     devices,
   };
 }
