@@ -33,6 +33,26 @@ describe.skipIf(!hasDb)("auth integration", () => {
     expect(r3).toEqual({ ok: false, code: "device_limit" });
   });
 
+  it("allows more than 2 live devices when the account has a deviceLimit=5 license", async () => {
+    const { hashPassword } = await import("../lib/server/authCrypto");
+    const user = await seedVerified("lifetime@x.com", await hashPassword("longenough1"));
+    await prisma.license.create({
+      data: {
+        licenseKeyHash: `hash-lifetime-${user.id}`,
+        licenseKeyPrefix: "VOCHI-LI",
+        email: "lifetime@x.com",
+        plan: "lifetime",
+        status: "active",
+        deviceLimit: 5,
+        userId: user.id,
+      },
+    });
+    const r1 = await login({ email: "lifetime@x.com", password: "longenough1", deviceIdHash: "dev-l1" });
+    const r2 = await login({ email: "lifetime@x.com", password: "longenough1", deviceIdHash: "dev-l2" });
+    const r3 = await login({ email: "lifetime@x.com", password: "longenough1", deviceIdHash: "dev-l3" });
+    expect(r1.ok && r2.ok && r3.ok).toBe(true);
+  });
+
   it("frees a slot after a session is revoked", async () => {
     const { hashPassword } = await import("../lib/server/authCrypto");
     const user = await seedVerified("c@d.com", await hashPassword("longenough1"));

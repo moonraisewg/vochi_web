@@ -2,7 +2,7 @@ import { prisma } from "./prisma";
 import { ApiError } from "./http";
 import { appUrl } from "./env";
 import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCrypto";
-import { decideDeviceAdmission } from "./authPolicy";
+import { decideDeviceAdmission, deviceLimitFor } from "./authPolicy";
 import type { RegisterInput, LoginInput, UpdateProfileInput } from "./authPolicy";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
@@ -119,7 +119,12 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     where: { userId: user.id, revokedAt: null, expiresAt: { gt: new Date() } },
     select: { deviceIdHash: true },
   });
-  if (decideDeviceAdmission(live, input.deviceIdHash) === "reject") {
+  const activeLicenses = await prisma.license.findMany({
+    where: { userId: user.id, status: "active" },
+    select: { deviceLimit: true },
+  });
+  const cap = deviceLimitFor(activeLicenses);
+  if (decideDeviceAdmission(live, input.deviceIdHash, cap) === "reject") {
     await audit("device_limit_hit", { userId: user.id });
     return { ok: false, code: "device_limit" };
   }
