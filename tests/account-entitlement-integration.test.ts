@@ -20,6 +20,7 @@ async function seedLicense(opts: {
   plan?: string;
   userId?: string | null;
   expiresAt?: Date | null;
+  deviceLimit?: number;
 }) {
   return prisma.license.create({
     data: {
@@ -28,9 +29,21 @@ async function seedLicense(opts: {
       email: opts.email,
       plan: (opts.plan as never) ?? ("lifetime" as never),
       status: "active",
-      deviceLimit: 3,
+      deviceLimit: opts.deviceLimit ?? 3,
       userId: opts.userId ?? null,
       expiresAt: opts.expiresAt ?? null,
+    },
+  });
+}
+
+async function seedSession(opts: { userId: string; deviceIdHash: string; createdAt: Date }) {
+  return prisma.session.create({
+    data: {
+      userId: opts.userId,
+      tokenHash: `tok-${opts.deviceIdHash}`,
+      deviceIdHash: opts.deviceIdHash,
+      createdAt: opts.createdAt,
+      expiresAt: new Date(Date.now() + 60 * 60 * 1000),
     },
   });
 }
@@ -51,6 +64,7 @@ describe.skipIf(!hasDb)("account entitlement + claim (integration)", () => {
     const u = await seedUser("buyer@x.com");
     await seedLicense({ key: "VOCHI-AAAA-BBBB", email: "someone-else@x.com", plan: "lifetime" });
     await claimLicense(u.id, "VOCHI-AAAA-BBBB");
+    await seedSession({ userId: u.id, deviceIdHash: "dev-hash-2", createdAt: new Date() });
     const { entitlement } = await issueAccountEntitlement(u.id, "dev-hash-2");
     expect(entitlement.features.length).toBeGreaterThan(0);
     expect((await listLicenses(u.id)).length).toBe(1);
@@ -90,7 +104,51 @@ describe.skipIf(!hasDb)("account entitlement + claim (integration)", () => {
       userId: u.id,
       expiresAt: new Date(Date.now() - 1000),
     });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-hash-3", createdAt: new Date() });
     const { entitlement } = await issueAccountEntitlement(u.id, "dev-hash-3");
+    expect(entitlement.features).toEqual([]);
+  });
+
+  it("denies entitlement to a device beyond the license's deviceLimit", async () => {
+    const u = await seedUser("capped@x.com");
+    await seedLicense({
+      key: "VOCHI-KKKK-LLLL",
+      email: "capped@x.com",
+      plan: "one_month",
+      userId: u.id,
+      deviceLimit: 2,
+    });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-1", createdAt: new Date(1000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-2", createdAt: new Date(2000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-3", createdAt: new Date(3000) });
+    await expect(issueAccountEntitlement(u.id, "dev-3")).rejects.toMatchObject({
+      status: 403,
+      code: "DeviceLimitExceeded",
+    });
+  });
+
+  it("still issues entitlement to a device within the license's deviceLimit", async () => {
+    const u = await seedUser("within@x.com");
+    await seedLicense({
+      key: "VOCHI-MMMM-NNNN",
+      email: "within@x.com",
+      plan: "one_month",
+      userId: u.id,
+      deviceLimit: 2,
+    });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-1", createdAt: new Date(1000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-2", createdAt: new Date(2000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-3", createdAt: new Date(3000) });
+    const { entitlement } = await issueAccountEntitlement(u.id, "dev-1");
+    expect(entitlement.features.length).toBeGreaterThan(0);
+  });
+
+  it("never restricts a free account (no active license) by device count", async () => {
+    const u = await seedUser("freecap@x.com");
+    await seedSession({ userId: u.id, deviceIdHash: "dev-1", createdAt: new Date(1000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-2", createdAt: new Date(2000) });
+    await seedSession({ userId: u.id, deviceIdHash: "dev-3", createdAt: new Date(3000) });
+    const { entitlement } = await issueAccountEntitlement(u.id, "dev-3");
     expect(entitlement.features).toEqual([]);
   });
 });

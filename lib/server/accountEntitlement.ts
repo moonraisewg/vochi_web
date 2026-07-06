@@ -1,6 +1,9 @@
 import { prisma } from "./prisma";
 import { getPlan } from "./plans";
 import { signedEntitlement } from "./licenses";
+import { deviceLimitFor, selectEntitledDevices } from "./authPolicy";
+import { audit } from "./authAudit";
+import { ApiError } from "./http";
 
 export interface ClaimedLicense {
   id: string;
@@ -69,8 +72,25 @@ export function computeEffectiveEntitlement(
 export async function issueAccountEntitlement(userId: string, deviceIdHash: string) {
   const licenses = await prisma.license.findMany({
     where: { userId, status: "active" },
-    select: { id: true, plan: true, expiresAt: true },
+    select: { id: true, plan: true, expiresAt: true, deviceLimit: true },
   });
+
+  if (licenses.length > 0) {
+    const limit = deviceLimitFor(licenses);
+    const liveSessions = await prisma.session.findMany({
+      where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      select: { deviceIdHash: true, createdAt: true },
+    });
+    if (!selectEntitledDevices(liveSessions, limit).has(deviceIdHash)) {
+      await audit("entitlement_device_limit_hit", { userId });
+      throw new ApiError(
+        "DeviceLimitExceeded",
+        "Thiết bị này vượt quá giới hạn số máy của gói hiện tại.",
+        403,
+      );
+    }
+  }
+
   const effective = computeEffectiveEntitlement(
     userId,
     licenses,
