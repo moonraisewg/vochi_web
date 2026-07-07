@@ -1,6 +1,11 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
-import { CLOCK_SKEW_LIMIT_MS, type PushEventInput } from "./syncPolicy";
+import {
+  CLOCK_SKEW_LIMIT_MS,
+  normalizeWord,
+  type PushEventInput,
+  type CardPushInput,
+} from "./syncPolicy";
 
 export interface PushResult {
   accepted: number;
@@ -165,4 +170,147 @@ export async function pullChanges(userId: string, since: number): Promise<PullRe
     },
     { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
   );
+}
+
+export interface CardPushResult {
+  cardUid: string;
+  outcome: "applied" | "superseded" | "conflict";
+  heldByCardUid?: string;
+}
+
+export interface CardsPushResult {
+  results: CardPushResult[];
+  clamped: number;
+}
+
+// JSON.stringify a (word, language) pair into a collision-free Map key — no
+// separator char can be spoofed by content, and it is plain ASCII (grep-safe).
+const slotKey = (normalizedWord: string, language: string) =>
+  JSON.stringify([normalizedWord, language]);
+
+/** Merge a device's vocab-card writes: strict clientUpdatedAt LWW (skew-clamped),
+ *  tombstones as ordinary writes, same-word dedup via a race-free pre-check. One
+ *  transaction with a FOR UPDATE lock on the cursor row serializes per-user pushes,
+ *  so the in-memory slot check is authoritative (the partial unique index is only a
+ *  backstop). Per-card outcomes — a collision never fails the batch. */
+export async function pushCards(userId: string, cards: CardPushInput[]): Promise<CardsPushResult> {
+  return prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`INSERT INTO "SyncCursor" ("userId", "usn") VALUES (${userId}, 0)
+                         ON CONFLICT ("userId") DO NOTHING`;
+    const locked = await tx.$queryRaw<{ usn: number }[]>`
+      SELECT "usn" FROM "SyncCursor" WHERE "userId" = ${userId} FOR UPDATE`;
+    let usn = locked[0].usn;
+
+    // State for LWW + slot-release, seeded from the DB then updated in-batch.
+    const cardUids = cards.map((c) => c.cardUid);
+    const existingRows = await tx.syncVocabCard.findMany({
+      where: { userId, cardUid: { in: cardUids } },
+      select: {
+        cardUid: true,
+        clientUpdatedAt: true,
+        normalizedWord: true,
+        language: true,
+        deletedAt: true,
+      },
+    });
+    const byCardUid = new Map<
+      string,
+      { clientUpdatedAt: Date; normalizedWord: string; language: string; deletedAt: Date | null }
+    >();
+    for (const r of existingRows) {
+      byCardUid.set(r.cardUid, {
+        clientUpdatedAt: r.clientUpdatedAt,
+        normalizedWord: r.normalizedWord,
+        language: r.language,
+        deletedAt: r.deletedAt,
+      });
+    }
+
+    // Live owner of each incoming (normalizedWord, language) slot.
+    const incoming = cards.map((c) => ({ nw: normalizeWord(c.word), lang: c.language }));
+    const liveRows = await tx.syncVocabCard.findMany({
+      where: {
+        userId,
+        deletedAt: null,
+        OR: incoming.map((s) => ({ normalizedWord: s.nw, language: s.lang })),
+      },
+      select: { cardUid: true, normalizedWord: true, language: true },
+    });
+    const slotOwner = new Map<string, string>();
+    for (const r of liveRows) slotOwner.set(slotKey(r.normalizedWord, r.language), r.cardUid);
+
+    const now = new Date();
+    let clamped = 0;
+    const results: CardPushResult[] = [];
+    let anyApplied = false;
+
+    for (const c of cards) {
+      const nw = normalizeWord(c.word);
+      const key = slotKey(nw, c.language);
+      let cua = new Date(c.clientUpdatedAt);
+      if (Math.abs(cua.getTime() - now.getTime()) > CLOCK_SKEW_LIMIT_MS) {
+        cua = now;
+        clamped++;
+      }
+
+      const existing = byCardUid.get(c.cardUid);
+      if (existing && cua.getTime() <= existing.clientUpdatedAt.getTime()) {
+        results.push({ cardUid: c.cardUid, outcome: "superseded" });
+        continue;
+      }
+
+      const isDeleted = c.deletedAt != null;
+      const owner = slotOwner.get(key);
+      if (!isDeleted && owner && owner !== c.cardUid) {
+        results.push({ cardUid: c.cardUid, outcome: "conflict", heldByCardUid: owner });
+        continue;
+      }
+
+      usn += 1;
+      const data = {
+        normalizedWord: nw,
+        language: c.language,
+        word: c.word,
+        meaning: c.meaning,
+        example: c.example ?? null,
+        pos: c.pos ?? null,
+        pinyin: c.pinyin ?? null,
+        toneMarks: c.toneMarks ?? null,
+        exampleVi: c.exampleVi ?? null,
+        deletedAt: c.deletedAt ? new Date(c.deletedAt) : null,
+        clientUpdatedAt: cua,
+        usn,
+      };
+      await tx.syncVocabCard.upsert({
+        where: { userId_cardUid: { userId, cardUid: c.cardUid } },
+        create: { userId, cardUid: c.cardUid, ...data },
+        update: data,
+      });
+
+      // Maintain in-memory slot ownership: release this card's OLD live slot on a
+      // rename/delete, then claim the new slot if the write is live.
+      if (existing && !existing.deletedAt) {
+        const oldKey = slotKey(existing.normalizedWord, existing.language);
+        if (oldKey !== key && slotOwner.get(oldKey) === c.cardUid) slotOwner.delete(oldKey);
+      }
+      if (isDeleted) {
+        if (slotOwner.get(key) === c.cardUid) slotOwner.delete(key);
+      } else {
+        slotOwner.set(key, c.cardUid);
+      }
+      byCardUid.set(c.cardUid, {
+        clientUpdatedAt: cua,
+        normalizedWord: nw,
+        language: c.language,
+        deletedAt: data.deletedAt,
+      });
+      results.push({ cardUid: c.cardUid, outcome: "applied" });
+      anyApplied = true;
+    }
+
+    if (anyApplied) {
+      await tx.$executeRaw`UPDATE "SyncCursor" SET "usn" = ${usn} WHERE "userId" = ${userId}`;
+    }
+    return { results, clamped };
+  });
 }
