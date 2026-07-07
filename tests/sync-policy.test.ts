@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { pushEventsSchema, pullChangesSchema } from "../lib/server/syncPolicy";
+import {
+  pushEventsSchema,
+  pullChangesSchema,
+  cardsPushSchema,
+  normalizeWord,
+} from "../lib/server/syncPolicy";
 
 function ev(over: Record<string, unknown> = {}) {
   return {
@@ -71,5 +76,53 @@ describe("pullChangesSchema", () => {
   });
   it("rejects a missing since", () => {
     expect(() => pullChangesSchema.parse({})).toThrow();
+  });
+});
+
+describe("normalizeWord", () => {
+  it("trims, lowercases, and NFC-normalizes", () => {
+    expect(normalizeWord("  Hello  ")).toBe("hello");
+    expect(normalizeWord("CAFÉ")).toBe("café");
+  });
+  it("is idempotent", () => {
+    expect(normalizeWord(normalizeWord("  Hello "))).toBe("hello");
+  });
+});
+
+describe("cardsPushSchema", () => {
+  function card(over: Record<string, unknown> = {}) {
+    return {
+      cardUid: "u1",
+      word: "hello",
+      language: "en",
+      meaning: "xin chào",
+      clientUpdatedAt: "2026-07-07T10:00:00.000Z",
+      ...over,
+    };
+  }
+  it("accepts a well-formed batch", () => {
+    expect(cardsPushSchema.parse({ cards: [card()] }).cards.length).toBe(1);
+  });
+  it("accepts a card with deletedAt (a delete)", () => {
+    expect(() =>
+      cardsPushSchema.parse({ cards: [card({ deletedAt: "2026-07-07T11:00:00.000Z" })] }),
+    ).not.toThrow();
+  });
+  it("rejects an empty batch", () => {
+    expect(() => cardsPushSchema.parse({ cards: [] })).toThrow();
+  });
+  it("rejects a batch larger than 1000", () => {
+    const cards = Array.from({ length: 1001 }, (_, i) => card({ cardUid: `u${i}` }));
+    expect(() => cardsPushSchema.parse({ cards })).toThrow();
+  });
+  it("rejects a missing clientUpdatedAt", () => {
+    expect(() => cardsPushSchema.parse({ cards: [card({ clientUpdatedAt: undefined })] })).toThrow();
+  });
+  it("rejects a missing word", () => {
+    expect(() => cardsPushSchema.parse({ cards: [card({ word: undefined })] })).toThrow();
+  });
+  it("strips a body-supplied normalizedWord (derived server-side)", () => {
+    const out = cardsPushSchema.parse({ cards: [card({ normalizedWord: "HACKED" })] });
+    expect((out.cards[0] as Record<string, unknown>).normalizedWord).toBeUndefined();
   });
 });
