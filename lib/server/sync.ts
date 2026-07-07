@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { CLOCK_SKEW_LIMIT_MS, type PushEventInput } from "./syncPolicy";
 
@@ -60,4 +61,108 @@ export async function pushEvents(
 
     return { accepted: data.length, duplicates: seen.size, clamped };
   });
+}
+
+export const SYNC_PULL_PAGE = 1000;
+
+export interface PulledEvent {
+  eventId: string;
+  eventType: string;
+  cardUid: string;
+  rating: number | null;
+  occurredAt: Date;
+  deviceIdHash: string;
+  usn: number;
+}
+
+export interface PulledCard {
+  cardUid: string;
+  normalizedWord: string;
+  language: string;
+  word: string;
+  meaning: string;
+  example: string | null;
+  pos: string | null;
+  pinyin: string | null;
+  toneMarks: string | null;
+  exampleVi: string | null;
+  deletedAt: Date | null;
+  clientUpdatedAt: Date;
+  usn: number;
+}
+
+export interface PullResult {
+  events: PulledEvent[];
+  cards: PulledCard[];
+  nextSince: number;
+  hasMore: boolean;
+}
+
+/** Return the account's events + vocab cards (incl. tombstones) with usn > since,
+ *  paginated over the shared USN sequence. Read in one RepeatableRead snapshot so
+ *  the two-table read is consistent (usn order == commit order → a snapshot sees a
+ *  gap-free prefix, so nextSince can never skip a record). Advances no server state;
+ *  the client sets last_synced_usn = nextSince and repeats while hasMore. */
+export async function pullChanges(userId: string, since: number): Promise<PullResult> {
+  return prisma.$transaction(
+    async (tx) => {
+      const events = await tx.syncEvent.findMany({
+        where: { userId, usn: { gt: since } },
+        orderBy: { usn: "asc" },
+        take: SYNC_PULL_PAGE + 1,
+      });
+      const cards = await tx.syncVocabCard.findMany({
+        where: { userId, usn: { gt: since } },
+        orderBy: { usn: "asc" },
+        take: SYNC_PULL_PAGE + 1,
+      });
+
+      // k-way merge by the shared usn; take the globally-smallest PAGE.
+      const tagged = [
+        ...events.map((e) => ({ usn: e.usn, kind: "event" as const, row: e })),
+        ...cards.map((c) => ({ usn: c.usn, kind: "card" as const, row: c })),
+      ].sort((a, b) => a.usn - b.usn);
+      const pageItems = tagged.slice(0, SYNC_PULL_PAGE);
+      const hasMore = tagged.length > SYNC_PULL_PAGE;
+      const nextSince = pageItems.length > 0 ? pageItems[pageItems.length - 1].usn : since;
+
+      const outEvents: PulledEvent[] = pageItems
+        .filter((i) => i.kind === "event")
+        .map((i) => {
+          const e = i.row as (typeof events)[number];
+          return {
+            eventId: e.eventId,
+            eventType: e.eventType,
+            cardUid: e.cardUid,
+            rating: e.rating,
+            occurredAt: e.occurredAt,
+            deviceIdHash: e.deviceIdHash,
+            usn: e.usn,
+          };
+        });
+      const outCards: PulledCard[] = pageItems
+        .filter((i) => i.kind === "card")
+        .map((i) => {
+          const c = i.row as (typeof cards)[number];
+          return {
+            cardUid: c.cardUid,
+            normalizedWord: c.normalizedWord,
+            language: c.language,
+            word: c.word,
+            meaning: c.meaning,
+            example: c.example,
+            pos: c.pos,
+            pinyin: c.pinyin,
+            toneMarks: c.toneMarks,
+            exampleVi: c.exampleVi,
+            deletedAt: c.deletedAt,
+            clientUpdatedAt: c.clientUpdatedAt,
+            usn: c.usn,
+          };
+        });
+
+      return { events: outEvents, cards: outCards, nextSince, hasMore };
+    },
+    { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+  );
 }
