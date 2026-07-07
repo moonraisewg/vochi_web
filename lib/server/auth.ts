@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { ApiError } from "./http";
 import { appUrl } from "./env";
@@ -215,6 +216,62 @@ export async function resetPassword(token: string, newPassword: string): Promise
     }),
   ]);
   await audit("password_reset", { userId: row.userId });
+}
+
+/** Map a verified third-party identity (Google/Apple) to a user: link to an existing
+ *  account or create a new verified one. Keys on the provider's stable account id (the
+ *  `sub`), never email — email can change. When linking to a pre-existing but UNVERIFIED
+ *  account (signed up with this email, never confirmed), we verify it AND null its
+ *  password: that account was never proven to belong to anyone, so nulling the password
+ *  stops a squatter from later logging in with a password they set. A VERIFIED existing
+ *  user keeps their password (just gains Google/Apple as another sign-in method). */
+export async function linkOrCreateAccountByVerifiedEmail(input: {
+  provider: "google" | "apple";
+  providerAccountId: string;
+  email: string;
+  name: string | null;
+}) {
+  const existingLink = await prisma.oAuthAccount.findUnique({
+    where: { provider_providerAccountId: { provider: input.provider, providerAccountId: input.providerAccountId } },
+  });
+  if (existingLink) {
+    return prisma.user.findUniqueOrThrow({ where: { id: existingLink.userId } });
+  }
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.user.findUnique({ where: { email: input.email } });
+      if (existing) {
+        if (!existing.emailVerifiedAt) {
+          await tx.user.update({
+            where: { id: existing.id },
+            data: { emailVerifiedAt: new Date(), passwordHash: null },
+          });
+        }
+        await tx.oAuthAccount.create({
+          data: { userId: existing.id, provider: input.provider, providerAccountId: input.providerAccountId },
+        });
+        return tx.user.findUniqueOrThrow({ where: { id: existing.id } });
+      }
+      const created = await tx.user.create({
+        data: { email: input.email, name: input.name, emailVerifiedAt: new Date(), passwordHash: null },
+      });
+      await tx.oAuthAccount.create({
+        data: { userId: created.id, provider: input.provider, providerAccountId: input.providerAccountId },
+      });
+      return created;
+    });
+  } catch (e) {
+    // Two concurrent OAuth callbacks for the same new identity can both pass the
+    // findUnique check and race to create the link; the loser hits the unique
+    // constraint. Resolve by reading back the winner's row.
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      const link = await prisma.oAuthAccount.findUniqueOrThrow({
+        where: { provider_providerAccountId: { provider: input.provider, providerAccountId: input.providerAccountId } },
+      });
+      return prisma.user.findUniqueOrThrow({ where: { id: link.userId } });
+    }
+    throw e;
+  }
 }
 
 /** Update the caller's own display name. */
