@@ -7,8 +7,24 @@ import {
   decideDeviceAdmission,
   deviceLimitFor,
   selectEntitledDevices,
+  googleOAuthSchema,
   DEVICE_CAP,
 } from "../lib/server/authPolicy";
+
+describe("googleOAuthSchema", () => {
+  it("googleOAuthSchema accepts a loopback redirect and requires the core fields", () => {
+    const ok = googleOAuthSchema.safeParse({
+      code: "c", codeVerifier: "v", redirectUri: "http://127.0.0.1:5123/callback", deviceIdHash: "device-abc",
+    });
+    expect(ok.success).toBe(true);
+  });
+  it("googleOAuthSchema rejects a non-loopback redirect", () => {
+    const bad = googleOAuthSchema.safeParse({
+      code: "c", codeVerifier: "v", redirectUri: "https://evil.com/cb", deviceIdHash: "device-abc",
+    });
+    expect(bad.success).toBe(false);
+  });
+});
 
 describe("normalizeEmail", () => {
   it("lowercases and trims", () => {

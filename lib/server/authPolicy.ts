@@ -20,6 +20,19 @@ export const forgotSchema = z.object({ email });
 export const resetSchema = z.object({ token: z.string().min(1), password });
 export const updateProfileSchema = z.object({ name: displayName });
 
+const loopbackRedirect = z
+  .string()
+  .regex(/^http:\/\/(127\.0\.0\.1|localhost):\d{1,5}\/callback$/, "must be a loopback redirect");
+
+export const googleOAuthSchema = z.object({
+  code: z.string().min(1).max(2048),
+  codeVerifier: z.string().min(1).max(256),
+  redirectUri: loopbackRedirect,
+  deviceIdHash,
+  deviceName,
+});
+export type GoogleOAuthInput = z.infer<typeof googleOAuthSchema>;
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
