@@ -22,3 +22,7 @@ export const pushEventsSchema = z.object({
 });
 
 export type PushEventInput = z.infer<typeof syncEvent>;
+
+export const pullChangesSchema = z.object({
+  since: z.number().int().min(0),
+});

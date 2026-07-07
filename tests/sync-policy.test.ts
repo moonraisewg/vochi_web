@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { pushEventsSchema } from "../lib/server/syncPolicy";
+import { pushEventsSchema, pullChangesSchema } from "../lib/server/syncPolicy";
 
 function ev(over: Record<string, unknown> = {}) {
   return {
@@ -53,5 +53,23 @@ describe("pushEventsSchema", () => {
 
   it("rejects a non-ISO occurredAt", () => {
     expect(() => pushEventsSchema.parse({ events: [ev({ occurredAt: "not-a-date" })] })).toThrow();
+  });
+});
+
+describe("pullChangesSchema", () => {
+  it("accepts since = 0", () => {
+    expect(pullChangesSchema.parse({ since: 0 }).since).toBe(0);
+  });
+  it("accepts a positive integer since", () => {
+    expect(pullChangesSchema.parse({ since: 42 }).since).toBe(42);
+  });
+  it("rejects a negative since", () => {
+    expect(() => pullChangesSchema.parse({ since: -1 })).toThrow();
+  });
+  it("rejects a non-integer since", () => {
+    expect(() => pullChangesSchema.parse({ since: 1.5 })).toThrow();
+  });
+  it("rejects a missing since", () => {
+    expect(() => pullChangesSchema.parse({})).toThrow();
   });
 });
