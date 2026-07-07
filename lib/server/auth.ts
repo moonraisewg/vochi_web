@@ -38,17 +38,17 @@ export async function register(input: RegisterInput): Promise<void> {
   if (existing) {
     if (!existing.emailVerifiedAt) {
       // Re-submitting the whole form (e.g. the first verify email got lost) — persist
-      // whatever name/age they just typed rather than keeping stale/absent values.
+      // whatever name they just typed rather than keeping stale/absent values.
       await prisma.user.update({
         where: { id: existing.id },
-        data: { name: input.name, age: input.age },
+        data: { name: input.name },
       });
       await issueVerifyToken(existing.id, existing.email);
     }
     return; // verified accounts: silently do nothing (no enumeration)
   }
   const user = await prisma.user.create({
-    data: { email: input.email, passwordHash, name: input.name, age: input.age },
+    data: { email: input.email, passwordHash, name: input.name },
   });
   await issueVerifyToken(user.id, user.email);
 }
@@ -217,12 +217,12 @@ export async function resetPassword(token: string, newPassword: string): Promise
   await audit("password_reset", { userId: row.userId });
 }
 
-/** Update the caller's own display name/age. */
+/** Update the caller's own display name. */
 export async function updateProfile(bearer: string | null, input: UpdateProfileInput): Promise<void> {
   const session = await requireSession(bearer);
   await prisma.user.update({
     where: { id: session.userId },
-    data: { name: input.name, age: input.age },
+    data: { name: input.name },
   });
 }
 
