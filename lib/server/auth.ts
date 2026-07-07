@@ -4,7 +4,8 @@ import { ApiError } from "./http";
 import { appUrl } from "./env";
 import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCrypto";
 import { decideDeviceAdmission, deviceLimitFor } from "./authPolicy";
-import type { RegisterInput, LoginInput, UpdateProfileInput } from "./authPolicy";
+import type { RegisterInput, LoginInput, UpdateProfileInput, GoogleOAuthInput } from "./authPolicy";
+import { exchangeCodeForGoogleIdentity } from "./googleOAuth";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
 import { after } from "next/server";
@@ -116,37 +117,50 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     throw new ApiError("EmailUnverified", "Vui lòng xác nhận email trước khi đăng nhập.", 403);
   }
 
+  const issued = await issueSession(user.id, input.deviceIdHash, input.deviceName ?? null);
+  if (!issued.ok) return issued;
+  await clearLoginFailures(user.id);
+  await audit("login_success", { userId: user.id });
+  return issued;
+}
+
+/** Shared device-admission + session-issuance for password and OAuth logins. Enforces
+ *  the device cap (rejecting when over), then upserts this device's session row with a
+ *  freshly minted token (returned once). Callers own their own audit/failure bookkeeping. */
+async function issueSession(
+  userId: string,
+  deviceIdHash: string,
+  deviceName: string | null,
+): Promise<{ ok: true; sessionToken: string } | { ok: false; code: "device_limit" }> {
   const live = await prisma.session.findMany({
-    where: { userId: user.id, revokedAt: null, expiresAt: { gt: new Date() } },
+    where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
     select: { deviceIdHash: true },
   });
   const activeLicenses = await prisma.license.findMany({
-    where: { userId: user.id, status: "active" },
+    where: { userId, status: "active" },
     select: { deviceLimit: true },
   });
   const cap = deviceLimitFor(activeLicenses);
-  if (decideDeviceAdmission(live, input.deviceIdHash, cap) === "reject") {
-    await audit("device_limit_hit", { userId: user.id });
+  if (decideDeviceAdmission(live, deviceIdHash, cap) === "reject") {
+    await audit("device_limit_hit", { userId });
     return { ok: false, code: "device_limit" };
   }
 
   const token = generateToken();
   const data = {
-    userId: user.id,
+    userId,
     tokenHash: hashToken(token),
-    deviceIdHash: input.deviceIdHash,
-    deviceName: input.deviceName ?? null,
+    deviceIdHash,
+    deviceName: deviceName ?? null,
     expiresAt: futureDate(SESSION_TTL_MS),
     revokedAt: null,
     lastSeenAt: new Date(),
   };
   await prisma.session.upsert({
-    where: { userId_deviceIdHash: { userId: user.id, deviceIdHash: input.deviceIdHash } },
+    where: { userId_deviceIdHash: { userId, deviceIdHash } },
     create: data,
     update: data, // new token + reset expiry/revoked for this device
   });
-  await clearLoginFailures(user.id);
-  await audit("login_success", { userId: user.id });
   return { ok: true, sessionToken: token };
 }
 
@@ -272,6 +286,33 @@ export async function linkOrCreateAccountByVerifiedEmail(input: {
     }
     throw e;
   }
+}
+
+export type OAuthLoginResult =
+  | { ok: true; sessionToken: string; email: string }
+  | { ok: false; code: "device_limit" };
+
+/** Exchange a Google auth code, require a verified email, link/create the account, then
+ *  issue a session under the device cap. Returns the email so the desktop client needs no
+ *  follow-up round-trip. */
+export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginResult> {
+  const identity = await exchangeCodeForGoogleIdentity({
+    code: input.code,
+    codeVerifier: input.codeVerifier,
+    redirectUri: input.redirectUri,
+  });
+  if (!identity.emailVerified) {
+    throw new ApiError("oauth_email_unverified", "Google email is not verified", 400);
+  }
+  const user = await linkOrCreateAccountByVerifiedEmail({
+    provider: "google",
+    providerAccountId: identity.sub,
+    email: identity.email,
+    name: identity.name,
+  });
+  const issued = await issueSession(user.id, input.deviceIdHash, input.deviceName ?? null);
+  if (!issued.ok) return issued;
+  return { ok: true, sessionToken: issued.sessionToken, email: user.email };
 }
 
 /** Update the caller's own display name. */

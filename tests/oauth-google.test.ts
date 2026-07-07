@@ -1,7 +1,11 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
+vi.mock("../lib/server/googleOAuth", () => ({ exchangeCodeForGoogleIdentity: vi.fn() }));
 import { prisma } from "../lib/server/prisma";
 import { resetAuthTables } from "./helpers/db";
-import { linkOrCreateAccountByVerifiedEmail } from "../lib/server/auth";
+import { linkOrCreateAccountByVerifiedEmail, oauthLogin } from "../lib/server/auth";
+import { exchangeCodeForGoogleIdentity } from "../lib/server/googleOAuth";
+
+const asMock = exchangeCodeForGoogleIdentity as unknown as ReturnType<typeof vi.fn>;
 
 const hasDb = !!process.env.TEST_DATABASE_URL;
 
@@ -38,5 +42,30 @@ describe.skipIf(!hasDb)("linkOrCreateAccountByVerifiedEmail", () => {
     const u = await linkOrCreateAccountByVerifiedEmail(g({ email: "u@b.com" }));
     expect(u.passwordHash).toBeNull();
     expect(u.emailVerifiedAt).not.toBeNull();
+  });
+});
+
+describe.skipIf(!hasDb)("oauthLogin", () => {
+  beforeEach(async () => { await resetAuthTables(); vi.clearAllMocks(); });
+  const body = (over = {}) => ({ code: "c", codeVerifier: "v", redirectUri: "http://127.0.0.1:1/callback", deviceIdHash: "dev-1", ...over });
+
+  it("issues a session + returns email for a verified identity", async () => {
+    asMock.mockResolvedValue({ sub: "s1", email: "new@x.com", emailVerified: true, name: "N" });
+    const r = await oauthLogin(body());
+    expect(r.ok).toBe(true);
+    if (r.ok) { expect(typeof r.sessionToken).toBe("string"); expect(r.email).toBe("new@x.com"); }
+  });
+
+  it("rejects an unverified google email", async () => {
+    asMock.mockResolvedValue({ sub: "s2", email: "u@x.com", emailVerified: false, name: null });
+    await expect(oauthLogin(body())).rejects.toMatchObject({ code: "oauth_email_unverified" });
+  });
+
+  it("enforces the device cap (free tier = 2)", async () => {
+    asMock.mockResolvedValue({ sub: "s3", email: "cap@x.com", emailVerified: true, name: null });
+    await oauthLogin(body({ deviceIdHash: "d1" }));
+    await oauthLogin(body({ deviceIdHash: "d2" }));
+    const r = await oauthLogin(body({ deviceIdHash: "d3" }));
+    expect(r).toEqual({ ok: false, code: "device_limit" });
   });
 });
