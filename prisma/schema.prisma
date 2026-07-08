@@ -177,7 +177,7 @@ model User {
   id               String      @id @default(cuid())
   email            String      @unique
   emailVerifiedAt  DateTime?
-  passwordHash     String
+  passwordHash     String?
   name             String?
   age              Int?
   status           UserStatus  @default(active)
@@ -191,6 +191,19 @@ model User {
   syncCursor       SyncCursor?
   syncEvents       SyncEvent[]
   syncVocabCards   SyncVocabCard[]
+  oauthAccounts    OAuthAccount[]
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String   // "google" | "apple"
+  providerAccountId String   // Google `sub` — stable across email changes
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model AuthThrottle {
