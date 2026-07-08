@@ -33,6 +33,13 @@ export const googleOAuthSchema = z.object({
 });
 export type GoogleOAuthInput = z.infer<typeof googleOAuthSchema>;
 
+export const googleMobileOAuthSchema = z.object({
+  idToken: z.string().min(1).max(4096),
+  deviceIdHash,
+  deviceName,
+});
+export type GoogleMobileOAuthInput = z.infer<typeof googleMobileOAuthSchema>;
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

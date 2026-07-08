@@ -4,8 +4,9 @@ import { ApiError } from "./http";
 import { appUrl } from "./env";
 import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCrypto";
 import { decideDeviceAdmission, deviceLimitFor } from "./authPolicy";
-import type { RegisterInput, LoginInput, UpdateProfileInput, GoogleOAuthInput } from "./authPolicy";
+import type { RegisterInput, LoginInput, UpdateProfileInput, GoogleOAuthInput, GoogleMobileOAuthInput } from "./authPolicy";
 import { exchangeCodeForGoogleIdentity } from "./googleOAuth";
+import { verifyGoogleIdToken } from "./googleIdToken";
 import type { GoogleIdentity } from "./googleOAuth";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
@@ -321,6 +322,12 @@ export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginRes
     codeVerifier: input.codeVerifier,
     redirectUri: input.redirectUri,
   });
+  return finishOAuthLogin(identity, input.deviceIdHash, input.deviceName ?? null);
+}
+
+/** Verify a Google id_token from the mobile SDK, then finish the login. */
+export async function oauthLoginMobile(input: GoogleMobileOAuthInput): Promise<OAuthLoginResult> {
+  const identity = await verifyGoogleIdToken(input.idToken);
   return finishOAuthLogin(identity, input.deviceIdHash, input.deviceName ?? null);
 }
 
