@@ -6,6 +6,7 @@ import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCr
 import { decideDeviceAdmission, deviceLimitFor } from "./authPolicy";
 import type { RegisterInput, LoginInput, UpdateProfileInput, GoogleOAuthInput } from "./authPolicy";
 import { exchangeCodeForGoogleIdentity } from "./googleOAuth";
+import type { GoogleIdentity } from "./googleOAuth";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
 import { after } from "next/server";
@@ -292,15 +293,13 @@ export type OAuthLoginResult =
   | { ok: true; sessionToken: string; email: string }
   | { ok: false; code: "device_limit" };
 
-/** Exchange a Google auth code, require a verified email, link/create the account, then
- *  issue a session under the device cap. Returns the email so the desktop client needs no
- *  follow-up round-trip. */
-export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginResult> {
-  const identity = await exchangeCodeForGoogleIdentity({
-    code: input.code,
-    codeVerifier: input.codeVerifier,
-    redirectUri: input.redirectUri,
-  });
+/** Shared tail for every OAuth provider path: require a verified email, link/create the
+ *  account by provider `sub`, then issue a session under the device cap. */
+export async function finishOAuthLogin(
+  identity: GoogleIdentity,
+  deviceIdHash: string,
+  deviceName: string | null,
+): Promise<OAuthLoginResult> {
   if (!identity.emailVerified) {
     throw new ApiError("oauth_email_unverified", "Google email is not verified", 400);
   }
@@ -310,9 +309,19 @@ export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginRes
     email: identity.email,
     name: identity.name,
   });
-  const issued = await issueSession(user.id, input.deviceIdHash, input.deviceName ?? null);
+  const issued = await issueSession(user.id, deviceIdHash, deviceName);
   if (!issued.ok) return issued;
   return { ok: true, sessionToken: issued.sessionToken, email: user.email };
+}
+
+/** Exchange a Google auth code (desktop loopback flow), then finish the login. */
+export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginResult> {
+  const identity = await exchangeCodeForGoogleIdentity({
+    code: input.code,
+    codeVerifier: input.codeVerifier,
+    redirectUri: input.redirectUri,
+  });
+  return finishOAuthLogin(identity, input.deviceIdHash, input.deviceName ?? null);
 }
 
 /** Update the caller's own display name. */
