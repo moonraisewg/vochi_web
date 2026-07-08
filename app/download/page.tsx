@@ -4,8 +4,16 @@ import { useSyncExternalStore } from "react";
 import { PageShell } from "@/components/PageShell";
 import { RELEASES } from "@/lib/releases";
 import { motion } from "motion/react";
+import posthog from "posthog-js";
 
 type OS = "mac" | "windows" | "linux" | "unknown";
+type Platform = "mac" | "windows";
+
+function extractVersion(url: string | null): string | null {
+  if (!url) return null;
+  const m = url.match(/_(\d+\.\d+\.\d+)_/);
+  return m ? m[1] : null;
+}
 
 function detectOS(): OS {
   if (typeof navigator === "undefined") return "unknown";
@@ -92,6 +100,8 @@ export default function DownloadPage() {
 
               <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
                 <DownloadCard
+                  platform="mac"
+                  detectedOS={os}
                   primary={os === "mac"}
                   label={t.macDmg}
                   about={t.macAbout}
@@ -101,6 +111,8 @@ export default function DownloadPage() {
                   comingSoonLabel={t.comingSoon}
                 />
                 <DownloadCard
+                  platform="windows"
+                  detectedOS={os}
                   primary={os === "windows"}
                   label={t.winMsi}
                   about={t.winAbout}
@@ -123,6 +135,8 @@ export default function DownloadPage() {
 }
 
 function DownloadCard({
+  platform,
+  detectedOS,
   primary,
   label,
   about,
@@ -131,6 +145,8 @@ function DownloadCard({
   forYouLabel,
   comingSoonLabel,
 }: {
+  platform: Platform;
+  detectedOS: OS;
   primary: boolean;
   label: string;
   about: string;
@@ -140,6 +156,18 @@ function DownloadCard({
   comingSoonLabel: string;
 }) {
   const available = href != null;
+  const version = extractVersion(href);
+
+  const handleDownloadClick = () => {
+    posthog.capture("app_download_click", {
+      platform,
+      version,
+      artifact_url: href,
+      detected_os: detectedOS,
+      matched_detected_os: detectedOS === platform,
+      recommended: primary,
+    });
+  };
 
   const badge =
     available && primary ? (
@@ -190,6 +218,9 @@ function DownloadCard({
   return (
     <motion.a
       href={href}
+      onClick={handleDownloadClick}
+      data-platform={platform}
+      data-version={version ?? ""}
       whileHover={{ y: -2 }}
       transition={{ type: "spring", stiffness: 200, damping: 18 }}
       className={`group relative block rounded-2xl border p-6 transition-shadow ${
