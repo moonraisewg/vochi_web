@@ -75,4 +75,10 @@ describe("verifyGoogleIdToken", () => {
     const id = await verifyGoogleIdToken("tok");
     expect(id.emailVerified).toBe(false);
   });
+
+  it("normalizes the email claim to lowercase, trimmed (parity with the desktop adapter)", async () => {
+    verifyIdTokenMock.mockResolvedValue({ getPayload: () => payload({ email: "  A@B.com  " }) });
+    const id = await verifyGoogleIdToken("tok");
+    expect(id.email).toBe("a@b.com");
+  });
 });

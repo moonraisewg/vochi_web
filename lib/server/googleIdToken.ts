@@ -36,7 +36,7 @@ export async function verifyGoogleIdToken(idToken: string): Promise<GoogleIdenti
 
   return {
     sub: payload.sub,
-    email: payload.email,
+    email: payload.email.trim().toLowerCase(),
     emailVerified: payload.email_verified === true,
     name: typeof payload.name === "string" ? payload.name : null,
   };
