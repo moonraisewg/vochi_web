@@ -6,15 +6,19 @@ export default function VerifyEmailPage() {
   const [state, setState] = useState<"working" | "ok" | "error">("working");
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    if (!token) return setState("error");
-    fetch(apiUrl("/api/auth/verify-email"), {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ token }),
-    })
-      .then((r) => setState(r.ok ? "ok" : "error"))
-      .catch(() => setState("error"));
+    (async () => {
+      const token = new URLSearchParams(window.location.search).get("token");
+      if (!token) {
+        setState("error");
+        return;
+      }
+      const r = await fetch(apiUrl("/api/auth/verify-email"), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      setState(r.ok ? "ok" : "error");
+    })().catch(() => setState("error"));
   }, []);
 
   return (
