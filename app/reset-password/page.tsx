@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { apiUrl } from "@/lib/apiBase";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -9,7 +10,7 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     const token = new URLSearchParams(window.location.search).get("token");
     if (!token || password.length < 8) return setState("error");
-    const r = await fetch("/api/auth/reset", {
+    const r = await fetch(apiUrl("/api/auth/reset"), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ token, password }),

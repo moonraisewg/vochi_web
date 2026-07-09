@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { apiUrl } from "@/lib/apiBase";
 
 type OrderStatus = {
   invoiceNumber: string;
@@ -40,7 +41,7 @@ export function CheckoutResult({
     };
     async function load() {
       try {
-        const res = await fetch(`/api/orders/${encodeURIComponent(invoice!)}`);
+        const res = await fetch(apiUrl(`/api/orders/${encodeURIComponent(invoice!)}`));
         const data = (await res.json()) as OrderStatus & { error?: { message?: string } };
         if (!res.ok) throw new Error(data?.error?.message ?? "Order not found");
         if (cancelled) return;
