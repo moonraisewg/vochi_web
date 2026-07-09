@@ -3,6 +3,7 @@
 import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
+import { apiUrl } from "@/lib/apiBase";
 
 // Plans shown in the checkout selector. `student` is intentionally omitted from
 const PLANS = {
@@ -55,7 +56,7 @@ function CheckoutInner() {
     setError(null);
     setLoading(true);
     try {
-      const response = await fetch("/api/checkout/create", {
+      const response = await fetch(apiUrl("/api/checkout/create"), {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ plan, email }),
