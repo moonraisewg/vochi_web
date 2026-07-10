@@ -85,6 +85,19 @@ export function CheckoutResult({
           {invoice && !order && !error && (
             <p className="text-[14px] text-[var(--color-ink-soft)]">Đang tải trạng thái đơn...</p>
           )}
+          {order && order.licenseIssued && (
+            <div className="mb-6 rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent-soft)] p-5">
+              <p className="text-[15px] font-medium leading-[1.6] text-[var(--color-ink)]">
+                Mở app Vô chi và đăng nhập bằng email bạn dùng khi thanh toán — Pro kích hoạt ngay, không cần nhập key. Key dự phòng đã được gửi vào email đó.
+              </p>
+              <Link
+                href="/download"
+                className="mt-4 inline-block rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)]"
+              >
+                Tải app Vô chi
+              </Link>
+            </div>
+          )}
           {order && (
             <dl className="grid grid-cols-1 gap-4 text-[14px] md:grid-cols-2">
               <div>
@@ -97,7 +110,11 @@ export function CheckoutResult({
               </div>
               <div>
                 <dt className="micro mb-1">License</dt>
-                <dd>{order.licenseIssued ? "Đã phát hành, kiểm tra email" : "Chưa phát hành"}</dd>
+                <dd>
+                  {order.licenseIssued
+                    ? "Đã kích hoạt cho email mua hàng (key dự phòng trong email)"
+                    : "Chưa phát hành"}
+                </dd>
               </div>
               <div>
                 <dt className="micro mb-1">Thanh toán lúc</dt>
