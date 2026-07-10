@@ -24,7 +24,7 @@ const COPY = {
       },
       {
         name: "License",
-        topics: ["Mua qua VietQR, key gửi qua email", "Nhập key trong app để kích hoạt", "Chuyển sang máy khác"],
+        topics: ["Mua qua VietQR", "Đăng nhập bằng email mua hàng là có Pro ngay (key dự phòng qua email)", "Chuyển sang máy khác"],
       },
       {
         name: "Khắc phục sự cố",
@@ -53,7 +53,7 @@ const COPY = {
       },
       {
         name: "License",
-        topics: ["Buy via VietQR, key arrives by email", "Enter the key in the app to activate", "Transfer to another device"],
+        topics: ["Buy via VietQR", "Sign in with your purchase email to get Pro right away (key emailed as backup)", "Transfer to another device"],
       },
       {
         name: "Troubleshooting",
