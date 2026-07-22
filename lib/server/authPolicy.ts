@@ -12,14 +12,33 @@ const password = z.string().min(8).max(200);
 const deviceIdHash = z.string().min(8).max(200);
 const deviceName = z.string().max(200).optional();
 const displayName = z.string().trim().min(1).max(100);
-const age = z.number().int().min(13).max(120);
 
-export const registerSchema = z.object({ email, password, name: displayName, age });
+export const registerSchema = z.object({ email, password, name: displayName });
 export const verifyEmailSchema = z.object({ token: z.string().min(1) });
 export const loginSchema = z.object({ email, password, deviceIdHash, deviceName });
 export const forgotSchema = z.object({ email });
 export const resetSchema = z.object({ token: z.string().min(1), password });
-export const updateProfileSchema = z.object({ name: displayName, age });
+export const updateProfileSchema = z.object({ name: displayName });
+
+const loopbackRedirect = z
+  .string()
+  .regex(/^http:\/\/(127\.0\.0\.1|localhost):\d{1,5}\/callback$/, "must be a loopback redirect");
+
+export const googleOAuthSchema = z.object({
+  code: z.string().min(1).max(2048),
+  codeVerifier: z.string().min(1).max(256),
+  redirectUri: loopbackRedirect,
+  deviceIdHash,
+  deviceName,
+});
+export type GoogleOAuthInput = z.infer<typeof googleOAuthSchema>;
+
+export const googleMobileOAuthSchema = z.object({
+  idToken: z.string().min(1).max(4096),
+  deviceIdHash,
+  deviceName,
+});
+export type GoogleMobileOAuthInput = z.infer<typeof googleMobileOAuthSchema>;
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;

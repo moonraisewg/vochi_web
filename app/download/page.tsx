@@ -3,6 +3,8 @@
 import { useSyncExternalStore } from "react";
 import { PageShell } from "@/components/PageShell";
 import { RELEASES } from "@/lib/releases";
+import { apiUrl } from "@/lib/apiBase";
+import { getStoredUtm } from "@/lib/utm";
 import { motion } from "motion/react";
 import posthog from "posthog-js";
 
@@ -159,6 +161,8 @@ function DownloadCard({
   const version = extractVersion(href);
 
   const handleDownloadClick = () => {
+    const utm = getStoredUtm(Date.now(), window.localStorage) ?? {};
+
     posthog.capture("app_download_click", {
       platform,
       version,
@@ -166,7 +170,18 @@ function DownloadCard({
       detected_os: detectedOS,
       matched_detected_os: detectedOS === platform,
       recommended: primary,
+      ...utm,
     });
+
+    // Record a server-side download intent so the app can resolve UTM on first
+    // launch (time + platform matching). Fire-and-forget — attribution must
+    // never block or error the actual download.
+    void fetch(apiUrl("/api/utm/download"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ platform, utm }),
+      keepalive: true,
+    }).catch(() => {});
   };
 
   const badge =

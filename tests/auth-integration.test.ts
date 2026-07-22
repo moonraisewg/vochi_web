@@ -84,33 +84,30 @@ describe.skipIf(!hasDb)("auth integration", () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
-  it("persists name and age on a new registration", async () => {
-    await register({ email: "g@h.com", password: "longenough1", name: "Moon", age: 25 });
+  it("persists name on a new registration", async () => {
+    await register({ email: "g@h.com", password: "longenough1", name: "Moon" });
     const user = await prisma.user.findUniqueOrThrow({ where: { email: "g@h.com" } });
     expect(user.name).toBe("Moon");
-    expect(user.age).toBe(25);
   });
 
-  it("updates name/age when an unverified account re-registers", async () => {
-    await register({ email: "i@j.com", password: "longenough1", name: "Moon", age: 25 });
-    await register({ email: "i@j.com", password: "longenough1", name: "Sun", age: 30 });
+  it("updates name when an unverified account re-registers", async () => {
+    await register({ email: "i@j.com", password: "longenough1", name: "Moon" });
+    await register({ email: "i@j.com", password: "longenough1", name: "Sun" });
     const user = await prisma.user.findUniqueOrThrow({ where: { email: "i@j.com" } });
     expect(user.name).toBe("Sun");
-    expect(user.age).toBe(30);
   });
 
-  it("does not touch name/age for an already-verified account", async () => {
+  it("does not touch name for an already-verified account", async () => {
     const { hashPassword } = await import("../lib/server/authCrypto");
     await seedVerified("k@l.com", await hashPassword("longenough1"));
-    await prisma.user.update({ where: { email: "k@l.com" }, data: { name: "Original", age: 40 } });
-    await register({ email: "k@l.com", password: "longenough1", name: "Attacker", age: 99 });
+    await prisma.user.update({ where: { email: "k@l.com" }, data: { name: "Original" } });
+    await register({ email: "k@l.com", password: "longenough1", name: "Attacker" });
     const user = await prisma.user.findUniqueOrThrow({ where: { email: "k@l.com" } });
     expect(user.name).toBe("Original");
-    expect(user.age).toBe(40);
   });
 
-  it("updateProfile persists new name/age and getMe reflects them", async () => {
-    await register({ email: "m@n.com", password: "longenough1", name: "Moon", age: 25 });
+  it("updateProfile persists new name and getMe reflects it", async () => {
+    await register({ email: "m@n.com", password: "longenough1", name: "Moon" });
     await prisma.user.update({ where: { email: "m@n.com" }, data: { emailVerifiedAt: new Date() } });
     const loginResult = await login({
       email: "m@n.com",
@@ -118,9 +115,8 @@ describe.skipIf(!hasDb)("auth integration", () => {
       deviceIdHash: "dev-profile",
     });
     if (!loginResult.ok) throw new Error("expected login to succeed");
-    await updateProfile(loginResult.sessionToken, { name: "Moon Updated", age: 26 });
+    await updateProfile(loginResult.sessionToken, { name: "Moon Updated" });
     const me = await getMe(`Bearer ${loginResult.sessionToken}`);
     expect(me.user.name).toBe("Moon Updated");
-    expect(me.user.age).toBe(26);
   });
 });

@@ -19,7 +19,7 @@ const COPY = {
       },
       {
         q: "Thanh toán bằng cách nào, có an toàn không?",
-        a: "Bạn quét mã VietQR trong app ngân hàng và chuyển khoản như bình thường. Không cần nhập số thẻ. Sau khi ngân hàng xác nhận (thường trong 30 giây đến 2 phút), license sẽ được gửi vào email.",
+        a: "Bạn quét mã VietQR trong app ngân hàng và chuyển khoản như bình thường. Không cần nhập số thẻ. Sau khi ngân hàng xác nhận (thường trong 30 giây đến 2 phút), mở app và đăng nhập bằng email vừa mua là có Pro ngay — license dự phòng vẫn được gửi vào email đó.",
       },
       {
         q: "Thú nhỏ có hiển thị được trên fullscreen Chrome?",
@@ -53,7 +53,7 @@ const COPY = {
       },
       {
         q: "How does payment work? Is it safe?",
-        a: "Scan a VietQR code in your banking app and transfer as usual. No card details are entered anywhere. Once the bank confirms (typically 30 seconds to 2 minutes), the license is emailed to you.",
+        a: "Scan a VietQR code in your banking app and transfer as usual. No card details are entered anywhere. Once the bank confirms (typically 30 seconds to 2 minutes), open the app and sign in with your purchase email to get Pro right away — the license is emailed too as a backup.",
       },
       {
         q: "Does the creature really sit over fullscreen Chrome?",

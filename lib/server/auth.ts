@@ -1,9 +1,13 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "./prisma";
 import { ApiError } from "./http";
 import { appUrl } from "./env";
 import { hashPassword, verifyPassword, generateToken, hashToken } from "./authCrypto";
 import { decideDeviceAdmission, deviceLimitFor } from "./authPolicy";
-import type { RegisterInput, LoginInput, UpdateProfileInput } from "./authPolicy";
+import type { RegisterInput, LoginInput, UpdateProfileInput, GoogleOAuthInput, GoogleMobileOAuthInput } from "./authPolicy";
+import { exchangeCodeForGoogleIdentity } from "./googleOAuth";
+import { verifyGoogleIdToken } from "./googleIdToken";
+import type { GoogleIdentity } from "./googleOAuth";
 import { enqueueVerifyEmail, enqueueResetPassword } from "./authEmail";
 import { processEmailOutboxOnce } from "./email";
 import { after } from "next/server";
@@ -38,17 +42,17 @@ export async function register(input: RegisterInput): Promise<void> {
   if (existing) {
     if (!existing.emailVerifiedAt) {
       // Re-submitting the whole form (e.g. the first verify email got lost) — persist
-      // whatever name/age they just typed rather than keeping stale/absent values.
+      // whatever name they just typed rather than keeping stale/absent values.
       await prisma.user.update({
         where: { id: existing.id },
-        data: { name: input.name, age: input.age },
+        data: { name: input.name },
       });
       await issueVerifyToken(existing.id, existing.email);
     }
     return; // verified accounts: silently do nothing (no enumeration)
   }
   const user = await prisma.user.create({
-    data: { email: input.email, passwordHash, name: input.name, age: input.age },
+    data: { email: input.email, passwordHash, name: input.name },
   });
   await issueVerifyToken(user.id, user.email);
 }
@@ -115,37 +119,50 @@ export async function login(input: LoginInput): Promise<LoginResult> {
     throw new ApiError("EmailUnverified", "Vui lòng xác nhận email trước khi đăng nhập.", 403);
   }
 
+  const issued = await issueSession(user.id, input.deviceIdHash, input.deviceName ?? null);
+  if (!issued.ok) return issued;
+  await clearLoginFailures(user.id);
+  await audit("login_success", { userId: user.id });
+  return issued;
+}
+
+/** Shared device-admission + session-issuance for password and OAuth logins. Enforces
+ *  the device cap (rejecting when over), then upserts this device's session row with a
+ *  freshly minted token (returned once). Callers own their own audit/failure bookkeeping. */
+async function issueSession(
+  userId: string,
+  deviceIdHash: string,
+  deviceName: string | null,
+): Promise<{ ok: true; sessionToken: string } | { ok: false; code: "device_limit" }> {
   const live = await prisma.session.findMany({
-    where: { userId: user.id, revokedAt: null, expiresAt: { gt: new Date() } },
+    where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
     select: { deviceIdHash: true },
   });
   const activeLicenses = await prisma.license.findMany({
-    where: { userId: user.id, status: "active" },
+    where: { userId, status: "active" },
     select: { deviceLimit: true },
   });
   const cap = deviceLimitFor(activeLicenses);
-  if (decideDeviceAdmission(live, input.deviceIdHash, cap) === "reject") {
-    await audit("device_limit_hit", { userId: user.id });
+  if (decideDeviceAdmission(live, deviceIdHash, cap) === "reject") {
+    await audit("device_limit_hit", { userId });
     return { ok: false, code: "device_limit" };
   }
 
   const token = generateToken();
   const data = {
-    userId: user.id,
+    userId,
     tokenHash: hashToken(token),
-    deviceIdHash: input.deviceIdHash,
-    deviceName: input.deviceName ?? null,
+    deviceIdHash,
+    deviceName: deviceName ?? null,
     expiresAt: futureDate(SESSION_TTL_MS),
     revokedAt: null,
     lastSeenAt: new Date(),
   };
   await prisma.session.upsert({
-    where: { userId_deviceIdHash: { userId: user.id, deviceIdHash: input.deviceIdHash } },
+    where: { userId_deviceIdHash: { userId, deviceIdHash } },
     create: data,
     update: data, // new token + reset expiry/revoked for this device
   });
-  await clearLoginFailures(user.id);
-  await audit("login_success", { userId: user.id });
   return { ok: true, sessionToken: token };
 }
 
@@ -217,12 +234,109 @@ export async function resetPassword(token: string, newPassword: string): Promise
   await audit("password_reset", { userId: row.userId });
 }
 
-/** Update the caller's own display name/age. */
+/** Map a verified third-party identity (Google/Apple) to a user: link to an existing
+ *  account or create a new verified one. Keys on the provider's stable account id (the
+ *  `sub`), never email — email can change. When linking to a pre-existing but UNVERIFIED
+ *  account (signed up with this email, never confirmed), we verify it AND null its
+ *  password: that account was never proven to belong to anyone, so nulling the password
+ *  stops a squatter from later logging in with a password they set. A VERIFIED existing
+ *  user keeps their password (just gains Google/Apple as another sign-in method). */
+export async function linkOrCreateAccountByVerifiedEmail(input: {
+  provider: "google" | "apple";
+  providerAccountId: string;
+  email: string;
+  name: string | null;
+}) {
+  const existingLink = await prisma.oAuthAccount.findUnique({
+    where: { provider_providerAccountId: { provider: input.provider, providerAccountId: input.providerAccountId } },
+  });
+  if (existingLink) {
+    return prisma.user.findUniqueOrThrow({ where: { id: existingLink.userId } });
+  }
+  try {
+    return await prisma.$transaction(async (tx) => {
+      const existing = await tx.user.findUnique({ where: { email: input.email } });
+      if (existing) {
+        if (!existing.emailVerifiedAt) {
+          await tx.user.update({
+            where: { id: existing.id },
+            data: { emailVerifiedAt: new Date(), passwordHash: null },
+          });
+        }
+        await tx.oAuthAccount.create({
+          data: { userId: existing.id, provider: input.provider, providerAccountId: input.providerAccountId },
+        });
+        return tx.user.findUniqueOrThrow({ where: { id: existing.id } });
+      }
+      const created = await tx.user.create({
+        data: { email: input.email, name: input.name, emailVerifiedAt: new Date(), passwordHash: null },
+      });
+      await tx.oAuthAccount.create({
+        data: { userId: created.id, provider: input.provider, providerAccountId: input.providerAccountId },
+      });
+      return created;
+    });
+  } catch (e) {
+    // Two concurrent OAuth callbacks for the same new identity can both pass the
+    // findUnique check and race to create the link; the loser hits the unique
+    // constraint. Resolve by reading back the winner's row.
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      const link = await prisma.oAuthAccount.findUniqueOrThrow({
+        where: { provider_providerAccountId: { provider: input.provider, providerAccountId: input.providerAccountId } },
+      });
+      return prisma.user.findUniqueOrThrow({ where: { id: link.userId } });
+    }
+    throw e;
+  }
+}
+
+export type OAuthLoginResult =
+  | { ok: true; sessionToken: string; email: string }
+  | { ok: false; code: "device_limit" };
+
+/** Shared tail for every OAuth provider path: require a verified email, link/create the
+ *  account by provider `sub`, then issue a session under the device cap. */
+export async function finishOAuthLogin(
+  identity: GoogleIdentity,
+  deviceIdHash: string,
+  deviceName: string | null,
+): Promise<OAuthLoginResult> {
+  if (!identity.emailVerified) {
+    throw new ApiError("oauth_email_unverified", "Google email is not verified", 400);
+  }
+  const user = await linkOrCreateAccountByVerifiedEmail({
+    provider: "google",
+    providerAccountId: identity.sub,
+    email: identity.email,
+    name: identity.name,
+  });
+  const issued = await issueSession(user.id, deviceIdHash, deviceName);
+  if (!issued.ok) return issued;
+  return { ok: true, sessionToken: issued.sessionToken, email: user.email };
+}
+
+/** Exchange a Google auth code (desktop loopback flow), then finish the login. */
+export async function oauthLogin(input: GoogleOAuthInput): Promise<OAuthLoginResult> {
+  const identity = await exchangeCodeForGoogleIdentity({
+    code: input.code,
+    codeVerifier: input.codeVerifier,
+    redirectUri: input.redirectUri,
+  });
+  return finishOAuthLogin(identity, input.deviceIdHash, input.deviceName ?? null);
+}
+
+/** Verify a Google id_token from the mobile SDK, then finish the login. */
+export async function oauthLoginMobile(input: GoogleMobileOAuthInput): Promise<OAuthLoginResult> {
+  const identity = await verifyGoogleIdToken(input.idToken);
+  return finishOAuthLogin(identity, input.deviceIdHash, input.deviceName ?? null);
+}
+
+/** Update the caller's own display name. */
 export async function updateProfile(bearer: string | null, input: UpdateProfileInput): Promise<void> {
   const session = await requireSession(bearer);
   await prisma.user.update({
     where: { id: session.userId },
-    data: { name: input.name, age: input.age },
+    data: { name: input.name },
   });
 }
 

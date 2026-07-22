@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import { PostHogProvider } from "@/components/PostHogProvider";
+import { UtmCapture } from "@/components/UtmCapture";
 import { LangProvider } from "@/components/LangProvider";
 import type { Lang } from "@/components/Nav";
 import "./globals.css";
@@ -120,6 +121,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <body className="min-h-screen overflow-x-hidden">
         <PostHogProvider>
+          <UtmCapture />
           <LangProvider initialLang={initialLang}>{children}</LangProvider>
         </PostHogProvider>
       </body>

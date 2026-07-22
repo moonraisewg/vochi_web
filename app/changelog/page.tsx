@@ -5,6 +5,16 @@ import { motion } from "motion/react";
 
 const ENTRIES = [
   {
+    v: "0.1.21",
+    date: "2026-07-09",
+    tag: "beta",
+    title: "Đăng nhập bằng Google",
+    items: [
+      "Đăng ký/đăng nhập nhanh bằng tài khoản Google, không cần nhớ mật khẩu.",
+      "Tài khoản Google được xác thực sẵn, bỏ qua bước xác nhận email.",
+    ],
+  },
+  {
     v: "0.1.4",
     date: "2026-05-20",
     tag: "beta",

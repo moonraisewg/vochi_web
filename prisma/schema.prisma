@@ -177,7 +177,7 @@ model User {
   id               String      @id @default(cuid())
   email            String      @unique
   emailVerifiedAt  DateTime?
-  passwordHash     String
+  passwordHash     String?
   name             String?
   age              Int?
   status           UserStatus  @default(active)
@@ -188,6 +188,22 @@ model User {
   sessions         Session[]
   authTokens       AuthToken[]
   licenses         License[]
+  syncCursor       SyncCursor?
+  syncEvents       SyncEvent[]
+  syncVocabCards   SyncVocabCard[]
+  oauthAccounts    OAuthAccount[]
+}
+
+model OAuthAccount {
+  id                String   @id @default(cuid())
+  userId            String
+  provider          String   // "google" | "apple"
+  providerAccountId String   // Google `sub` — stable across email changes
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
 }
 
 model AuthThrottle {
@@ -223,4 +239,66 @@ model Session {
 
   @@unique([userId, deviceIdHash])
   @@index([userId])
+}
+
+enum SyncEventType {
+  review
+  master
+  unmaster
+}
+
+/// One monotonic USN counter per account. Assigned under SELECT ... FOR UPDATE
+/// on this row so concurrent pushes from two devices never collide.
+model SyncCursor {
+  userId String @id
+  usn    Int    @default(0)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// Append-only learning events (review + manual master/unmaster). Replayed in
+/// client-timestamp order to rebuild srs_state + mastered state. Never updated
+/// or deleted (append-only) — no tombstone.
+model SyncEvent {
+  id           String        @id @default(cuid())
+  userId       String
+  eventId      String        // client-generated UUID — idempotency key
+  eventType    SyncEventType
+  cardUid      String        // cross-device card identity (string, not FK)
+  rating       Int?          // present iff eventType = review (DB CHECK in constraints migration)
+  occurredAt   DateTime      @db.Timestamptz(3) // client event time (replay order)
+  deviceIdHash String        // sort tiebreaker + clock-skew attribution
+  usn          Int
+  receivedAt   DateTime      @default(now()) @db.Timestamptz(3) // server receive time
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@unique([userId, usn])
+  @@index([userId, usn])
+  @@index([userId, cardUid])
+}
+
+/// User-added cards only (seed/deck cards are shipped, never synced as content).
+/// Last-write-wins by clientUpdatedAt; soft-delete via deletedAt tombstone.
+model SyncVocabCard {
+  id              String    @id @default(cuid())
+  userId          String
+  cardUid         String
+  normalizedWord  String
+  language        String
+  word            String
+  meaning         String
+  example         String?
+  pos             String?
+  pinyin          String?
+  toneMarks       String?
+  exampleVi       String?
+  usn             Int
+  deletedAt       DateTime? @db.Timestamptz(3)
+  clientUpdatedAt DateTime  @db.Timestamptz(3)
+  createdAt       DateTime  @default(now()) @db.Timestamptz(3)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cardUid])
+  @@unique([userId, usn])
+  @@index([userId, usn])
 }

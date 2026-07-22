@@ -3,6 +3,7 @@
 import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
+import { apiUrl } from "@/lib/apiBase";
 
 // Plans shown in the checkout selector. `student` is intentionally omitted from
 const PLANS = {
@@ -55,7 +56,7 @@ function CheckoutInner() {
     setError(null);
     setLoading(true);
     try {
-      const response = await fetch("/api/checkout/create", {
+      const response = await fetch(apiUrl("/api/checkout/create"), {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ plan, email }),
@@ -93,7 +94,7 @@ function CheckoutInner() {
               ["01", "Chọn gói và nhập email", "Email này sẽ nhận license, hãy dùng email bạn đang dùng thường xuyên."],
               ["02", "Quét mã QR", "Mở app ngân hàng, quét mã, kiểm tra số tiền và nội dung chuyển khoản đã có sẵn."],
               ["03", "Xác nhận chuyển khoản", "Bấm chuyển trong app ngân hàng. Thường mất 30 giây đến 2 phút để xác nhận."],
-              ["04", "Mở email", "License tự gửi vào hộp thư. Mở app, dán license, dùng ngay."],
+              ["04", "Mở app và đăng nhập", "Đăng nhập bằng email bạn vừa mua là có Pro ngay, không cần nhập key. License dự phòng vẫn được gửi vào email đó."],
             ].map(([n, title, desc]) => (
               <li key={n} className="flex items-start gap-5">
                 <span className="pt-1 font-mono text-[12px] uppercase tracking-[0.18em] text-[var(--color-ink-muted)]">
