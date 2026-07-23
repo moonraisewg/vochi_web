@@ -5,11 +5,12 @@ import { PageShell } from "@/components/PageShell";
 import { RELEASES } from "@/lib/releases";
 import { apiUrl } from "@/lib/apiBase";
 import { getStoredUtm } from "@/lib/utm";
+import { APP_STORE_URL } from "@/lib/useDownloadHref";
 import { motion } from "motion/react";
 import posthog from "posthog-js";
 
-type OS = "mac" | "windows" | "linux" | "unknown";
-type Platform = "mac" | "windows";
+type OS = "mac" | "windows" | "ios" | "linux" | "unknown";
+type Platform = "mac" | "windows" | "ios";
 
 function extractVersion(url: string | null): string | null {
   if (!url) return null;
@@ -19,10 +20,14 @@ function extractVersion(url: string | null): string | null {
 
 function detectOS(): OS {
   if (typeof navigator === "undefined") return "unknown";
-  const ua = navigator.userAgent.toLowerCase();
-  if (ua.includes("mac")) return "mac";
-  if (ua.includes("win")) return "windows";
-  if (ua.includes("linux")) return "linux";
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/i.test(ua)) return "ios";
+  const uaLower = ua.toLowerCase();
+  // iPadOS 13+ reports as Mac; disambiguate via touch support.
+  if (uaLower.includes("mac") && navigator.maxTouchPoints > 1) return "ios";
+  if (uaLower.includes("mac")) return "mac";
+  if (uaLower.includes("win")) return "windows";
+  if (uaLower.includes("linux")) return "linux";
   return "unknown";
 }
 
@@ -47,10 +52,14 @@ const COPY = {
     macAbout: "Cần macOS 12 trở lên, 28MB",
     winMsi: "Windows, MSI (x64)",
     winAbout: "Cần Windows 10 build 1809+, 31MB",
+    iosStore: "iOS · App Store",
+    iosAbout: "Cần iOS 15 trở lên · iPhone & iPad",
+    iosSource: "Tải từ App Store",
     linuxNote: "Linux đang nấu. Đăng ký đê, mình sẽ ới khi xong.",
     detected: "Máy bạn đang xài",
     forYouMac: "Cho máy Mac của bạn",
     forYouWin: "Cho máy Windows của bạn",
+    forYouIos: "Cho iPhone/iPad của bạn",
     forYou: "Cho máy bạn",
     comingSoon: "Sắp ra mắt",
   },
@@ -61,10 +70,14 @@ const COPY = {
     macAbout: "Requires macOS 12 or later, 28MB",
     winMsi: "Windows, MSI (x64)",
     winAbout: "Requires Windows 10 build 1809 or later, 31MB",
+    iosStore: "iOS · App Store",
+    iosAbout: "Requires iOS 15 or later · iPhone & iPad",
+    iosSource: "Get on the App Store",
     linuxNote: "A Linux build is in development. Leave your email to be notified when it ships.",
     detected: "Detected system",
     forYouMac: "Recommended for your Mac",
     forYouWin: "Recommended for your PC",
+    forYouIos: "Recommended for your iPhone/iPad",
     forYou: "Recommended for you",
     comingSoon: "Coming soon",
   },
@@ -94,13 +107,15 @@ export default function DownloadPage() {
                     ? "macOS"
                     : os === "windows"
                       ? "Windows"
-                      : os === "linux"
-                        ? "Linux"
-                        : "-"}
+                      : os === "ios"
+                        ? "iOS"
+                        : os === "linux"
+                          ? "Linux"
+                          : "-"}
                 </span>
               </div>
 
-              <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 <DownloadCard
                   platform="mac"
                   detectedOS={os}
@@ -123,6 +138,18 @@ export default function DownloadPage() {
                   forYouLabel={t.forYouWin}
                   comingSoonLabel={t.comingSoon}
                 />
+                <DownloadCard
+                  platform="ios"
+                  detectedOS={os}
+                  primary={os === "ios"}
+                  label={t.iosStore}
+                  about={t.iosAbout}
+                  sha={null}
+                  sourceLabel={t.iosSource}
+                  href={APP_STORE_URL}
+                  forYouLabel={t.forYouIos}
+                  comingSoonLabel={t.comingSoon}
+                />
               </div>
 
               <div className="mt-10 rounded-2xl border border-dashed border-[var(--color-hairline-strong)] bg-[var(--color-tint)] p-6 text-[14px] text-[var(--color-ink-soft)]">
@@ -143,6 +170,7 @@ function DownloadCard({
   label,
   about,
   sha,
+  sourceLabel,
   href,
   forYouLabel,
   comingSoonLabel,
@@ -153,6 +181,7 @@ function DownloadCard({
   label: string;
   about: string;
   sha: string | null;
+  sourceLabel?: string;
   href: string | null;
   forYouLabel: string;
   comingSoonLabel: string;
@@ -172,6 +201,11 @@ function DownloadCard({
       recommended: primary,
       ...utm,
     });
+
+    // Store-mediated installs (iOS App Store) can't be matched to a server
+    // download-intent — Apple owns the install pipeline. Only desktop
+    // artifacts hit the intent endpoint.
+    if (platform !== "mac" && platform !== "windows") return;
 
     // Record a server-side download intent so the app can resolve UTM on first
     // launch (time + platform matching). Fire-and-forget — attribution must
@@ -211,9 +245,15 @@ function DownloadCard({
           ↓
         </span>
       </div>
-      <div className="mt-6 flex items-center justify-between border-t border-[var(--color-hairline)] pt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
-        <span>SHA-256</span>
-        <span>{sha ?? "-"}</span>
+      <div className="mt-6 flex items-center justify-between gap-3 border-t border-[var(--color-hairline)] pt-4 font-mono text-[11px] text-[var(--color-ink-muted)]">
+        {sourceLabel ? (
+          <span className="truncate">{sourceLabel}</span>
+        ) : (
+          <>
+            <span>SHA-256</span>
+            <span className="truncate">{sha ?? "-"}</span>
+          </>
+        )}
       </div>
     </>
   );
