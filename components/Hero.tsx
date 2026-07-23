@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { PetDevice } from "./PetDevice";
 import type { Lang } from "./Nav";
+import { trackDownloadClick, useDownloadTarget } from "@/lib/useDownloadHref";
 
 const HERO_COPY = {
   vi: {
@@ -28,6 +29,7 @@ const HERO_COPY = {
 
 export function Hero({ lang }: { lang: Lang }) {
   const t = HERO_COPY[lang];
+  const download = useDownloadTarget();
 
   return (
     <section id="top" className="relative pb-16 pt-10 md:pb-20 md:pt-14">
@@ -88,7 +90,8 @@ export function Hero({ lang }: { lang: Lang }) {
             className="mt-9 flex flex-wrap items-center gap-4"
           >
             <Link
-              href="/download"
+              href={download.href}
+              onClick={() => trackDownloadClick(download, "hero")}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-ink)] px-6 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)] sm:w-auto sm:justify-start"
             >
               {t.ctaPrimary}

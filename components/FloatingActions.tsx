@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLang } from "./LangProvider";
+import { trackDownloadClick, useDownloadTarget } from "@/lib/useDownloadHref";
 
 const COPY = {
   vi: { adopt: "Nuôi thú ngay", up: "Lên đầu trang" },
@@ -11,6 +12,7 @@ const COPY = {
 
 export function FloatingActions() {
   const { lang } = useLang();
+  const download = useDownloadTarget();
   const [visible, setVisible] = useState(false);
 
   // Reveal after the user scrolls past one viewport. IntersectionObserver on a
@@ -51,7 +53,8 @@ export function FloatingActions() {
         <span aria-hidden>↑</span>
       </button>
       <Link
-        href="/download"
+        href={download.href}
+        onClick={() => trackDownloadClick(download, "floating")}
         className={`pointer-events-auto inline-flex items-center gap-2 rounded-full bg-[var(--color-ink)] px-5 py-3 text-[14px] font-medium text-[var(--color-surface)] shadow-[0_10px_30px_rgba(15,19,17,0.18)] transition-colors hover:bg-[var(--color-accent-deep)] ${
           visible ? "" : "pointer-events-none"
         }`}
