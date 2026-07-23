@@ -3,11 +3,33 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLang } from "./LangProvider";
-import { trackDownloadClick, useDownloadTarget } from "@/lib/useDownloadHref";
+import {
+  trackDownloadClick,
+  useDownloadTarget,
+  type DownloadPlatform,
+} from "@/lib/useDownloadHref";
 
 const COPY = {
-  vi: { adopt: "Nuôi thú ngay", up: "Lên đầu trang" },
-  en: { adopt: "Adopt now", up: "Back to top" },
+  vi: {
+    adopt: {
+      unknown: "Nuôi thú ngay",
+      mac: "Nuôi trên Mac",
+      windows: "Nuôi trên Windows",
+      ios: "Nuôi trên iPhone",
+      android: "Tải App Store",
+    } satisfies Record<DownloadPlatform, string>,
+    up: "Lên đầu trang",
+  },
+  en: {
+    adopt: {
+      unknown: "Adopt now",
+      mac: "Adopt on Mac",
+      windows: "Adopt on Windows",
+      ios: "Adopt on iPhone",
+      android: "Get on App Store",
+    } satisfies Record<DownloadPlatform, string>,
+    up: "Back to top",
+  },
 } as const;
 
 export function FloatingActions() {
@@ -59,7 +81,7 @@ export function FloatingActions() {
           visible ? "" : "pointer-events-none"
         }`}
       >
-        {t.adopt}
+        {t.adopt[download.platform]}
         <span aria-hidden className="text-[15px] leading-none">↓</span>
       </Link>
     </div>

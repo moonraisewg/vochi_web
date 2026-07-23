@@ -4,7 +4,11 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { PetDevice } from "./PetDevice";
 import type { Lang } from "./Nav";
-import { trackDownloadClick, useDownloadTarget } from "@/lib/useDownloadHref";
+import {
+  trackDownloadClick,
+  useDownloadTarget,
+  type DownloadPlatform,
+} from "@/lib/useDownloadHref";
 
 const HERO_COPY = {
   vi: {
@@ -12,7 +16,13 @@ const HERO_COPY = {
     titleA: "Học ngoại ngữ bằng cách",
     titleB: ["nuôi một thú nhỏ."],
     sub: "Mỗi từ bạn nhớ được sẽ nuôi lớn một sinh vật sống trên màn hình. Bạn học một chút. Nó lớn lên một chút.",
-    ctaPrimary: "Tải miễn phí cho Mac & Windows",
+    ctaPrimary: {
+      unknown: "Tải miễn phí cho Mac & Windows",
+      mac: "Tải miễn phí cho macOS",
+      windows: "Tải miễn phí cho Windows",
+      ios: "Tải trên App Store",
+      android: "Tải trên App Store",
+    } satisfies Record<DownloadPlatform, string>,
     ctaSecondary: "Xem bảng giá",
     micro: "Không cần tài khoản. 28MB. Beta.",
   },
@@ -21,7 +31,13 @@ const HERO_COPY = {
     titleA: "Learn a language by",
     titleB: ["raising a tiny creature."],
     sub: "Every word you remember feeds a small creature living on your screen. You learn a little. It grows a little.",
-    ctaPrimary: "Download free for Mac & Windows",
+    ctaPrimary: {
+      unknown: "Download free for Mac & Windows",
+      mac: "Download free for macOS",
+      windows: "Download free for Windows",
+      ios: "Get it on the App Store",
+      android: "Get it on the App Store",
+    } satisfies Record<DownloadPlatform, string>,
     ctaSecondary: "See pricing",
     micro: "No account required. 28MB. Beta.",
   },
@@ -94,7 +110,7 @@ export function Hero({ lang }: { lang: Lang }) {
               onClick={() => trackDownloadClick(download, "hero")}
               className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--color-ink)] px-6 py-3 text-[14px] font-medium text-[var(--color-surface)] transition-colors hover:bg-[var(--color-accent-deep)] sm:w-auto sm:justify-start"
             >
-              {t.ctaPrimary}
+              {t.ctaPrimary[download.platform]}
               <span aria-hidden className="text-[16px] leading-none">↓</span>
             </Link>
             <a
