@@ -130,7 +130,7 @@ export function Hero({ lang }: { lang: Lang }) {
         {/* right column: pet device */}
         <div className="md:col-span-5">
           <div className="float-y">
-            <PetDevice />
+            <PetDevice lang={lang} />
           </div>
         </div>
       </div>
