@@ -9,7 +9,7 @@ import { APP_STORE_URL } from "@/lib/useDownloadHref";
 import { motion } from "motion/react";
 import posthog from "posthog-js";
 
-type OS = "mac" | "windows" | "ios" | "linux" | "unknown";
+type OS = "mac" | "windows" | "linux" | "unknown";
 type Platform = "mac" | "windows" | "ios";
 
 function extractVersion(url: string | null): string | null {
@@ -20,14 +20,10 @@ function extractVersion(url: string | null): string | null {
 
 function detectOS(): OS {
   if (typeof navigator === "undefined") return "unknown";
-  const ua = navigator.userAgent;
-  if (/iPad|iPhone|iPod/i.test(ua)) return "ios";
-  const uaLower = ua.toLowerCase();
-  // iPadOS 13+ reports as Mac; disambiguate via touch support.
-  if (uaLower.includes("mac") && navigator.maxTouchPoints > 1) return "ios";
-  if (uaLower.includes("mac")) return "mac";
-  if (uaLower.includes("win")) return "windows";
-  if (uaLower.includes("linux")) return "linux";
+  const ua = navigator.userAgent.toLowerCase();
+  if (ua.includes("mac")) return "mac";
+  if (ua.includes("win")) return "windows";
+  if (ua.includes("linux")) return "linux";
   return "unknown";
 }
 
@@ -107,11 +103,9 @@ export default function DownloadPage() {
                     ? "macOS"
                     : os === "windows"
                       ? "Windows"
-                      : os === "ios"
-                        ? "iOS"
-                        : os === "linux"
-                          ? "Linux"
-                          : "-"}
+                      : os === "linux"
+                        ? "Linux"
+                        : "-"}
                 </span>
               </div>
 
@@ -141,7 +135,7 @@ export default function DownloadPage() {
                 <DownloadCard
                   platform="ios"
                   detectedOS={os}
-                  primary={os === "ios"}
+                  primary={false}
                   label={t.iosStore}
                   about={t.iosAbout}
                   sha={null}
