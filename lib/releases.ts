@@ -25,7 +25,7 @@ export const RELEASES: Releases = {
     sha256: "4c9af74069c81a0426a5bc2ee6a757d4a198c1ddeecad8d2d6c0db5f5788523b",
   },
   windows: {
-    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.2.0_x64-setup.exe",
-    sha256: "9a659a490abe304be79f213d9da66803f3883df644053896e166cd4595d31a36",
+    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.2.1_x64-setup.exe",
+    sha256: "50e1b66a941712f809311102abda4850a0c34f61371cac4f7ccfb47e9e4201e7",
   },
 };
