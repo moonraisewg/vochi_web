@@ -18,7 +18,7 @@ type Target = {
   external: boolean;
 };
 
-function detectTarget(): Target {
+function computeTarget(): Target {
   if (typeof navigator === "undefined") {
     return { href: DESKTOP_FALLBACK_URL, platform: "unknown", external: false };
   }
@@ -40,17 +40,25 @@ function detectTarget(): Target {
   return { href: DESKTOP_FALLBACK_URL, platform: "unknown", external: false };
 }
 
-const noopSubscribe = () => () => {};
+// useSyncExternalStore compares snapshots with Object.is — the getter must
+// return a stable reference or React infinite-loops. Cache once per module
+// load; UA does not change after mount.
 const SERVER_SNAPSHOT: Target = {
   href: DESKTOP_FALLBACK_URL,
   platform: "unknown",
   external: false,
 };
+let clientSnapshot: Target | null = null;
+function getClientSnapshot(): Target {
+  if (clientSnapshot === null) clientSnapshot = computeTarget();
+  return clientSnapshot;
+}
+const noopSubscribe = () => () => {};
 
 export function useDownloadTarget(): Target {
   return useSyncExternalStore<Target>(
     noopSubscribe,
-    detectTarget,
+    getClientSnapshot,
     () => SERVER_SNAPSHOT,
   );
 }
