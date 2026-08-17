@@ -10,6 +10,7 @@ import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { FloatingActions } from "@/components/FloatingActions";
 import { ScrollDots } from "@/components/ScrollDots";
+import { SubscribePopup } from "@/components/SubscribePopup";
 import { useLang } from "@/components/LangProvider";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
       <Footer lang={lang} />
       <ScrollDots lang={lang} />
       <FloatingActions />
+      <SubscribePopup lang={lang} />
     </main>
   );
 }
