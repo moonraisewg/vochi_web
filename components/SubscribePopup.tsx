@@ -63,12 +63,14 @@ export function SubscribePopup({ lang }: { lang: Lang }) {
   const [website, setWebsite] = useState(""); // honeypot
   const [consent, setConsent] = useState(false);
   const [token, setToken] = useState("");
+  const [captchaReady, setCaptchaReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   const dialogRef = useRef<HTMLDivElement>(null);
   const captchaRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<Element | null>(null);
+  const renderedRef = useRef(false);
   const t = COPY[lang];
 
   // Mở popup: chỉ khi chưa từng đăng ký thành công. Mobile chờ 5s để tránh án
@@ -128,12 +130,26 @@ export function SubscribePopup({ lang }: { lang: Lang }) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, close]);
 
-  // Turnstile render sau khi script tải xong và dialog đã có trong DOM.
+  // Vẽ widget Turnstile. `captchaReady` là thứ bắt buộc phải có trong deps:
+  // <Script> render cùng lượt với dialog, nên lần effect đầu tiên LUÔN chạy
+  // trước khi script tải xong — không có cờ này thì effect thoát sớm rồi không
+  // bao giờ chạy lại, widget không bao giờ hiện, và người dùng kẹt ở thông báo
+  // "chờ xác minh chống spam" vĩnh viễn.
   useEffect(() => {
-    if (!open || done || !SITE_KEY || !captchaRef.current) return;
-    if (!window.turnstile) return;
-    window.turnstile.render(captchaRef.current, { sitekey: SITE_KEY, callback: setToken });
-  }, [open, done]);
+    if (!open || done || !SITE_KEY) return;
+    // React StrictMode gọi effect hai lần ở dev; Turnstile ném lỗi nếu vẽ đè
+    // lên cùng một container.
+    if (renderedRef.current) return;
+    const el = captchaRef.current;
+    if (!el || !window.turnstile) return;
+    renderedRef.current = true;
+    window.turnstile.render(el, { sitekey: SITE_KEY, callback: setToken });
+  }, [open, done, captchaReady]);
+
+  // Đóng popup là container biến mất; mở lại phải vẽ widget mới.
+  useEffect(() => {
+    if (!open) renderedRef.current = false;
+  }, [open]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -185,6 +201,10 @@ export function SubscribePopup({ lang }: { lang: Lang }) {
         <Script
           src="https://challenges.cloudflare.com/turnstile/v0/api.js"
           strategy="afterInteractive"
+          // Script tải xong mới có window.turnstile — cờ này là thứ đánh thức
+          // effect vẽ widget ở trên.
+          onLoad={() => setCaptchaReady(true)}
+          onReady={() => setCaptchaReady(true)}
         />
       )}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
