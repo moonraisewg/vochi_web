@@ -25,11 +25,20 @@ export const metadata: Metadata = {
     url: "/tai-lieu",
     title: TITLE,
     description: DESCRIPTION,
+    images: [
+      {
+        url: "/og-tai-lieu.png",
+        width: 1200,
+        height: 630,
+        alt: "Tài liệu từ vựng tiếng Anh theo chủ đề · 58 trang · PDF miễn phí",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
+    images: ["/og-tai-lieu.png"],
   },
 };
 
