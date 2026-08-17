@@ -1,45 +1,24 @@
-import { processSepayIpn } from "@/lib/server/ipn";
-import { processEmailOutboxOnce } from "@/lib/server/email";
-import { jsonError, jsonOk } from "@/lib/server/http";
-import { serverEnv } from "@/lib/server/env";
-
 export const runtime = "nodejs";
 
-// Placeholder kept in .env when SECRET_KEY auth isn't configured on the SePay
-// dashboard (e.g. the sandbox integration wizard doesn't expose it).
-const IPN_SECRET_UNSET = "your-sepay-ipn-secret";
-
-// Defense in depth, the way a payment webhook should be hardened:
-//   Layer 1 (here): if an IPN secret is configured, reject requests whose
-//     X-Secret-Key header doesn't match — cheap early spam/forgery filter.
-//     When SePay's SECRET_KEY auth isn't set up, this layer is skipped.
-//   Layer 2 (processSepayIpn): NEVER trust the webhook body — call SePay's
-//     order API back to confirm CAPTURED + the real amount before issuing a
-//     license. This is the authoritative check and holds even if Layer 1 is off.
-//   Layers 3-4: idempotency on transaction id + amount/currency/expiry guards.
-export async function POST(req: Request) {
-  const configuredSecret = serverEnv().SEPAY_IPN_SECRET_KEY;
-  if (configuredSecret && configuredSecret !== IPN_SECRET_UNSET) {
-    const provided = req.headers.get("x-secret-key");
-    if (provided !== configuredSecret) {
-      console.error(JSON.stringify({ event: "sepay_ipn_rejected", reason: "bad_secret" }));
-      return jsonError("Unauthorized", "Invalid IPN secret", 401);
-    }
-  }
-
-  try {
-    const payload = await req.json();
-    const result = await processSepayIpn(payload);
-    // Await the send: on serverless, fire-and-forget after the response can be
-    // frozen before the email actually goes out. Best-effort — never fail the
-    // IPN ack over an email hiccup (the order-status poll flushes as a backup).
-    await processEmailOutboxOnce(3).catch((error) => {
-      console.error(JSON.stringify({ event: "email_outbox_async_failed", error: String(error) }));
-    });
-    return jsonOk({ ok: true, result });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(JSON.stringify({ event: "sepay_ipn_failed", error: message }));
-    return jsonError("IpnRejected", message, 400);
-  }
+// RETIRED 2026-08-17. The SePay IPN handler lives in vochi-api now:
+//   POST https://api.vochi.xyz/api/sepay/ipn
+//
+// This app's Prisma schema is frozen at the pre-consolidation shape (it still
+// declares Order.invoiceNumber and PaymentEvent), while the shared DB was
+// migrated by vochi-api's 20260713010000_consolidate_orders_webhooks (column
+// renamed to invoiceId, PaymentEvent folded into PaymentWebhookLog). A payment
+// that lands here therefore gets confirmed with SePay and THEN dies on the DB
+// write — SePay sees a 400, the order stays `pending`, and the customer pays
+// for a license that is never issued. That happened in production.
+//
+// So this stays as a tombstone rather than a deleted file: if the SePay
+// dashboard is ever pointed back at vochi.xyz, 410 makes the misconfiguration
+// obvious instead of a bare 404 that reads like a typo. Do NOT re-wire
+// processSepayIpn here — port anything missing to vochi-api instead.
+export function POST() {
+  console.error(JSON.stringify({ event: "sepay_ipn_retired_endpoint_hit" }));
+  return Response.json(
+    { error: { code: "Gone", message: "SePay IPN moved to https://api.vochi.xyz/api/sepay/ipn" } },
+    { status: 410 },
+  );
 }
