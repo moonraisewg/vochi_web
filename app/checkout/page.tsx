@@ -4,18 +4,30 @@ import { FormEvent, Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { PageShell } from "@/components/PageShell";
 import { apiUrl } from "@/lib/apiBase";
+import { formatVnd } from "@/lib/formatVnd";
+import posthog from "posthog-js";
 
 // Plans shown in the checkout selector. `student` is intentionally omitted from
 const PLANS = {
-  one_month: { name: "1 tháng", amount: "59.000đ", note: "2 thiết bị, 1 tháng" },
-  three_months: { name: "3 tháng", amount: "129.000đ", note: "2 thiết bị, 3 tháng" },
-  lifetime: { name: "Lifetime", amount: "599.000đ", note: "5 thiết bị, trọn đời" },
-  student: { name: "Student Lifetime", amount: "249.000đ", note: "5 thiết bị, trọn đời (cần email .edu.vn)" },
-  one_month_student: { name: "1 tháng (Sinh viên)", amount: "29.000đ", note: "2 thiết bị, 1 tháng (cần email .edu.vn)" },
-  three_months_student: { name: "3 tháng (Sinh viên)", amount: "65.000đ", note: "2 thiết bị, 3 tháng (cần email .edu.vn)" },
-  trial_7days: { name: "Dùng thử 7 ngày", amount: "Liên hệ", note: "1 thiết bị, 7 ngày" },
-  hsk_advanced: { name: "HSK nâng cao", amount: "50.000đ", note: "Mở HSK 4·5·6 · 1 thiết bị, trọn đời" },
+  one_month: { name: "1 tháng", amountVnd: 59_000, note: "2 thiết bị, 1 tháng" },
+  three_months: { name: "3 tháng", amountVnd: 129_000, note: "2 thiết bị, 3 tháng" },
+  lifetime: { name: "Lifetime", amountVnd: 599_000, note: "5 thiết bị, trọn đời" },
+  student: { name: "Student Lifetime", amountVnd: 249_000, note: "5 thiết bị, trọn đời (cần email .edu.vn)" },
+  one_month_student: { name: "1 tháng (Sinh viên)", amountVnd: 29_000, note: "2 thiết bị, 1 tháng (cần email .edu.vn)" },
+  three_months_student: { name: "3 tháng (Sinh viên)", amountVnd: 65_000, note: "2 thiết bị, 3 tháng (cần email .edu.vn)" },
+  trial_7days: { name: "Dùng thử 7 ngày", amountVnd: 0, note: "1 thiết bị, 7 ngày" },
+  hsk_advanced: { name: "HSK nâng cao", amountVnd: 50_000, note: "Mở HSK 4·5·6 · 1 thiết bị, trọn đời" },
 } as const;
+
+const DISCOUNT_CODE = "VOCHI20";
+const DISCOUNT_RATE = 0.2;
+
+// Chỉ để HIỂN THỊ. Số tiền thật do server tính trong order-policy.ts rồi ghi vào
+// order.paidAmount — công thức ở đây phải khớp, nhưng không phải nguồn sự thật.
+function previewAmountVnd(amountVnd: number, code: string): number {
+  if (code.trim().toUpperCase() !== DISCOUNT_CODE || amountVnd === 0) return amountVnd;
+  return Math.floor((amountVnd * (1 - DISCOUNT_RATE)) / 1000) * 1000;
+}
 
 type PlanId = keyof typeof PLANS;
 const DEFAULT_PLAN: PlanId = "three_months";
@@ -40,6 +52,7 @@ function CheckoutInner() {
   const initialPlan = (params.get("plan") ?? DEFAULT_PLAN) as PlanId;
   const [plan, setPlan] = useState<PlanId>(initialPlan in PLANS ? initialPlan : DEFAULT_PLAN);
   const [email, setEmail] = useState("");
+  const [code, setCode] = useState(params.get("code") ?? "");
   const [error, setError] = useState<string | null>(null);
   const [checkout, setCheckout] = useState<CheckoutResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -56,10 +69,13 @@ function CheckoutInner() {
     setError(null);
     setLoading(true);
     try {
+      if (code.trim().toUpperCase() === DISCOUNT_CODE) {
+        posthog.capture("discount_applied", { plan });
+      }
       const response = await fetch(apiUrl("/api/checkout/create"), {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ plan, email }),
+        body: JSON.stringify({ plan, email, code: code.trim() || undefined }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data?.error?.message ?? "Không tạo được đơn hàng");
@@ -125,7 +141,7 @@ function CheckoutInner() {
                 >
                   {Object.entries(PLANS).map(([id, p]) => (
                     <option key={id} value={id}>
-                      {p.name} - {p.amount}
+                      {p.name} - {formatVnd(p.amountVnd)}
                     </option>
                   ))}
                 </select>
@@ -134,7 +150,16 @@ function CheckoutInner() {
               <div className="mt-6 rounded-xl border border-[var(--color-hairline)] bg-[var(--color-tint)] p-4">
                 <div className="font-display text-[22px] tracking-tight">{selected.name}</div>
                 <div className="mt-2 font-display text-[36px] leading-none tracking-tight">
-                  {selected.amount}
+                  {previewAmountVnd(selected.amountVnd, code) !== selected.amountVnd ? (
+                    <>
+                      <span className="mr-3 text-[24px] text-[var(--color-ink-muted)] line-through">
+                        {formatVnd(selected.amountVnd)}
+                      </span>
+                      {formatVnd(previewAmountVnd(selected.amountVnd, code))}
+                    </>
+                  ) : (
+                    formatVnd(selected.amountVnd)
+                  )}
                 </div>
                 <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                   {selected.note}
@@ -152,6 +177,19 @@ function CheckoutInner() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   className="mt-2 w-full rounded-xl border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-[14px] outline-none focus:border-[var(--color-accent)]"
+                />
+              </label>
+
+              <label className="mt-6 block">
+                <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
+                  Mã giảm giá (nếu có)
+                </span>
+                <input
+                  type="text"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  placeholder="VOCHI20"
+                  className="mt-2 w-full rounded-xl border border-[var(--color-hairline-strong)] bg-white px-4 py-3 text-[14px] uppercase outline-none focus:border-[var(--color-accent)]"
                 />
               </label>
 
