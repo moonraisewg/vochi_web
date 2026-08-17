@@ -11,6 +11,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingActions } from "@/components/FloatingActions";
 import { ScrollDots } from "@/components/ScrollDots";
 import { SubscribePopup } from "@/components/SubscribePopup";
+import { ReferralCodeNotice } from "@/components/ReferralCodeNotice";
 import { useLang } from "@/components/LangProvider";
 
 export default function Home() {
@@ -19,6 +20,12 @@ export default function Home() {
   return (
     <main className="relative">
       <Nav lang={lang} onLangChange={setLang} />
+      {/* Chỉ render khi khách tới từ link mời có ?ref=; bình thường là null.
+          Đặt trên fold vì đây là thứ người được mời cần thấy trước tiên —
+          container khớp Hero để lề trái thẳng hàng với tiêu đề. */}
+      <div className="mx-auto max-w-[1280px] px-6">
+        <ReferralCodeNotice lang={lang} />
+      </div>
       <Hero lang={lang} />
       <Features lang={lang} />
       <Manifesto lang={lang} />
