@@ -1,32 +1,14 @@
-"use client";
+import type { Metadata } from "next";
+import { buildPageMetadata, resolveSeoLang } from "@/lib/seo/pageMeta";
+import HomeClient from "./page-client";
 
-import { Nav } from "@/components/Nav";
-import { Hero } from "@/components/Hero";
-import { Features } from "@/components/Features";
-import { Method } from "@/components/Method";
-import { Manifesto } from "@/components/Manifesto";
-import { PricingTeaser } from "@/components/PricingTeaser";
-import { FAQ } from "@/components/FAQ";
-import { Footer } from "@/components/Footer";
-import { FloatingActions } from "@/components/FloatingActions";
-import { ScrollDots } from "@/components/ScrollDots";
-import { useLang } from "@/components/LangProvider";
+type Props = { searchParams: Promise<{ lang?: string | string[] }> };
 
-export default function Home() {
-  const { lang, setLang } = useLang();
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const lang = await resolveSeoLang((await searchParams).lang);
+  return buildPageMetadata("home", "/", lang);
+}
 
-  return (
-    <main className="relative">
-      <Nav lang={lang} onLangChange={setLang} />
-      <Hero lang={lang} />
-      <Features lang={lang} />
-      <Manifesto lang={lang} />
-      <Method lang={lang} />
-      <PricingTeaser lang={lang} />
-      <FAQ lang={lang} />
-      <Footer lang={lang} />
-      <ScrollDots lang={lang} />
-      <FloatingActions />
-    </main>
-  );
+export default function Page() {
+  return <HomeClient />;
 }
