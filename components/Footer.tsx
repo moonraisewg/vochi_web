@@ -19,6 +19,7 @@ const COPY = {
     fanpage: "Fanpage Facebook",
     community: "Cộng đồng Facebook",
     docs: "Cẩm nang",
+    tips: "Mẹo học",
     changelog: "Cập nhật",
     address: "Việt Nam",
     rights: "Vô chi, 2026.",
@@ -39,6 +40,7 @@ const COPY = {
     fanpage: "Facebook Fanpage",
     community: "Facebook Community",
     docs: "Handbook",
+    tips: "Tips",
     changelog: "Updates",
     address: "Vietnam",
     rights: "Vô chi, 2026.",
@@ -106,6 +108,7 @@ export function Footer({ lang }: { lang: Lang }) {
               <li><Link href="/pricing" className="hover:text-[var(--color-ink)]">{t.pricing}</Link></li>
               <li><Link href="/changelog" className="hover:text-[var(--color-ink)]">{t.changelog}</Link></li>
               <li><Link href="/docs" className="hover:text-[var(--color-ink)]">{t.docs}</Link></li>
+              <li><Link href="/tips" className="hover:text-[var(--color-ink)]">{t.tips}</Link></li>
             </ul>
           </div>
 

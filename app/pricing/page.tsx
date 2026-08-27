@@ -1,18 +1,14 @@
-"use client";
+import type { Metadata } from "next";
+import { buildPageMetadata, resolveSeoLang } from "@/lib/seo/pageMeta";
+import PricingPage from "./page-client";
 
-import { PageShell } from "@/components/PageShell";
-import { PricingTeaser } from "@/components/PricingTeaser";
-import { FAQ } from "@/components/FAQ";
+type Props = { searchParams: Promise<{ lang?: string | string[] }> };
 
-export default function PricingPage() {
-  return (
-    <PageShell>
-      {(lang) => (
-        <>
-          <PricingTeaser lang={lang} />
-          <FAQ lang={lang} />
-        </>
-      )}
-    </PageShell>
-  );
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const lang = await resolveSeoLang((await searchParams).lang);
+  return buildPageMetadata("pricing", "/pricing", lang);
+}
+
+export default function Page() {
+  return <PricingPage />;
 }

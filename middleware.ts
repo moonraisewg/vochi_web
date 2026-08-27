@@ -1,8 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const COOKIE = "vochi_lang";
-const ONE_YEAR = 60 * 60 * 24 * 365;
-
 // The backend moved to vochi-api (api.vochi.xyz). Everything under /api/ here is
 // a leftover from before that cutover, still running this app's pre-migration
 // Prisma schema against the SAME production Postgres — a shape the DB no longer
@@ -18,10 +15,11 @@ const API_ALLOWLIST = new Set([
   "/api/og/stats",
 ]);
 
-// Pick the visitor's default language from edge geo headers.
-// Vercel adds `x-vercel-ip-country`; Cloudflare adds `cf-ipcountry`.
-// VN -> Vietnamese, everyone else -> English. Existing cookie wins,
-// so a user toggling EN inside Vietnam doesn't get reverted on next visit.
+// Language detection lives in resolveSeoLang / resolveHtmlLang — resolved per
+// request from edge geo headers + Accept-Language, with the user's cookie
+// overriding both. Middleware no longer writes the cookie: doing so collapsed
+// "user picked" and "geo default" into the same key, so a user who toggled EN
+// in Vietnam was flipped back to VI on next visit.
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (pathname.startsWith("/api/") && !API_ALLOWLIST.has(pathname)) {
@@ -31,32 +29,9 @@ export function middleware(req: NextRequest) {
       { status: 410 },
     );
   }
-
-  const res = NextResponse.next();
-  if (req.cookies.get(COOKIE)) return res;
-
-  const country = (
-    req.headers.get("x-vercel-ip-country") ||
-    req.headers.get("cf-ipcountry") ||
-    ""
-  )
-    .trim()
-    .toUpperCase();
-
-  const lang = country === "VN" ? "vi" : "en";
-  res.cookies.set(COOKIE, lang, {
-    path: "/",
-    maxAge: ONE_YEAR,
-    sameSite: "lax",
-  });
-  return res;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    // Every /api/* request, so the allowlist above is the only way in.
-    "/api/:path*",
-    // User-facing pages (language cookie). Static assets skipped.
-    "/((?!_next/static|_next/image|favicon.ico|icon|opengraph|og.png|robots.txt|sitemap.xml|manifest|api/).*)",
-  ],
+  matcher: ["/api/:path*"],
 };
