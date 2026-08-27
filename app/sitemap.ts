@@ -21,8 +21,16 @@ const ENTRIES: Entry[] = [
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
 ];
 
-const enUrl = (path: string) => `${SITE_URL}${path}${path.includes("?") ? "&" : "?"}lang=en`;
-const viUrl = (path: string) => `${SITE_URL}${path || "/"}`;
+// Root path "" becomes "/" so the EN alt for the homepage is
+// https://vochi.xyz/?lang=en (matches the canonical the page sets),
+// not https://vochi.xyz?lang=en which mismatched and made Google flag the
+// alternate/canonical pair as inconsistent.
+const withSlash = (path: string): string => (path === "" ? "/" : path);
+const enUrl = (path: string) => {
+  const p = withSlash(path);
+  return `${SITE_URL}${p}${p.includes("?") ? "&" : "?"}lang=en`;
+};
+const viUrl = (path: string) => `${SITE_URL}${withSlash(path)}`;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
