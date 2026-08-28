@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { listPosts } from "@/lib/tips/posts";
-import { TOPICS, topicKeys } from "@/lib/tips/topics";
+import { postsForTopic, TOPICS, topicKeys } from "@/lib/tips/topics";
+import { postUrl } from "@/lib/tips/urls";
 
 const SITE_URL = "https://vochi.xyz";
 
@@ -8,17 +9,30 @@ type Entry = {
   path: string;
   priority: number;
   changeFrequency: "weekly" | "monthly" | "yearly";
+  /** Ngày trang đổi nội dung lần cuối (YYYY-MM-DD).
+   *
+   *  CỐ Ý khai tay thay vì `new Date()`: một sitemap báo "cả site vừa đổi" sau
+   *  mỗi lần deploy là cách nhanh nhất để Google học cách bỏ qua lastmod của
+   *  mình. Sửa trang nào thì đổi ngày trang đó. Các trang do nội dung sinh ra
+   *  (/tips, hub chủ đề, bài viết) lấy ngày từ chính bài, không khai ở đây. */
+  lastModified: string;
 };
 
+/** Ngày của bài mới nhất trong danh sách — lastmod cho trang tổng hợp. */
+function newestDate(posts: Array<{ publishedAt: string; updatedAt?: string }>): string | null {
+  const dates = posts.map((p) => p.updatedAt ?? p.publishedAt).sort();
+  return dates.length ? dates[dates.length - 1] : null;
+}
+
 const ENTRIES: Entry[] = [
-  { path: "", priority: 1.0, changeFrequency: "weekly" },
-  { path: "/download", priority: 0.9, changeFrequency: "weekly" },
-  { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/tips", priority: 0.8, changeFrequency: "weekly" },
-  { path: "/docs", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/changelog", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
-  { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
+  { path: "", priority: 1.0, changeFrequency: "weekly", lastModified: "2026-08-27" },
+  { path: "/download", priority: 0.9, changeFrequency: "weekly", lastModified: "2026-08-27" },
+  { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: "2026-08-27" },
+  { path: "/tips", priority: 0.8, changeFrequency: "weekly", lastModified: "2026-08-27" },
+  { path: "/docs", priority: 0.7, changeFrequency: "monthly", lastModified: "2026-08-27" },
+  { path: "/changelog", priority: 0.7, changeFrequency: "monthly", lastModified: "2026-08-27" },
+  { path: "/privacy", priority: 0.3, changeFrequency: "yearly", lastModified: "2026-08-27" },
+  { path: "/terms", priority: 0.3, changeFrequency: "yearly", lastModified: "2026-08-27" },
 ];
 
 // Root path "" becomes "/" so the EN alt for the homepage is
@@ -33,25 +47,27 @@ const enUrl = (path: string) => {
 const viUrl = (path: string) => `${SITE_URL}${withSlash(path)}`;
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
   const entries: MetadataRoute.Sitemap = [];
+  // /tips liệt kê bài nên nó "đổi" khi có bài mới, không phải khi deploy.
+  const newestPost = newestDate([...listPosts("vi"), ...listPosts("en")]);
 
-  for (const { path, priority, changeFrequency } of ENTRIES) {
+  for (const { path, priority, changeFrequency, lastModified } of ENTRIES) {
     const languages = {
       "vi-VN": viUrl(path),
       "en-US": enUrl(path),
       "x-default": viUrl(path),
     };
+    const stamp = path === "/tips" ? (newestPost ?? lastModified) : lastModified;
     entries.push({
       url: viUrl(path),
-      lastModified: now,
+      lastModified: stamp,
       changeFrequency,
       priority,
       alternates: { languages },
     });
     entries.push({
       url: enUrl(path),
-      lastModified: now,
+      lastModified: stamp,
       changeFrequency,
       priority: Math.max(0.1, priority - 0.1),
       alternates: { languages },
@@ -63,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // "/tai-lieu", một alt EN sẽ lệch canonical đúng kiểu mà chú thích ở trên cảnh báo.
   entries.push({
     url: viUrl("/tai-lieu"),
-    lastModified: now,
+    lastModified: "2026-08-17",
     changeFrequency: "monthly",
     priority: 0.8,
   });
@@ -77,7 +93,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         : `${SITE_URL}${topic.path}`;
     entries.push({
       url,
-      lastModified: now,
+      lastModified: newestDate(postsForTopic(topic)) ?? "2026-08-27",
       changeFrequency: "weekly",
       priority: 0.7,
     });
@@ -87,10 +103,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // URL. Google understands the alt is the /tips index in the other lang,
   // not a machine-translated version we don't have.
   for (const post of [...listPosts("vi"), ...listPosts("en")]) {
-    const path = `/tips/${post.slug}`;
     entries.push({
-      url: post.lang === "en" ? enUrl(path) : viUrl(path),
-      lastModified: new Date(post.updatedAt ?? post.publishedAt),
+      url: postUrl(post),
+      lastModified: post.updatedAt ?? post.publishedAt,
       changeFrequency: "monthly",
       priority: 0.6,
     });
