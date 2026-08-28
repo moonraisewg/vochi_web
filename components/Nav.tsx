@@ -3,6 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  trackDownloadClick,
+  useDownloadTarget,
+  type DownloadPlatform,
+} from "@/lib/useDownloadHref";
 
 export type Lang = "vi" | "en";
 
@@ -12,14 +17,26 @@ const COPY = {
     pricing: "Bảng giá",
     docs: "Cẩm nang",
     changelog: "Cập nhật",
-    download: "Tải miễn phí",
+    download: {
+      unknown: "Tải miễn phí",
+      mac: "Tải cho macOS",
+      windows: "Tải cho Windows",
+      ios: "Tải App Store",
+      android: "Tải App Store",
+    } satisfies Record<DownloadPlatform, string>,
   },
   en: {
     features: "How it works",
     pricing: "Pricing",
     docs: "Handbook",
     changelog: "Updates",
-    download: "Download free",
+    download: {
+      unknown: "Download free",
+      mac: "Download for macOS",
+      windows: "Download for Windows",
+      ios: "App Store",
+      android: "App Store",
+    } satisfies Record<DownloadPlatform, string>,
   },
 };
 
@@ -31,6 +48,7 @@ export function Nav({
   onLangChange: (l: Lang) => void;
 }) {
   const t = COPY[lang];
+  const download = useDownloadTarget();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -81,10 +99,11 @@ export function Nav({
 
         <div className="flex items-center gap-3">
           <Link
-            href="/download"
+            href={download.href}
+            onClick={() => trackDownloadClick(download, "nav_desktop")}
             className="hidden rounded-full bg-[var(--color-ink)] px-4 py-2 text-[13px] font-medium text-[var(--color-surface)] transition-all hover:bg-[var(--color-accent-deep)] md:inline-block"
           >
-            {t.download}
+            {t.download[download.platform]}
           </Link>
           <LangSwitch lang={lang} onChange={onLangChange} />
           <button
@@ -105,11 +124,14 @@ export function Nav({
             <Link href="/docs" onClick={() => setOpen(false)}>{t.docs}</Link>
             <Link href="/changelog" onClick={() => setOpen(false)}>{t.changelog}</Link>
             <Link
-              href="/download"
-              onClick={() => setOpen(false)}
+              href={download.href}
+              onClick={() => {
+                trackDownloadClick(download, "nav_mobile");
+                setOpen(false);
+              }}
               className="mt-1 rounded-full bg-[var(--color-ink)] px-4 py-2 text-center text-[13px] font-medium text-[var(--color-surface)]"
             >
-              {t.download}
+              {t.download[download.platform]}
             </Link>
           </nav>
         </div>

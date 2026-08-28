@@ -33,9 +33,13 @@ describe("legacy /api/* is closed", () => {
     },
   );
 
-  it("still picks the language cookie on normal pages", () => {
-    const res = middleware(req("/checkout"));
+  // Language detection moved into the render path (see lib/seo/pageMeta.ts and
+  // app/layout.tsx). Middleware no longer writes the vochi_lang cookie; that
+  // key is now reserved for the in-app language toggle so a user pick can
+  // outlive a geo default.
+  it("does not touch the language cookie", () => {
+    const res = middleware(req("/pricing"));
     expect(res.status).not.toBe(410);
-    expect(res.cookies.get("vochi_lang")?.value).toBe("en");
+    expect(res.cookies.get("vochi_lang")).toBeUndefined();
   });
 });

@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# MANUAL FALLBACK. The primary path is automated: app CI uploads the DMG to R2
+# and opens a vochi_web PR via .github/workflows/update-download-links.yml. Use
+# this script only when CI is unavailable.
+#
 # Usage: ./scripts/publish-release.sh <dmg-path> <exe-path>
 # Requires CLOUDFLARE_API_TOKEN in .env.local or environment.
 

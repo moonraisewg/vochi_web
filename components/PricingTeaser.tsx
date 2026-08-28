@@ -33,6 +33,11 @@ const COPY = {
         id: "one_month",
         name: "1 tháng",
         price: "59.000đ",
+        priceMonthly: "59.000đ",
+        priceMonthlyStudent: "29.000đ",
+        perMonthSuffix: "/tháng",
+        totalLine: "tổng 59.000đ",
+        totalLineStudent: "tổng 29.000đ",
         priceNote: "thử trước khi chốt lâu dài",
         compare: "≈ 2 ly trà sữa Mixue",
         compareStudent: "≈ 1 ly trà sữa Mixue size lớn",
@@ -49,7 +54,12 @@ const COPY = {
         id: "three_months",
         name: "3 tháng",
         price: "129.000đ",
-        priceNote: "khoảng 43.000đ mỗi tháng",
+        priceMonthly: "43.000đ",
+        priceMonthlyStudent: "21.500đ",
+        perMonthSuffix: "/tháng",
+        totalLine: "tổng 129.000đ · trả 1 lần cho 3 tháng",
+        totalLineStudent: "tổng 64.500đ · trả 1 lần cho 3 tháng",
+        priceNote: "gói 3 tháng, trả 1 lần",
         compare: "≈ 1 buổi The Coffee House cùng bánh",
         compareStudent: "≈ 2 ly Phúc Long size M",
         cta: "Nuôi thử 3 tháng",
@@ -65,6 +75,7 @@ const COPY = {
         id: "lifetime",
         name: "Lifetime",
         price: "599.000đ",
+        priceStudent: "249.000đ",
         priceNote: "trả một lần, dùng trọn đời",
         compare: "≈ 1 buổi đi xem phim CGV cùng bạn",
         compareStudent: "≈ 1 lần lượn POP MART chọn em yêu thích",
@@ -109,6 +120,11 @@ const COPY = {
         id: "one_month",
         name: "1 month",
         price: "59.000đ",
+        priceMonthly: "59.000đ",
+        priceMonthlyStudent: "29.000đ",
+        perMonthSuffix: "/month",
+        totalLine: "total 59.000đ",
+        totalLineStudent: "total 29.000đ",
         priceNote: "try before you commit",
         compare: "≈ two bubble teas",
         compareStudent: "≈ one large bubble tea",
@@ -125,7 +141,12 @@ const COPY = {
         id: "three_months",
         name: "3 months",
         price: "129.000đ",
-        priceNote: "about 43k a month",
+        priceMonthly: "43.000đ",
+        priceMonthlyStudent: "21.500đ",
+        perMonthSuffix: "/month",
+        totalLine: "total 129.000đ · billed once for 3 months",
+        totalLineStudent: "total 64.500đ · billed once for 3 months",
+        priceNote: "3 months, billed once",
         compare: "≈ one café outing with snacks",
         compareStudent: "≈ two specialty drinks",
         cta: "Raise it for 3 months",
@@ -141,6 +162,7 @@ const COPY = {
         id: "lifetime",
         name: "Lifetime",
         price: "599.000đ",
+        priceStudent: "249.000đ",
         priceNote: "pay once, keep forever",
         compare: "≈ one movie night with friends",
         compareStudent: "≈ one POP MART blind-box hunt",
@@ -239,32 +261,59 @@ export function PricingTeaser({ lang }: { lang: Lang }) {
                 <h3 className="font-display text-[20px] tracking-tight">{plan.name}</h3>
               </div>
 
-              <div className="mt-5">
-                {isStudent && plan.id !== "free" ? (
-                  <>
-                    <div className="font-display text-[20px] leading-none tracking-tight text-[var(--color-ink-muted)] line-through decoration-[var(--color-hairline-strong)]">
-                      {plan.price}
+              {(() => {
+                const hasMonthly = Boolean(plan.priceMonthly);
+                const discountable = plan.id !== "free";
+                const showDiscount = isStudent && discountable;
+                const oldPrice = hasMonthly ? plan.priceMonthly : plan.price;
+                const mainPrice = hasMonthly
+                  ? (showDiscount ? plan.priceMonthlyStudent : plan.priceMonthly)
+                  : (showDiscount ? plan.priceStudent : plan.price);
+                const totalLine = hasMonthly
+                  ? (showDiscount ? plan.totalLineStudent : plan.totalLine)
+                  : null;
+                return (
+                  <div className="mt-5">
+                    {showDiscount && (
+                      <div className="mb-1.5 flex items-center gap-2">
+                        <span className="font-display text-[16px] leading-none tracking-tight text-[var(--color-ink-muted)] line-through decoration-[var(--color-hairline-strong)]">
+                          {oldPrice}
+                        </span>
+                        <span className="rounded-full bg-[var(--color-accent)] px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white">
+                          -50%
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex items-baseline gap-1.5">
+                      <span
+                        className={`font-display text-[30px] leading-none tracking-tight ${
+                          showDiscount ? "text-[var(--color-accent)]" : ""
+                        }`}
+                      >
+                        {mainPrice}
+                      </span>
+                      {hasMonthly && (
+                        <span className="text-[13px] font-medium text-[var(--color-ink-soft)]">
+                          {plan.perMonthSuffix}
+                        </span>
+                      )}
                     </div>
-                    <div className="mt-1 font-display text-[30px] leading-none tracking-tight text-[var(--color-accent)]">
-                      {plan.id === "one_month" ? "29.000đ" :
-                       plan.id === "three_months" ? "65.000đ" :
-                       "249.000đ"}
+                    {totalLine && (
+                      <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-soft)]">
+                        {totalLine}
+                      </div>
+                    )}
+                    <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
+                      {plan.priceNote}
                     </div>
-                  </>
-                ) : (
-                  <div className="font-display text-[30px] leading-none tracking-tight">
-                    {plan.price}
+                    {(isStudent ? plan.compareStudent : plan.compare) && (
+                      <div className="mt-2 text-[12.5px] italic leading-snug text-[var(--color-ink-soft)]">
+                        {isStudent ? plan.compareStudent : plan.compare}
+                      </div>
+                    )}
                   </div>
-                )}
-                <div className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
-                  {plan.priceNote}
-                </div>
-                {(isStudent ? plan.compareStudent : plan.compare) && (
-                  <div className="mt-2 text-[12.5px] italic leading-snug text-[var(--color-ink-soft)]">
-                    {isStudent ? plan.compareStudent : plan.compare}
-                  </div>
-                )}
-              </div>
+                );
+              })()}
 
               <ul className="mt-6 flex-1 space-y-2.5 border-t border-[var(--color-hairline)] pt-5 text-[13.5px] leading-[1.45] text-[var(--color-ink-soft)]">
                 {plan.features.map((f) => (

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion, useAnimationFrame } from "motion/react";
+import type { Lang } from "./Nav";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -16,6 +17,27 @@ const SRC: Record<Animation, string> = {
   learning: "/lottie/Learning.json",
 };
 
+const LABELS = {
+  vi: {
+    live: "Đang sống",
+    level: "Cấp",
+    hunger: "Sức khoẻ",
+    due: "Đến hạn",
+    skip: "Bỏ qua",
+    feed: "Cho ăn",
+    reveal: "Xem",
+  },
+  en: {
+    live: "Live",
+    level: "Lvl",
+    hunger: "Health",
+    due: "Due",
+    skip: "Skip",
+    feed: "Feed",
+    reveal: "Reveal",
+  },
+} as const;
+
 const WORDS = [
   { en: "ephemeral", vi: "phù du", phon: "/ɪˈfem.ər.əl/" },
   { en: "serendipity", vi: "duyên may", phon: "/ˌser.ənˈdɪp.ə.ti/" },
@@ -26,7 +48,14 @@ const WORDS = [
   { en: "resilient", vi: "kiên cường", phon: "/rɪˈzɪl.i.ənt/" },
 ];
 
-export function PetDevice({ className = "" }: { className?: string }) {
+export function PetDevice({
+  className = "",
+  lang = "vi",
+}: {
+  className?: string;
+  lang?: Lang;
+}) {
+  const L = LABELS[lang];
   const [animationData, setAnimationData] = useState<Record<string, unknown> | null>(null);
   // A short-lived override (eating/happy) set by feed(); when null, the displayed
   // animation is derived from hunger so we never setState in an effect.
@@ -94,11 +123,11 @@ export function PetDevice({ className = "" }: { className?: string }) {
             <div className="flex items-center gap-1.5">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
-                Live
+                {L.live}
               </span>
             </div>
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-              Lvl 04
+              {L.level} 04
             </span>
           </div>
 
@@ -110,7 +139,7 @@ export function PetDevice({ className = "" }: { className?: string }) {
           {/* hunger meter */}
           <div className="mt-5 flex items-center gap-3">
             <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-soft)]">
-              Hunger
+              {L.hunger}
             </span>
             <div className="h-1 flex-1 overflow-hidden rounded-full bg-[var(--color-hairline)]">
               <motion.div
@@ -136,7 +165,7 @@ export function PetDevice({ className = "" }: { className?: string }) {
             <div className="flex items-baseline justify-between">
               <span className="font-display text-[20px] tracking-tight">{word.en}</span>
               <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--color-ink-muted)]">
-                Due
+                {L.due}
               </span>
             </div>
             <div className="mt-1 flex items-center justify-between gap-2">
@@ -155,9 +184,9 @@ export function PetDevice({ className = "" }: { className?: string }) {
 
           {/* controls */}
           <div className="mt-5 grid grid-cols-3 gap-2">
-            <ControlButton onClick={() => setWordIdx((i) => i + 1)} label="Skip" />
-            <ControlButton onClick={feed} label="Feed" primary />
-            <ControlButton onClick={() => setRevealed((r) => !r)} label="Reveal" />
+            <ControlButton onClick={() => setWordIdx((i) => i + 1)} label={L.skip} />
+            <ControlButton onClick={feed} label={L.feed} primary />
+            <ControlButton onClick={() => setRevealed((r) => !r)} label={L.reveal} />
           </div>
         </div>
       </motion.div>
