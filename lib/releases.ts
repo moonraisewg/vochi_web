@@ -21,11 +21,11 @@ export type Releases = {
 
 export const RELEASES: Releases = {
   mac: {
-    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.2.2_universal.dmg",
-    sha256: "47cb871fc934bda2ccbd045dc69aa55f535dec30ca19394564f2a8a97e9680b3",
+    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.3.0_universal.dmg",
+    sha256: "f7e15d9f820897884b4d768d78fc94e75ce9aad37ae3b11bb13c5642fa0f666b",
   },
   windows: {
-    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.2.2_x64-setup.exe",
-    sha256: "12f8af81f9476f8622ea0b08ed501dde8ef554aa13eb1ffdcf7a1d6682ceda2f",
+    url: "https://pub-473da2442c814f8396ee4d39873e0829.r2.dev/Vochi_0.3.0_x64-setup.exe",
+    sha256: "d89c4cb72b420d8110569d862352537f61665ba2c7a11d7d6fbab776d67f9e82",
   },
 };
