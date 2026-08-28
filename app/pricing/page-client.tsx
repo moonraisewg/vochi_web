@@ -9,7 +9,7 @@ export default function PricingPage() {
     <PageShell>
       {(lang) => (
         <>
-          <PricingTeaser lang={lang} />
+          <PricingTeaser lang={lang} titleAs="h1" />
           <FAQ lang={lang} />
         </>
       )}

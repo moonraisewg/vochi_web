@@ -114,7 +114,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
   },
   download: {
     vi: {
-      title: "Tải Vô chi cho macOS và Windows · Miễn phí",
+      title: "Tải app học từ vựng cho macOS và Windows · Miễn phí",
       description:
         "Tải Vô chi cho macOS 12+ (Apple Silicon & Intel) và Windows 10+. App học từ vựng tiếng Anh cho người Việt. Miễn phí.",
       keywords: [
@@ -130,7 +130,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
         "Cài Vô chi trên macOS 12+ hoặc Windows 10+. Học từ vựng tiếng Anh mỗi ngày.",
     },
     en: {
-      title: "Download Vô chi for macOS & Windows · Free",
+      title: "Download the offline HSK vocabulary app · Free",
       description:
         "Download Vô chi for macOS 12+ (Apple Silicon & Intel) and Windows 10+. Learn Mandarin Chinese HSK vocabulary. Free.",
       keywords: [
@@ -179,7 +179,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
   },
   changelog: {
     vi: {
-      title: "Changelog · Lịch sử cập nhật Vô chi",
+      title: "Changelog · Lịch sử cập nhật",
       description:
         "Tính năng mới, cải tiến và bản sửa lỗi của Vô chi. Đăng nhập Google, VietQR, chế độ ngủ theo lịch.",
       keywords: ["vô chi changelog", "vochi update", "lịch sử phiên bản vô chi"],
@@ -187,7 +187,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
       ogDescription: "Tính năng mới, cải tiến, bản vá gần nhất.",
     },
     en: {
-      title: "Changelog · Vô chi release notes",
+      title: "Changelog · Release notes",
       description:
         "New features, improvements and fixes in Vô chi. Google Sign-in, VietQR, scheduled sleep mode.",
       keywords: ["vochi changelog", "vochi release notes", "vochi updates"],
@@ -205,7 +205,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
       ogDescription: "Dữ liệu lưu trên thiết bị. Không telemetry. Không huấn luyện AI.",
     },
     en: {
-      title: "Privacy · Vô chi data policy",
+      title: "Privacy · Data policy",
       description:
         "Vô chi privacy policy under Vietnam PDPL (Decree 13/2023) and GDPR. Learning data stays on device. No telemetry. No AI training.",
       keywords: ["vochi privacy", "PDPL", "GDPR", "vocabulary app privacy"],
@@ -215,7 +215,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
   },
   tips: {
     vi: {
-      title: "Mẹo học · Blog Vô chi",
+      title: "Mẹo học · Blog",
       description:
         "Mẹo học từ vựng tiếng Anh cho người Việt: IELTS, TOEIC, FSRS, spaced repetition. Bài viết ngắn, có thể áp dụng ngay.",
       keywords: [
@@ -230,7 +230,7 @@ const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
       ogDescription: "IELTS, TOEIC, FSRS, SRS. Bài ngắn, áp dụng ngay.",
     },
     en: {
-      title: "Tips · Vô chi blog",
+      title: "Tips · Blog",
       description:
         "Tips for learning Mandarin Chinese: HSK 1–6, characters, tones, FSRS spaced repetition. Short posts you can act on today.",
       keywords: [
