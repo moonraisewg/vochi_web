@@ -3,6 +3,7 @@ slug: fsrs-la-gi-so-sanh-anki
 lang: vi
 title: "FSRS là gì? Vì sao nhớ lâu hơn Anki mà học ít hơn"
 description: "FSRS (Free Spaced Repetition Scheduler) là thuật toán ôn từ mới nhất, giảm 40% số lần ôn so với Anki mặc định mà vẫn giữ retention 90%. Cách hoạt động và khác biệt so với SM-2."
+metaDescription: "FSRS là thuật toán ôn tập mới, giảm 40% số lần ôn so với Anki mặc định mà vẫn giữ retention 90%. Cách hoạt động và khác biệt với SM-2."
 keywords: [FSRS là gì, so sánh FSRS Anki, spaced repetition tiếng anh, SRS học từ vựng, SM-2 vs FSRS, học từ vựng nhớ lâu, thuật toán học từ vựng]
 publishedAt: 2026-08-10
 updatedAt: 2026-08-27

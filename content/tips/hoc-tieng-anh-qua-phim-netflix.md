@@ -2,6 +2,7 @@
 slug: hoc-tieng-anh-qua-phim-netflix
 lang: vi
 title: "Học tiếng Anh qua phim Netflix (đúng cách, không chỉ xem xong quên)"
+metaTitle: "Học tiếng Anh qua phim Netflix đúng cách"
 description: "Xem phim để giải trí không cải thiện tiếng Anh. Xem phim đúng phương pháp: chọn thể loại, active listening, và ghi từ vào SRS. 30 phút/ngày, 3 tháng lên trình."
 keywords: [học tiếng anh qua phim, học tiếng anh qua Netflix, phim học tiếng Anh, active listening tiếng anh, học tiếng anh qua series, phim Netflix học tiếng Anh]
 publishedAt: 2026-09-01

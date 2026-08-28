@@ -2,6 +2,7 @@
 slug: lo-trinh-tu-hoc-ielts-6-thang
 lang: vi
 title: "Lộ trình tự học IELTS 6 tháng từ 5.0 lên 7.0 (không đi trung tâm)"
+metaTitle: "Lộ trình tự học IELTS 6 tháng: từ 5.0 lên 7.0"
 description: "Lộ trình chia 6 tháng, mỗi giai đoạn 30 ngày, tập trung SRS từ vựng + luyện đề. Áp dụng cho người có nền tảng B1 và 1 giờ/ngày."
 keywords: [lộ trình tự học IELTS, tự học IELTS 7.0, lộ trình học IELTS 6 tháng, tự học IELTS tại nhà, IELTS 5.0 lên 7.0, kế hoạch học IELTS]
 publishedAt: 2026-08-20

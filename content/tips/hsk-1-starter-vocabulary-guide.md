@@ -3,6 +3,7 @@ slug: hsk-1-starter-vocabulary-guide
 lang: en
 title: "HSK 1 starter guide: 150 words that unlock basic Mandarin"
 description: "The 150 HSK 1 words let you order food, ask directions, and hold a first conversation. A study plan that gets you there in 30 days with FSRS spaced repetition, 10 minutes a day."
+metaDescription: "The 150 HSK 1 words let you order food, ask directions and hold a first conversation. A 30-day plan with FSRS spaced repetition, 10 minutes a day."
 keywords: [HSK 1, HSK 1 vocabulary, learn Chinese beginner, learn Mandarin beginner, Chinese vocabulary app, spaced repetition Chinese, FSRS Chinese, Chinese flashcards]
 publishedAt: 2026-08-05
 updatedAt: 2026-08-27

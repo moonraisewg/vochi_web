@@ -2,6 +2,7 @@
 slug: hoc-tu-vung-toeic-750-nguoi-di-lam
 lang: vi
 title: "Học từ vựng TOEIC 750+ cho người đi làm (chiến thuật theo Part)"
+metaTitle: "Từ vựng TOEIC 750+ cho người đi làm (theo từng Part)"
 description: "Danh sách từ vựng TOEIC 750+ chia theo Part 1–7, cụm cố định trong Listening, và cách dùng SRS để nhớ 2.000 từ trong 90 ngày với 20 phút/ngày."
 keywords: [học từ vựng TOEIC, TOEIC 750, TOEIC cho người đi làm, TOEIC Listening, TOEIC Reading, TOEIC Part 5, từ vựng TOEIC theo Part, chiến thuật TOEIC]
 publishedAt: 2026-08-22

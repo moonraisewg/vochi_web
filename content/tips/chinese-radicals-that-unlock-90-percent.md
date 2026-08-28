@@ -3,6 +3,7 @@ slug: chinese-radicals-that-unlock-90-percent
 lang: en
 title: "The 50 Chinese radicals that unlock 90% of characters"
 description: "Instead of memorizing 3,000 characters, learn 50 radicals first. Each new character becomes a combination of things you already know. Full list with meanings and mnemonics."
+metaDescription: "Learn 50 radicals instead of memorizing 3,000 characters. Every new character becomes a combination you already know. Full list with meanings and mnemonics."
 keywords: [Chinese radicals, learn Chinese radicals, radical list Chinese, Chinese character components, memorize Chinese characters, 214 radicals, HSK radicals, Chinese character mnemonics]
 publishedAt: 2026-09-03
 readingMinutes: 6
