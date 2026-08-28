@@ -31,51 +31,54 @@ type Copy = {
 const COPY: Record<PageMetaKey, Record<SeoLang, Copy>> = {
   home: {
     vi: {
-      title: "Vô chi · Học tiếng Anh cùng pet ảo trên desktop",
+      title: "Vô chi · Học tiếng Anh AI cùng thú ảo",
       description:
-        "App học từ vựng tiếng Anh cho người Việt. Pet ảo sống trên macOS/Windows, 5.300 từ IELTS/TOEIC, thuật toán FSRS. Miễn phí, offline.",
+        "App AI học tiếng Anh cho người Việt. 5.300 từ IELTS/TOEIC, FSRS spaced repetition, pet ảo trên macOS/Windows. Miễn phí, offline.",
       keywords: [
-        "học tiếng anh",
-        "học từ vựng tiếng anh",
+        "học tiếng anh AI",
+        "app AI học tiếng anh",
+        "học tiếng anh với AI",
+        "AI luyện tiếng anh",
+        "AI học từ vựng tiếng anh",
+        "AI học IELTS",
+        "AI học TOEIC",
         "app học tiếng anh cho người việt",
-        "học IELTS",
-        "học TOEIC",
         "pet ảo học tiếng anh",
-        "tamagotchi học tiếng anh",
         "spaced repetition tiếng anh",
         "FSRS",
         "vô chi",
         "vochi",
       ],
-      ogTitle: "Vô chi · Học tiếng Anh cùng pet ảo desktop",
+      ogTitle: "Vô chi · Học tiếng Anh AI cùng thú ảo",
       ogDescription:
-        "5.300 từ IELTS/TOEIC, thuật toán FSRS, pet ảo sống trên màn hình. macOS & Windows. Miễn phí.",
+        "App AI học từ vựng tiếng Anh cho người Việt. IELTS/TOEIC, FSRS, pet ảo trên desktop. macOS & Windows. Miễn phí.",
     },
     en: {
-      title: "Vô chi · Learn Mandarin Chinese with a desktop pet",
+      title: "Vô chi · Learn Chinese with AI — HSK 1–6",
       description:
-        "Learn Chinese vocabulary (HSK 1–6) with a virtual pet that lives on your macOS/Windows desktop. FSRS spaced repetition. Free, offline.",
+        "AI-powered Chinese vocabulary app for HSK 1–6. FSRS spaced repetition, a virtual pet on your desktop. macOS/Windows. Free, offline.",
       keywords: [
-        "learn Chinese",
-        "learn Mandarin",
-        "HSK app",
+        "learn Chinese with AI",
+        "learn Chinese AI",
+        "AI Chinese learning app",
+        "AI HSK app",
+        "AI Mandarin app",
+        "learn Mandarin AI",
+        "Chinese vocabulary app AI",
         "HSK 1",
         "HSK 2",
         "HSK 3",
         "HSK 4",
         "HSK 5",
         "HSK 6",
-        "Chinese vocabulary app",
-        "Chinese flashcards",
         "spaced repetition Chinese",
-        "SRS Chinese",
-        "desktop pet vocabulary",
         "FSRS Chinese",
+        "desktop pet vocabulary",
         "vochi",
       ],
-      ogTitle: "Vô chi · Learn Chinese with a desktop pet",
+      ogTitle: "Vô chi · Learn Chinese with AI (HSK 1–6)",
       ogDescription:
-        "HSK 1–6 vocabulary with FSRS spaced repetition. A pet that lives on your desktop. macOS & Windows. Free.",
+        "AI-powered HSK vocabulary. FSRS spaced repetition. A pet on your desktop. macOS & Windows. Free.",
     },
   },
   pricing: {
@@ -290,7 +293,7 @@ function langFromAcceptLanguage(h: string | null): SeoLang | null {
 //   2. vochi_lang cookie     — the user's own toggle
 //   3. edge geo (Vercel/CF)  — VN → vi, else en; also what Googlebot from a US IP hits
 //   4. Accept-Language       — best-effort when no geo header (dev, non-Vercel edge)
-//   5. vi                    — Vietnamese-first product default
+//   5. en                    — English-first product default (widest reach; VI signal wins upstream)
 export async function resolveSeoLang(
   searchParamsLang?: string | string[] | undefined,
 ): Promise<SeoLang> {
@@ -311,7 +314,7 @@ export async function resolveSeoLang(
   const fromAccept = langFromAcceptLanguage(hdrs.get("accept-language"));
   if (fromAccept) return fromAccept;
 
-  return "vi";
+  return "en";
 }
 
 // Layouts don't get searchParams; use the same order minus (1).
@@ -331,7 +334,7 @@ export async function resolveHtmlLang(): Promise<SeoLang> {
   const fromAccept = langFromAcceptLanguage(hdrs.get("accept-language"));
   if (fromAccept) return fromAccept;
 
-  return "vi";
+  return "en";
 }
 
 function altPath(path: string, lang: SeoLang): string {
