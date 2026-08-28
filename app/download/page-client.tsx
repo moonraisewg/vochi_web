@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { PageShell } from "@/components/PageShell";
+import { ReferralCodeNotice } from "@/components/ReferralCodeNotice";
 import { RELEASES } from "@/lib/releases";
 import { apiUrl } from "@/lib/apiBase";
 import { getStoredUtm } from "@/lib/utm";
@@ -95,6 +96,9 @@ export default function DownloadPage() {
               <p className="mt-5 max-w-[560px] text-[17px] leading-[1.55] text-[var(--color-ink-soft)] md:text-[19px]">
                 {t.sub}
               </p>
+
+              {/* Chỉ hiện khi người dùng tới từ link mời có ?ref=. */}
+              <ReferralCodeNotice lang={lang} />
 
               <div className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[var(--color-ink-muted)]">
                 {t.detected}:{" "}

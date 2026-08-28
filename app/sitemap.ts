@@ -58,6 +58,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  // Trang tài liệu chỉ có bản tiếng Việt (PDF là nội dung tiếng Việt), nên phát
+  // một URL duy nhất, không kèm alt ?lang=en — layout của nó đặt canonical là
+  // "/tai-lieu", một alt EN sẽ lệch canonical đúng kiểu mà chú thích ở trên cảnh báo.
+  entries.push({
+    url: viUrl("/tai-lieu"),
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  });
+
   // Keyword-rich topic hubs. Single-lang, own canonical URL, no cross-lang alt.
   for (const key of topicKeys()) {
     const topic = TOPICS[key];
