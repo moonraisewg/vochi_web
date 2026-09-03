@@ -1,5 +1,6 @@
 import { listPosts } from "@/lib/tips/posts";
-import { TOPICS, topicKeys } from "@/lib/tips/topics";
+import { postsForTopic, TOPICS, topicKeys } from "@/lib/tips/topics";
+import { postUrl } from "@/lib/tips/urls";
 
 // Handcrafted so element order strictly matches sitemaps.org 0.9 XSD
 // (loc → lastmod → extension) instead of Next's built-in generator, which
@@ -12,16 +13,16 @@ export const revalidate = 3600;
 
 const SITE_URL = "https://vochi.xyz";
 
-type Entry = { path: string };
+type Entry = { path: string; lastModified: string };
 const ENTRIES: Entry[] = [
-  { path: "" },
-  { path: "/download" },
-  { path: "/pricing" },
-  { path: "/tips" },
-  { path: "/docs" },
-  { path: "/changelog" },
-  { path: "/privacy" },
-  { path: "/terms" },
+  { path: "", lastModified: "2026-08-29" },
+  { path: "/download", lastModified: "2026-08-27" },
+  { path: "/pricing", lastModified: "2026-08-28" },
+  { path: "/tips", lastModified: "2026-08-27" },
+  { path: "/docs", lastModified: "2026-08-27" },
+  { path: "/changelog", lastModified: "2026-08-27" },
+  { path: "/privacy", lastModified: "2026-08-27" },
+  { path: "/terms", lastModified: "2026-08-27" },
 ];
 
 const withSlash = (p: string): string => (p === "" ? "/" : p);
@@ -57,10 +58,6 @@ function urlBlock(loc: string, lastmod: string, alts: Alt[] = []): string {
   </url>`;
 }
 
-function isoDay(): string {
-  return new Date().toISOString().slice(0, 10);
-}
-
 function isoOfPost(publishedAt: string, updatedAt?: string): string {
   const raw = updatedAt ?? publishedAt;
   // Frontmatter usually has YYYY-MM-DD; keep the short form so the sitemap
@@ -68,19 +65,31 @@ function isoOfPost(publishedAt: string, updatedAt?: string): string {
   return raw.length <= 10 ? raw : raw.slice(0, 10);
 }
 
-export function GET() {
-  const today = isoDay();
-  const blocks: string[] = [];
+function newestDate(
+  posts: Array<{ publishedAt: string; updatedAt?: string }>,
+): string | null {
+  const dates = posts.map((post) => isoOfPost(post.publishedAt, post.updatedAt)).sort();
+  return dates.at(-1) ?? null;
+}
 
-  for (const { path } of ENTRIES) {
+export function buildSitemap(): string {
+  const blocks: string[] = [];
+  const allPosts = [...listPosts("vi"), ...listPosts("en")];
+  const newestPost = newestDate(allPosts);
+
+  for (const { path, lastModified } of ENTRIES) {
     const alts: Alt[] = [
       ["vi-VN", viUrl(path)],
       ["en-US", enUrl(path)],
       ["x-default", viUrl(path)],
     ];
-    blocks.push(urlBlock(viUrl(path), today, alts));
-    blocks.push(urlBlock(enUrl(path), today, alts));
+    const stamp = path === "/tips" ? (newestPost ?? lastModified) : lastModified;
+    blocks.push(urlBlock(viUrl(path), stamp, alts));
+    blocks.push(urlBlock(enUrl(path), stamp, alts));
   }
+
+  // This PDF page only exists in Vietnamese, so it has no EN alternate.
+  blocks.push(urlBlock(viUrl("/tai-lieu"), "2026-08-17"));
 
   // Topic hubs are single-lang; no cross-lang alt exists.
   for (const key of topicKeys()) {
@@ -89,28 +98,24 @@ export function GET() {
       topic.lang === "en"
         ? `${SITE_URL}${topic.path}?lang=en`
         : `${SITE_URL}${topic.path}`;
-    blocks.push(urlBlock(url, today));
+    blocks.push(urlBlock(url, newestDate(postsForTopic(topic)) ?? "2026-08-27"));
   }
 
   // Blog posts: each in its own lang, native URL only.
-  for (const post of [...listPosts("vi"), ...listPosts("en")]) {
-    const path = `/tips/${post.slug}`;
-    blocks.push(
-      urlBlock(
-        post.lang === "en" ? enUrl(path) : viUrl(path),
-        isoOfPost(post.publishedAt, post.updatedAt),
-      ),
-    );
+  for (const post of allPosts) {
+    blocks.push(urlBlock(postUrl(post), isoOfPost(post.publishedAt, post.updatedAt)));
   }
 
-  const body = `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${blocks.join("\n")}
 </urlset>
 `;
+}
 
-  return new Response(body, {
+export function GET() {
+  return new Response(buildSitemap(), {
     headers: {
       "content-type": "application/xml; charset=UTF-8",
       "cache-control": "public, s-maxage=3600, stale-while-revalidate=86400",

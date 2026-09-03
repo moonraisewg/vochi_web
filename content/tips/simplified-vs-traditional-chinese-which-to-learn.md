@@ -3,6 +3,7 @@ slug: simplified-vs-traditional-chinese-which-to-learn
 lang: en
 title: "Simplified vs Traditional Chinese: which should you learn?"
 description: "Simplified (mainland China, Singapore) or Traditional (Taiwan, Hong Kong, diaspora)? A no-nonsense guide based on where you plan to use it, plus how to switch later without redoing years of study."
+metaDescription: "Simplified (mainland, Singapore) or Traditional (Taiwan, Hong Kong)? Choose by where you will use it — plus how to switch later without losing years."
 keywords: [simplified vs traditional Chinese, which Chinese to learn, simplified Chinese, traditional Chinese, Mandarin script, learn Chinese Taiwan, learn Chinese mainland, Chinese characters]
 publishedAt: 2026-09-06
 readingMinutes: 5

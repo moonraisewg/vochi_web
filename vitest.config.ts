@@ -1,9 +1,13 @@
+import path from "node:path";
 import { defineConfig } from "vitest/config";
 
 // Local config so vitest runs this package's tests in isolation instead of
 // walking up and picking up the desktop app's root config (which references a
 // setup file that doesn't exist here).
 export default defineConfig({
+  // Cùng alias "@" như tsconfig/Next, để test import được module app/ và lib/
+  // vốn dùng đường dẫn tuyệt đối.
+  resolve: { alias: { "@": path.resolve(__dirname, ".") } },
   test: {
     include: ["tests/**/*.test.ts"],
     // The *-integration.test.ts files share ONE live Postgres DB and TRUNCATE

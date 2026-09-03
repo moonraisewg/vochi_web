@@ -3,6 +3,8 @@ import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { loadAllPosts } from "../lib/tips/loader";
+import { ogImagePath } from "../lib/tips/urls";
 
 const SIZE = { width: 1200, height: 630 } as const;
 const PUBLIC_DIR = path.join(process.cwd(), "public");
@@ -52,6 +54,100 @@ async function build() {
       style: "normal" as const,
     },
   ];
+
+
+// Thẻ OG riêng cho từng bài blog. 21 bài dùng chung một ảnh thì mọi link chia sẻ
+// trông y hệt nhau — cùng một thumbnail cho "HSK 1" lẫn "IELTS Writing".
+function postCard(post: { title: string; tags: string[]; readingMinutes: number; lang: string }) {
+  // Cỡ chữ co theo độ dài để tiêu đề dài không tràn khung 1200×630.
+  const size = post.title.length <= 40 ? 66 : post.title.length <= 70 ? 54 : 46;
+  const meta = [post.tags[0], `${post.readingMinutes} ${post.lang === "vi" ? "phút đọc" : "min read"}`]
+    .filter(Boolean)
+    .join("  ·  ");
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        background: "#fafaf7",
+        fontFamily: "Display",
+        color: "#0f1311",
+        position: "relative",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(900px 600px at 0% 0%, rgba(139,111,214,0.18) 0%, rgba(139,111,214,0) 60%)",
+          display: "flex",
+        }}
+      />
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          width: "100%",
+          height: "100%",
+          padding: 64,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <img src={logo} width={52} height={52} style={{ borderRadius: 13 }} />
+          <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: -0.8 }}>Vô chi</div>
+          <div
+            style={{
+              display: "flex",
+              marginLeft: 6,
+              fontFamily: "Mono",
+              fontSize: 13,
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              color: "#6b7066",
+            }}
+          >
+            Blog
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            fontSize: size,
+            fontWeight: 600,
+            lineHeight: 1.12,
+            letterSpacing: -1.4,
+            maxWidth: 1000,
+          }}
+        >
+          {post.title}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderTop: "1.5px solid #d8d6cf",
+            paddingTop: 22,
+            fontFamily: "Mono",
+            fontSize: 16,
+            letterSpacing: 2,
+            textTransform: "uppercase",
+            color: "#6b7066",
+          }}
+        >
+          <div style={{ display: "flex" }}>{meta}</div>
+          <div style={{ display: "flex", color: "#0f1311", fontWeight: 700 }}>vochi.xyz/tips</div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
   const element = (
     <div
@@ -487,6 +583,12 @@ async function build() {
   const cards = [
     { element, file: "og.png" },
     { element: docElement, file: "og-tai-lieu.png" },
+    // ogImagePath là nguồn duy nhất quyết định đường dẫn: trang bài đọc cùng hàm
+    // đó, nên ảnh sinh ra và ảnh trang trỏ tới không thể lệch nhau.
+    ...loadAllPosts().map((post) => ({
+      element: postCard(post),
+      file: ogImagePath(post).replace(/^\//, ""),
+    })),
   ];
 
   await fs.mkdir(PUBLIC_DIR, { recursive: true });
@@ -502,6 +604,7 @@ async function build() {
       .render()
       .asPng();
     const out = path.join(PUBLIC_DIR, card.file);
+    await fs.mkdir(path.dirname(out), { recursive: true });
     await fs.writeFile(out, png);
     console.log(`wrote ${out} (${png.length} bytes)`);
   }

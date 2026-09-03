@@ -11,6 +11,10 @@ export type MdPost = {
   lang: SeoLang;
   title: string;
   description: string;
+  /** Chuỗi hiện trên SERP. Mặc định lấy title/description, nhưng tách riêng để
+   *  giới hạn 60/160 ký tự của Google không ép phải cắt H1 hay lede cho khó đọc. */
+  metaTitle: string;
+  metaDescription: string;
   keywords: string[];
   publishedAt: string;
   updatedAt?: string;
@@ -47,11 +51,15 @@ function parseLang(v: string | number | string[] | undefined): SeoLang {
 }
 
 function fromFrontmatter(slug: string, data: Frontmatter, bodyHtml: string): MdPost {
+  const title = toStr(data.title, slug);
+  const description = toStr(data.description);
   return {
     slug: toStr(data.slug, slug),
     lang: parseLang(data.lang),
-    title: toStr(data.title, slug),
-    description: toStr(data.description),
+    title,
+    description,
+    metaTitle: toStr(data.metaTitle, title),
+    metaDescription: toStr(data.metaDescription, description),
     keywords: toStringArray(data.keywords),
     publishedAt: toStr(data.publishedAt, new Date().toISOString().slice(0, 10)),
     updatedAt: data.updatedAt ? toStr(data.updatedAt) : undefined,

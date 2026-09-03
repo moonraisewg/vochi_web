@@ -3,6 +3,7 @@ slug: memorize-chinese-characters-faster-srs
 lang: en
 title: "How to memorize Chinese characters 3× faster with SRS"
 description: "The hard part of Mandarin is not tones — it is characters. FSRS spaced repetition, radical decomposition, and daily 10-minute reviews make HSK 1–6 tractable without cramming."
+metaDescription: "The hard part of Mandarin is characters, not tones. FSRS spaced repetition plus radical decomposition makes HSK 1–6 tractable in 10 minutes a day."
 keywords: [memorize Chinese characters, learn Chinese characters, Chinese character memorization, SRS Chinese, FSRS Chinese, HSK study tips, Chinese vocabulary app, spaced repetition Mandarin]
 publishedAt: 2026-08-15
 updatedAt: 2026-08-27

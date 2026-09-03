@@ -7,6 +7,8 @@ export type Post = {
   lang: SeoLang;
   title: string;
   description: string;
+  metaTitle: string;
+  metaDescription: string;
   keywords: string[];
   publishedAt: string;
   updatedAt?: string;

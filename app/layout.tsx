@@ -82,6 +82,14 @@ export const metadata: Metadata = {
       "vi-VN": SITE_URL,
       "en-US": `${SITE_URL}?lang=en`,
     },
+    // Feed khai ở layout để mọi trang đều quảng bá nó — reader và trình thu thập
+    // tìm feed qua <link rel="alternate"> chứ không đoán URL.
+    types: {
+      "application/rss+xml": [
+        { url: `${SITE_URL}/feed.xml`, title: "Vô chi · Mẹo học tiếng Anh" },
+        { url: `${SITE_URL}/feed.en.xml`, title: "Vô chi · Learn Chinese tips" },
+      ],
+    },
   },
   openGraph: {
     type: "website",

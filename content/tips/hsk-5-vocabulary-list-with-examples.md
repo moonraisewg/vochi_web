@@ -2,6 +2,7 @@
 slug: hsk-5-vocabulary-list-with-examples
 lang: en
 title: "HSK 5 vocabulary list with example sentences (1,300 new words)"
+metaTitle: "HSK 5 Vocabulary List: 1,300 Words, Examples & Study Plan"
 description: "HSK 5 adds 1,300 new words (2,500 cumulative) and shifts from concrete nouns to abstract, academic vocabulary. Themed list, examples, and a study plan."
 keywords: [HSK 5, HSK 5 vocabulary, HSK 5 word list, HSK 5 example sentences, learn Chinese HSK 5, HSK 5 study plan, Chinese vocabulary advanced]
 publishedAt: 2026-08-28

@@ -2,6 +2,7 @@
 slug: so-sanh-anki-vochi-quizlet
 lang: vi
 title: "So sánh chi tiết Anki, Vô chi và Quizlet (khách quan, không PR)"
+metaTitle: "So sánh Anki, Vô chi và Quizlet: app nào hợp bạn?"
 description: "So sánh Anki, Quizlet và Vô chi: giá, nền tảng hỗ trợ, thuật toán FSRS/SM-2, offline. Ưu nhược điểm thật của từng app, kể cả Vô chi — viết bởi team Vô chi."
 keywords: [Anki vs Vô chi, so sánh Anki Quizlet, app học từ vựng SRS, Anki vs Quizlet, app flashcard tốt nhất]
 publishedAt: 2026-08-28

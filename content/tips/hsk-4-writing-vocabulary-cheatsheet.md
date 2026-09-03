@@ -3,6 +3,7 @@ slug: hsk-4-writing-vocabulary-cheatsheet
 lang: en
 title: "HSK 4 vocabulary cheatsheet for the writing section"
 description: "HSK 4 writing needs about 200 high-yield words: connectors, opinion phrases, hedging, examples. This cheatsheet groups them so you can drop them into any 80-character essay."
+metaDescription: "HSK 4 writing needs about 200 high-yield words: connectors, opinion phrases, hedging, examples. Grouped to drop straight into an 80-character essay."
 keywords: [HSK 4 vocabulary, HSK 4 writing, HSK 4 word list, HSK writing tips, HSK 4 essay, Chinese writing HSK, HSK 4 preparation]
 publishedAt: 2026-09-05
 readingMinutes: 6

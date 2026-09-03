@@ -209,3 +209,13 @@ export function renderMarkdown(md: string): string {
   flushPara(para);
   return out.join("\n");
 }
+
+/** Số từ thật của bài, đếm từ HTML đã render. JSON-LD trước đây khai
+ *  readingMinutes * 220 — một con số bịa gửi thẳng cho Google. */
+export function wordCount(bodyHtml: string): number {
+  const text = bodyHtml
+    .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;|&#\d+;/gi, " ");
+  return text.split(/\s+/).filter(Boolean).length;
+}

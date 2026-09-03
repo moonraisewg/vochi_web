@@ -2,6 +2,7 @@
 slug: writing-task-2-collocations-band-7
 lang: vi
 title: "IELTS Writing Task 2: 50 collocations kéo band từ 6.0 lên 7.0"
+metaTitle: "IELTS Writing Task 2: 50 collocations lên band 7.0"
 description: "50 collocations chia theo 5 chủ đề Writing Task 2 (environment, technology, education, health, society). Cách dùng, câu mẫu, và cách nhớ bằng SRS."
 keywords: [IELTS Writing Task 2, collocations Writing Task 2, IELTS Writing band 7, IELTS Writing vocabulary, cách viết Task 2, IELTS Writing collocations, band 7 Writing]
 publishedAt: 2026-08-31

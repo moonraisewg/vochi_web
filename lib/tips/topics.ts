@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { SeoLang } from "@/lib/seo/pageMeta";
+import { listPosts } from "./posts";
+import type { Post } from "./types";
 
 export type TopicKey =
   | "learning-tip"
@@ -147,6 +149,32 @@ export const TOPICS: Record<TopicKey, Topic> = {
     ],
   },
 };
+
+/** Bài thuộc một hub: cùng ngôn ngữ và trùng ít nhất một tag. Trang hub và
+ *  sitemap dùng chung hàm này để không bao giờ lệch danh sách. */
+export function postsForTopic(topic: Topic): Post[] {
+  const wanted = new Set(topic.matchTags.map((t) => t.toLowerCase()));
+  return listPosts(topic.lang).filter((p) =>
+    p.tags.some((t) => wanted.has(t.toLowerCase())),
+  );
+}
+
+/** Hub chủ đề khớp bài này (nếu có) — dùng để bài link ngược về hub. */
+export function topicForPost(post: { lang: SeoLang; tags: string[] }): Topic | null {
+  const tags = new Set(post.tags.map((t) => t.toLowerCase()));
+  const hits = topicKeys()
+    .map((k) => TOPICS[k])
+    .filter((t) => t.lang === post.lang)
+    .map((t) => ({
+      topic: t,
+      shared: t.matchTags.filter((m) => tags.has(m.toLowerCase())).length,
+    }))
+    .filter((h) => h.shared > 0)
+    // Hub hẹp nhất (ít matchTags nhất) là hub sát chủ đề nhất: /meo-thi-ielts
+    // sát hơn /meo-hoc-tieng-anh cho một bài IELTS.
+    .sort((a, b) => b.shared - a.shared || a.topic.matchTags.length - b.topic.matchTags.length);
+  return hits[0]?.topic ?? null;
+}
 
 export function getTopic(key: TopicKey): Topic {
   return TOPICS[key];

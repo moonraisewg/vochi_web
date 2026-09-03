@@ -2,6 +2,7 @@
 slug: lo-trinh-tu-vung-band-5-len-band-6
 lang: vi
 title: "Lộ trình từ vựng từ Band 5 lên Band 6 (không cần đi trung tâm)"
+metaTitle: "Lộ trình từ vựng IELTS Band 5 lên 6 không cần trung tâm"
 description: "Band 5 lên 6 là bước nhảy từ vựng khó nhất IELTS. Lộ trình cụ thể theo tuần, phân bổ từ mới theo kỹ năng và cách dùng FSRS để không quên lại."
 keywords: [lộ trình IELTS band 5 lên 6, từ vựng IELTS band 6, tăng band IELTS, lộ trình học IELTS, từ vựng IELTS lộ trình]
 publishedAt: 2026-08-28

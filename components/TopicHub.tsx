@@ -1,17 +1,10 @@
 import Link from "next/link";
-import { listPosts } from "@/lib/tips/posts";
+import { postsForTopic } from "@/lib/tips/topics";
 import type { Topic } from "@/lib/tips/topics";
 
 const SITE_URL = "https://vochi.xyz";
 
-// Match if the post's lang matches the topic AND at least one tag intersects.
-function selectPosts(topic: Topic) {
-  const langPosts = listPosts(topic.lang);
-  const wanted = new Set(topic.matchTags.map((t) => t.toLowerCase()));
-  return langPosts.filter((p) =>
-    p.tags.some((t) => wanted.has(t.toLowerCase())),
-  );
-}
+const selectPosts = postsForTopic;
 
 function buildJsonLd(topic: Topic, posts: ReturnType<typeof selectPosts>) {
   const langSuffix = topic.lang === "en" ? "?lang=en" : "";
