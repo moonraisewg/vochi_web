@@ -2,6 +2,7 @@
 slug: ielts-speaking-part-2-tu-vung-theo-chu-de
 lang: vi
 title: "IELTS Speaking Part 2: từ vựng theo 8 chủ đề (cheatsheet band 7+)"
+metaTitle: "IELTS Speaking Part 2: từ vựng 8 chủ đề (band 7+)"
 description: "Danh sách từ vựng Speaking Part 2 chia theo 8 chủ đề hay ra: person, place, object, event, experience, activity, media, decision. Idiom + collocation band 7."
 keywords: [IELTS Speaking Part 2, từ vựng IELTS Speaking, IELTS Speaking band 7, Speaking Part 2 topics, IELTS idiom Speaking, IELTS Speaking collocations, cue card IELTS]
 publishedAt: 2026-08-30

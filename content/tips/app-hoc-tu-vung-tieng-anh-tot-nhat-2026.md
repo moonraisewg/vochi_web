@@ -2,6 +2,7 @@
 slug: app-hoc-tu-vung-tieng-anh-tot-nhat-2026
 lang: vi
 title: "App học từ vựng tiếng Anh tốt nhất 2026 (so sánh thật, không PR)"
+metaTitle: "App học từ vựng tiếng Anh tốt nhất 2026 (so sánh thật)"
 description: "So sánh 6 app phổ biến: Duolingo, Memrise, Quizlet, Anki, Elsa Speak, Vô chi. App nào cho IELTS, TOEIC, người đi làm, người mới. Ưu nhược điểm rõ ràng."
 keywords: [app học từ vựng tiếng anh, app học tiếng anh tốt nhất 2026, so sánh app học tiếng anh, Duolingo vs Anki, Elsa Speak, app học IELTS, app học TOEIC]
 publishedAt: 2026-08-29

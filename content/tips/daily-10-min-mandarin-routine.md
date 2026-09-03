@@ -3,6 +3,7 @@ slug: daily-10-min-mandarin-routine
 lang: en
 title: "A daily 10-minute Mandarin routine that actually sticks"
 description: "You do not need 1 hour a day to learn Chinese. You need 10 minutes every day. The exact loop: 5 min review, 3 min new words, 2 min shadowing. Works for HSK 1 through HSK 4."
+metaDescription: "You need 10 minutes a day, not an hour: 5 min review, 3 min new words, 2 min shadowing. A Mandarin routine that holds from HSK 1 through HSK 4."
 keywords: [daily Mandarin routine, learn Chinese 10 minutes a day, daily Chinese practice, Chinese study routine, learn Mandarin fast, HSK daily plan, spaced repetition Chinese]
 publishedAt: 2026-09-04
 readingMinutes: 4

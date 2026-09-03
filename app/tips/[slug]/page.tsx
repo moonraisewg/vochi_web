@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { allSlugs, findPost } from "@/lib/tips/posts";
+import { allSlugs, findPost, listPosts } from "@/lib/tips/posts";
+import { wordCount } from "@/lib/tips/markdown";
+import { relatedPosts } from "@/lib/tips/related";
+import { topicForPost } from "@/lib/tips/topics";
+import { ogImagePath, ogImageUrl, postPath, postUrl } from "@/lib/tips/urls";
 import { TipsShell } from "../tips-shell";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -15,11 +19,13 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = findPost(slug);
-  if (!post) return {};
-  const canonical = `/tips/${post.slug}${post.lang === "en" ? "?lang=en" : ""}`;
+  // Slug lạ render 404 nhưng vẫn trả 200 kèm metadata mặc định nếu không chặn —
+  // đủ để Google index một trang rỗng.
+  if (!post) return { title: "404", robots: { index: false, follow: false } };
+  const canonical = postPath(post);
   return {
-    title: post.title,
-    description: post.description,
+    title: post.metaTitle,
+    description: post.metaDescription,
     keywords: post.keywords,
     alternates: {
       canonical,
@@ -29,21 +35,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     },
     openGraph: {
-      title: post.title,
-      description: post.description,
+      title: post.metaTitle,
+      description: post.metaDescription,
       type: "article",
       url: canonical,
       locale: post.lang === "vi" ? "vi_VN" : "en_US",
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt ?? post.publishedAt,
       tags: post.tags,
-      images: ["/og.png"],
+      images: [ogImagePath(post)],
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-      images: ["/og.png"],
+      title: post.metaTitle,
+      description: post.metaDescription,
+      images: [ogImagePath(post)],
     },
   };
 }
@@ -57,6 +63,8 @@ const COPY = {
     ctaTitle: "Tải Vô chi miễn phí",
     ctaBody: "Pet ảo desktop giúp bạn luyện IELTS/TOEIC 10 phút/ngày.",
     ctaButton: "Tải cho macOS & Windows",
+    relatedTitle: "Bài liên quan",
+    hubPrefix: "Xem chủ đề:",
   },
   en: {
     back: "← Back to all tips",
@@ -66,6 +74,8 @@ const COPY = {
     ctaTitle: "Get Vô chi free",
     ctaBody: "A desktop pet that helps you drill HSK vocabulary daily.",
     ctaButton: "Download for macOS & Windows",
+    relatedTitle: "Related posts",
+    hubPrefix: "Browse topic:",
   },
 } as const;
 
@@ -75,7 +85,9 @@ export default async function Page({ params }: Props) {
   if (!post) notFound();
 
   const t = COPY[post.lang];
-  const url = `${SITE_URL}/tips/${post.slug}${post.lang === "en" ? "?lang=en" : ""}`;
+  const url = postUrl(post);
+  const related = relatedPosts(post, listPosts(post.lang));
+  const topic = topicForPost(post);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -96,9 +108,9 @@ export default async function Page({ params }: Props) {
           logo: { "@type": "ImageObject", url: `${SITE_URL}/logo-bird.png` },
         },
         mainEntityOfPage: url,
-        image: `${SITE_URL}/og.png`,
+        image: ogImageUrl(post),
         articleSection: post.tags[0],
-        wordCount: post.readingMinutes * 220,
+        wordCount: wordCount(post.bodyHtml),
       },
       {
         "@type": "BreadcrumbList",
@@ -150,6 +162,30 @@ export default async function Page({ params }: Props) {
           className="prose-tips mt-14"
           dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
         />
+
+        <nav aria-label={t.relatedTitle} className="mt-16 border-t border-[var(--color-hairline)] pt-8">
+          <h2 className="micro text-[var(--color-ink-muted)]">{t.relatedTitle}</h2>
+          <ul className="mt-4 space-y-3">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  href={postPath(r)}
+                  className="text-[17px] leading-[1.4] text-[var(--color-ink)] underline decoration-[var(--color-hairline)] underline-offset-4 hover:decoration-[var(--color-ink)]"
+                >
+                  {r.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {topic && (
+            <Link
+              href={topic.lang === "en" ? `${topic.path}?lang=en` : topic.path}
+              className="micro mt-5 inline-block text-[var(--color-ink-muted)] hover:text-[var(--color-ink)]"
+            >
+              {t.hubPrefix} {topic.hero.title} →
+            </Link>
+          )}
+        </nav>
 
         <aside className="mt-16 rounded-2xl border border-[var(--color-hairline)] bg-[var(--color-tint)] p-6 md:p-8">
           <div className="micro text-[var(--color-ink-muted)]">{t.ctaTitle}</div>

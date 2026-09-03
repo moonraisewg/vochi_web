@@ -3,6 +3,7 @@ slug: best-apps-to-learn-chinese-2026
 lang: en
 title: "Best apps to learn Chinese in 2026 (honest comparison)"
 description: "A no-hype comparison of the top apps for learning Mandarin: HelloChinese, Pleco, Anki, Du Chinese, and Vô chi. Which one for tones, which for characters, which for retention."
+metaDescription: "A no-hype comparison of the top Mandarin apps: HelloChinese, Pleco, Anki, Du Chinese and Vô chi — which one for tones, characters and retention."
 keywords: [best app to learn Chinese, best Chinese learning app, HelloChinese vs Duolingo, Pleco, Anki Chinese, learn Mandarin app, Chinese vocabulary app 2026]
 publishedAt: 2026-08-25
 readingMinutes: 6

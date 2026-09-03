@@ -2,7 +2,9 @@
 slug: top-10-app-ai-hoc-tieng-anh-hieu-qua
 lang: vi
 title: "Top 10 app AI học tiếng Anh hiệu quả 2026 (đã dùng thật, không PR)"
+metaTitle: "Top 10 app AI học tiếng Anh hiệu quả 2026"
 description: "Đánh giá 10 app AI học tiếng Anh nổi bật 2026: ChatGPT, ELSA Speak, Speak, Duolingo Max, Talkpal, Loora, Praktika, Gliglish, LangAI, Vô chi. App nào cho Speaking, app nào cho từ vựng, giá bao nhiêu."
+metaDescription: "Đánh giá 10 app AI học tiếng Anh 2026: ChatGPT, ELSA, Speak, Duolingo Max, Talkpal, Loora, Praktika, Vô chi — app nào cho Speaking, app nào cho từ vựng."
 keywords: [app AI học tiếng anh, AI học tiếng anh, top app AI học tiếng anh 2026, học tiếng anh với AI, ChatGPT học tiếng anh, ELSA Speak, Speak AI tutor, Duolingo Max, AI luyện Speaking, app AI luyện phát âm]
 publishedAt: 2026-09-07
 readingMinutes: 8
