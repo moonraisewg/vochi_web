@@ -66,4 +66,4 @@ At HSK 1 you could brute-force isolated meanings. At HSK 2 grammar patterns appe
 
 ### Get the deck
 
-Vô chi ships an HSK 2 deck with example sentences and audio. Free on macOS and Windows.
+Vô chi ships an HSK 2 deck with example sentences, reviewed with FSRS. Free on macOS and Windows.
