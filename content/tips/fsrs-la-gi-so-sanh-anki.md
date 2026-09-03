@@ -2,16 +2,16 @@
 slug: fsrs-la-gi-so-sanh-anki
 lang: vi
 title: "FSRS là gì? Vì sao nhớ lâu hơn Anki mà học ít hơn"
-description: "FSRS (Free Spaced Repetition Scheduler) là thuật toán ôn từ mới nhất, giảm 40% số lần ôn so với Anki mặc định mà vẫn giữ retention 90%. Cách hoạt động và khác biệt so với SM-2."
-metaDescription: "FSRS là thuật toán ôn tập mới, giảm 40% số lần ôn so với Anki mặc định mà vẫn giữ retention 90%. Cách hoạt động và khác biệt với SM-2."
+description: "FSRS (Free Spaced Repetition Scheduler) là thuật toán ôn từ mới nhất, giảm số lần ôn so với Anki mặc định mà vẫn giữ retention cao. Cách hoạt động và khác biệt so với SM-2."
+metaDescription: "FSRS là thuật toán ôn tập mới, giảm số lần ôn so với Anki mặc định mà vẫn giữ retention cao. Cách hoạt động và khác biệt với SM-2."
 keywords: [FSRS là gì, so sánh FSRS Anki, spaced repetition tiếng anh, SRS học từ vựng, SM-2 vs FSRS, học từ vựng nhớ lâu, thuật toán học từ vựng]
 publishedAt: 2026-08-10
-updatedAt: 2026-08-27
+updatedAt: 2026-08-28
 readingMinutes: 5
 tags: [FSRS, SRS, Anki]
 ---
 
-Anki dùng thuật toán **SM-2** từ năm 1987. FSRS ra đời 2022, đã trở thành mặc định trong Anki 23.10+. Vô chi dùng FSRS ngay từ đầu. Bài này giải thích khác biệt.
+Anki dùng thuật toán **SM-2** từ năm 1987. FSRS ra đời 2022, và từ bản Anki 23.10 người dùng có thể tự bật FSRS trong Deck Options — nhưng SM-2 vẫn là mặc định khi cài mới, FSRS chỉ là tuỳ chọn. Vô chi thì dùng FSRS ngay từ đầu, không cần bật. Bài này giải thích khác biệt.
 
 ## SM-2: hai tham số cố định
 
@@ -29,7 +29,7 @@ FSRS chọn thời điểm ôn tại lúc retrievability rơi xuống ngưỡng 
 
 ## Kết quả thực tế
 
-Nghiên cứu của tác giả FSRS trên 20.000 người dùng: *giảm 40% số review* so với SM-2 mà retention vẫn 90%. Với 5.300 từ IELTS, con số này = tiết kiệm ~200 giờ cho một chu kỳ học đầy đủ.
+Theo benchmark công khai của dự án open-spaced-repetition (chạy trên số lượng lớn dữ liệu ôn tập thực tế từ Anki), FSRS thường cần *ít hơn khoảng 20-30% số lần ôn* so với SM-2 để giữ cùng mức retention — đây là con số ước lượng chung, không phải cam kết cho mọi bộ thẻ, vì còn phụ thuộc số lượng từ và tần suất ôn của từng người. Bộ càng lớn (như 5.300 từ IELTS/TOEIC), chênh lệch càng rõ, vì SM-2 vẫn kéo những từ bạn đã thuộc lâu về ôn lại theo công thức cố định thay vì đọc đúng mức độ nhớ thật.
 
 ## Vì sao Vô chi chọn FSRS?
 

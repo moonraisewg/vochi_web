@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import sitemap from "../app/sitemap";
+import { buildSitemap } from "../app/sitemap.xml/route";
 import { loadAllPosts } from "../lib/tips/loader";
 import { relatedPosts } from "../lib/tips/related";
 import { ogImagePath, postUrl } from "../lib/tips/urls";
@@ -11,6 +11,17 @@ const DESC_MIN = 70;
 const DESC_MAX = 160;
 
 const posts = loadAllPosts();
+
+function sitemapEntries(): Array<{ url: string; lastModified: string }> {
+  return [
+    ...buildSitemap().matchAll(
+      /<url>\s*<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g,
+    ),
+  ].map(([, url, lastModified]) => ({
+    url: url.replaceAll("&amp;", "&"),
+    lastModified,
+  }));
+}
 
 describe("nội dung blog", () => {
   it("có bài để kiểm", () => {
@@ -63,19 +74,19 @@ describe("ảnh OG", () => {
 
 describe("sitemap", () => {
   it("không có URL trùng", () => {
-    const urls = sitemap().map((e) => e.url);
+    const urls = sitemapEntries().map((e) => e.url);
     expect(new Set(urls).size).toBe(urls.length);
   });
 
   it("có đủ mọi bài, đúng URL canonical của bài đó", () => {
-    const urls = new Set(sitemap().map((e) => e.url));
+    const urls = new Set(sitemapEntries().map((e) => e.url));
     for (const post of posts) {
       expect(urls.has(postUrl(post)), `thiếu ${post.slug}`).toBe(true);
     }
   });
 
   it("lastmod của bài là ngày của bài, không phải lúc build", () => {
-    const bySlug = new Map(sitemap().map((e) => [e.url, e.lastModified]));
+    const bySlug = new Map(sitemapEntries().map((e) => [e.url, e.lastModified]));
     for (const post of posts) {
       const expected = post.updatedAt ?? post.publishedAt;
       expect(String(bySlug.get(postUrl(post))).startsWith(expected)).toBe(true);
@@ -86,9 +97,9 @@ describe("sitemap", () => {
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date("2026-01-01T00:00:00Z"));
-      const first = JSON.stringify(sitemap());
+      const first = buildSitemap();
       vi.setSystemTime(new Date("2026-06-15T12:00:00Z"));
-      const second = JSON.stringify(sitemap());
+      const second = buildSitemap();
       expect(second).toBe(first);
     } finally {
       vi.useRealTimers();

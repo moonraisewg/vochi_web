@@ -2,14 +2,17 @@
 slug: anki-vs-fsrs-for-chinese-learners
 lang: en
 title: "Anki vs FSRS for Chinese learners: which schedule wins?"
-description: "SM-2 (classic Anki) vs FSRS (default in Anki 23.10+ and Vô chi) on HSK vocabulary. How many review hours you save, and when the difference actually shows up."
+description: "SM-2 (classic Anki) vs FSRS (opt-in since Anki 23.10, default in Vô chi) on HSK vocabulary. Where the review-count savings actually show up as your deck grows."
 keywords: [Anki vs FSRS, FSRS Chinese, SM-2 vs FSRS, spaced repetition Chinese, best SRS for Chinese, HSK study algorithm, Anki settings Chinese]
 publishedAt: 2026-08-26
+updatedAt: 2026-08-28
 readingMinutes: 5
 tags: [FSRS, Anki, HSK]
 ---
 
-If you use Anki with the default (SM-2), you are reviewing more than you need. FSRS ships as the default in Anki 23.10+ (and in Vô chi). For Chinese learners, the difference is significant — because you have 3,000+ characters to move through, not 300.
+If you use Anki with the default (SM-2), you are reviewing more than you need. Anki added FSRS as an opt-in scheduler in 23.10 — you switch it on yourself in Deck Options, a fresh install still ships with SM-2 — and Vô chi runs FSRS by default with nothing to enable. For Chinese learners, the difference is significant either way — because you have 3,000+ characters to move through, not 300.
+
+For the mechanics of why FSRS schedules differently in the first place, see [FSRS vs SM-2: what changed and why it matters](/tips/fsrs-vs-sm2-what-changed) — this post focuses specifically on what that means for HSK-sized vocabulary.
 
 ## What SM-2 assumes
 
@@ -27,10 +30,7 @@ FSRS schedules the review right when retrievability drops to the target (usually
 
 ## On HSK vocab, how much do you save?
 
-- HSK 1–3 (~1,200 words): SM-2 ~ 2,800 reviews / 3 months. FSRS ~ 1,700 for the same retention.
-- HSK 6 (~5,000 cumulative): SM-2 ~ 12,000 reviews / year. FSRS ~ 7,200.
-
-That is 4,800 fewer reviews for HSK 6. At 5 seconds/review, that is a saved ~6.6 hours per year — with the same retention.
+The open-spaced-repetition project's published benchmarks put FSRS at roughly 20–30% fewer reviews than SM-2 for the same retention target — treat that as an order-of-magnitude figure, not a guarantee for any specific deck, since it depends on deck size and how consistently you review. The savings barely register on a 150-word HSK 1 deck. They compound once you're carrying HSK 4–6 volume: thousands of cards, many of which you've already known solidly for months, where SM-2 keeps pulling them back on a fixed multiplier instead of reading how well you actually still know them.
 
 ## When the gap matters most
 
@@ -45,8 +45,8 @@ That is 4,800 fewer reviews for HSK 6. At 5 seconds/review, that is a saved ~6.6
 
 ## Migrating
 
-- In Anki 23.10+: Settings → Deck → FSRS on. Optimize weights after 400+ reviews.
-- In Vô chi: FSRS is default. Nothing to configure.
+- In Anki 23.10+: it's off by default — go to Deck Options → FSRS and turn it on yourself. Optimize weights after 400+ reviews.
+- In Vô chi: FSRS is the default. Nothing to configure.
 
 ## Verdict
 
